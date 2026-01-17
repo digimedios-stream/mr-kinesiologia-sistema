@@ -3,12 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <title>Redirigiendo...</title>
-    <script>
-        // Redirigir al login
-        window.location.href = 'login.html';
-    </script>
+    <meta http-equiv="refresh" content="2;url=login.html">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #2c3e50, #3498db);
+            color: white;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top: 4px solid white;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 30px auto;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
 </head>
 <body>
-    <p>Redirigiendo al sistema MR Kinesiología...</p>
+    <div class="container">
+        <h1>MR Kinesiología</h1>
+        <p>Redirigiendo al sistema de gestión...</p>
+        <div class="spinner"></div>
+        <p>Si no eres redirigido automáticamente, <a href="login.html" style="color: #fff; text-decoration: underline;">haz clic aquí</a>.</p>
+    </div>
 </body>
 </html>
