@@ -3,165 +3,1697 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MR Kinesiología - Login</title>
+    <title>MR Kinesiología - Sistema de Gestión</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.css" rel="stylesheet">
     <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --info-color: #17a2b8;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
         body {
-            background: linear-gradient(135deg, #2c3e50, #3498db);
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: linear-gradient(180deg, var(--primary-color), #1a252f);
+            color: white;
             height: 100vh;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s;
+            z-index: 1000;
+            box-shadow: 3px 0 15px rgba(0,0,0,0.1);
+        }
+        
+        .sidebar-brand {
+            padding: 20px 15px;
+            background-color: rgba(0,0,0,0.2);
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .sidebar-brand h4 {
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .sidebar-brand small {
+            font-size: 0.8rem;
+            opacity: 0.8;
+        }
+        
+        .user-info {
+            padding: 20px 15px;
+            text-align: center;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .user-avatar {
+            font-size: 3rem;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+        
+        .user-email {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            word-break: break-all;
+        }
+        
+        .nav-container {
+            padding: 15px 0;
+        }
+        
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            margin: 2px 10px;
+            border-radius: 8px;
+            border-left: 4px solid transparent;
+            transition: all 0.3s;
             display: flex;
             align-items: center;
-            justify-content: center;
         }
         
-        .login-card {
-            background: white;
-            border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            width: 100%;
-            max-width: 400px;
-        }
-        
-        .logo {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-        
-        .logo h2 {
-            color: #2c3e50;
-            font-weight: bold;
-        }
-        
-        .logo small {
-            color: #7f8c8d;
-        }
-        
-        .btn-login {
-            background: #3498db;
+        .nav-link:hover {
             color: white;
-            width: 100%;
-            padding: 12px;
+            background-color: rgba(255,255,255,0.1);
+            border-left-color: var(--secondary-color);
+            text-decoration: none;
+        }
+        
+        .nav-link.active {
+            color: white;
+            background-color: rgba(52, 152, 219, 0.2);
+            border-left-color: var(--secondary-color);
+            font-weight: 600;
+        }
+        
+        .nav-link i {
+            width: 25px;
+            text-align: center;
+            margin-right: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .logout-btn {
+            margin: 20px 15px 0;
+            width: calc(100% - 30px);
+        }
+        
+        /* Main Content */
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            transition: all 0.3s;
+            min-height: 100vh;
+        }
+        
+        /* Top Navbar */
+        .top-navbar {
+            background: white;
+            border-radius: 10px;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .sidebar-toggle {
+            background: var(--light-color);
             border: none;
             border-radius: 8px;
-            font-weight: bold;
+            padding: 8px 15px;
+            color: var(--primary-color);
+            cursor: pointer;
             transition: all 0.3s;
         }
         
-        .btn-login:hover {
-            background: #2980b9;
-            transform: translateY(-2px);
+        .sidebar-toggle:hover {
+            background: var(--secondary-color);
+            color: white;
         }
         
-        .alert {
-            margin-top: 20px;
+        .page-title {
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .status-badge {
+            background: var(--success-color);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+        
+        /* Stats Cards */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            transition: all 0.3s;
+            border-left: 5px solid;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,0,0,0.12);
+        }
+        
+        .stat-card.pacientes { border-left-color: var(--secondary-color); }
+        .stat-card.sesiones { border-left-color: var(--success-color); }
+        .stat-card.obras-sociales { border-left-color: var(--warning-color); }
+        .stat-card.ingresos { border-left-color: var(--danger-color); }
+        
+        .stat-icon {
+            position: absolute;
+            right: 20px;
+            top: 20px;
+            font-size: 2.5rem;
+            opacity: 0.2;
+        }
+        
+        .stat-number {
+            font-size: 2.2rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .stat-label {
+            color: #6c757d;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+        
+        /* Tables */
+        .table-container {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .section-title {
+            margin: 0;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
+        
+        .btn-mrk {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-mrk:hover {
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-mrk-sm {
+            padding: 6px 12px;
+            font-size: 0.85rem;
+        }
+        
+        .table {
+            margin-bottom: 0;
+        }
+        
+        .table th {
+            border-top: none;
+            border-bottom: 2px solid var(--light-color);
+            font-weight: 700;
+            color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.05);
+        }
+        
+        .table td {
+            vertical-align: middle;
+            border-color: #f1f3f4;
+        }
+        
+        .badge {
+            padding: 6px 12px;
+            font-weight: 600;
+            border-radius: 6px;
+        }
+        
+        .badge-pendiente { background-color: #fff3cd; color: #856404; }
+        .badge-realizada { background-color: #d4edda; color: #155724; }
+        .badge-cancelada { background-color: #f8d7da; color: #721c24; }
+        
+        /* Action buttons */
+        .action-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 8px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 3px;
+            border: none;
+            transition: all 0.3s;
+        }
+        
+        .action-btn.view { background-color: rgba(52, 152, 219, 0.1); color: var(--secondary-color); }
+        .action-btn.edit { background-color: rgba(243, 156, 18, 0.1); color: var(--warning-color); }
+        .action-btn.delete { background-color: rgba(231, 76, 60, 0.1); color: var(--danger-color); }
+        
+        .action-btn:hover {
+            transform: scale(1.1);
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .sidebar {
+                margin-left: -250px;
+            }
+            
+            .sidebar.active {
+                margin-left: 0;
+            }
+            
+            .content {
+                margin-left: 0;
+            }
+            
+            .stats-container {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .stats-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .top-navbar {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+        }
+        
+        /* Footer */
+        .app-footer {
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--light-color);
+            margin-top: 40px;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6c757d;
+        }
+        
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            opacity: 0.3;
         }
     </style>
 </head>
 <body>
-    <div class="login-card">
-        <div class="logo">
-            <h2><i class="fas fa-hands-helping"></i> MR Kinesiología</h2>
-            <small>Sistema de Gestión Integral</small>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-brand">
+            <h4><i class="fas fa-hands-helping me-2"></i>MR Kinesiología</h4>
+            <small>Sistema de Gestión</small>
         </div>
         
-        <form id="loginForm">
-            <div class="mb-3">
-                <label for="email" class="form-label">Email</label>
-                <input type="email" class="form-control" id="email" 
-                       value="admin@mrkinesiologia.com" required>
+        <div class="user-info">
+            <div class="user-avatar">
+                <i class="fas fa-user-circle"></i>
             </div>
-            
-            <div class="mb-3">
-                <label for="password" class="form-label">Contraseña</label>
-                <input type="password" class="form-control" id="password" 
-                       value="admin123" required>
+            <div class="user-email" id="currentUserEmail">admin@mrkinesiologia.com</div>
+            <div class="mt-2">
+                <span class="badge bg-success" id="userRole">Administrador</span>
             </div>
-            
-            <button type="submit" class="btn btn-login" id="btnLogin">
-                <i class="fas fa-sign-in-alt"></i> Iniciar Sesión
-            </button>
-            
-            <div class="alert alert-info mt-3" role="alert">
-                <small>
-                    <i class="fas fa-info-circle"></i> 
-                    Credenciales por defecto: admin@mrkinesiologia.com / admin123
-                </small>
-            </div>
-        </form>
+        </div>
         
-        <div id="message" class="mt-3"></div>
+        <div class="nav-container">
+            <nav>
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" data-section="dashboard">
+                            <i class="fas fa-tachometer-alt"></i> Dashboard
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="pacientes">
+                            <i class="fas fa-users"></i> Pacientes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="sesiones">
+                            <i class="fas fa-calendar-check"></i> Sesiones
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="obras-sociales">
+                            <i class="fas fa-hospital"></i> Obras Sociales
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="reportes">
+                            <i class="fas fa-chart-bar"></i> Reportes
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="configuracion">
+                            <i class="fas fa-cog"></i> Configuración
+                        </a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+        
+        <button class="btn btn-outline-light logout-btn" onclick="logout()">
+            <i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión
+        </button>
     </div>
-
-    <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyM18g0Ig7Qw61uYwLnrdJQntATWR_oTojvIHoZvYoiHcE1QjXvm_tD6mazEig9TSeA1A/exec';
+    
+    <!-- Main Content -->
+    <div class="content" id="content">
+        <!-- Top Navbar -->
+        <div class="top-navbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="sidebar-toggle" id="sidebarToggle">
+                    <i class="fas fa-bars"></i>
+                </button>
+                <h4 class="page-title" id="pageTitle">Dashboard</h4>
+            </div>
+            <div class="d-flex align-items-center gap-3">
+                <div id="currentDate" class="text-muted"></div>
+                <div class="status-badge" id="connectionStatus">
+                    <i class="fas fa-circle me-1"></i> Conectado
+                </div>
+            </div>
+        </div>
         
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
+        <!-- Dashboard Section -->
+        <div class="section-content" id="dashboard-section">
+            <!-- Stats Cards -->
+            <div class="stats-container">
+                <div class="stat-card pacientes">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-number" id="totalPacientes">0</div>
+                    <div class="stat-label">Pacientes Registrados</div>
+                </div>
+                
+                <div class="stat-card sesiones">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-number" id="sesionesHoy">0</div>
+                    <div class="stat-label">Sesiones Hoy</div>
+                </div>
+                
+                <div class="stat-card obras-sociales">
+                    <div class="stat-icon">
+                        <i class="fas fa-hospital"></i>
+                    </div>
+                    <div class="stat-number" id="totalObrasSociales">0</div>
+                    <div class="stat-label">Obras Sociales</div>
+                </div>
+                
+                <div class="stat-card ingresos">
+                    <div class="stat-icon">
+                        <i class="fas fa-dollar-sign"></i>
+                    </div>
+                    <div class="stat-number" id="ingresosMes">$0</div>
+                    <div class="stat-label">Ingresos del Mes</div>
+                </div>
+            </div>
             
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btnLogin = document.getElementById('btnLogin');
+            <!-- Recent Activity -->
+            <div class="row">
+                <div class="col-lg-8 mb-4">
+                    <div class="table-container">
+                        <div class="section-header">
+                            <h5 class="section-title">Próximas Sesiones</h5>
+                            <button class="btn btn-mrk" onclick="loadSection('sesiones')">
+                                <i class="fas fa-plus me-1"></i> Nueva Sesión
+                            </button>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Paciente</th>
+                                        <th>Fecha</th>
+                                        <th>Hora</th>
+                                        <th>Tratamiento</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="upcomingSessionsTable">
+                                    <tr>
+                                        <td colspan="6" class="text-center py-4">
+                                            <div class="empty-state">
+                                                <i class="fas fa-calendar-day"></i>
+                                                <p>No hay sesiones programadas</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 mb-4">
+                    <div class="table-container">
+                        <div class="section-header">
+                            <h5 class="section-title">Pacientes Recientes</h5>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Contacto</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentPatientsTable">
+                                    <tr>
+                                        <td colspan="2" class="text-center py-4">
+                                            <div class="empty-state">
+                                                <i class="fas fa-user-clock"></i>
+                                                <p>No hay pacientes recientes</p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Pacientes Section (hidden by default) -->
+        <div class="section-content" id="pacientes-section" style="display: none;">
+            <div class="table-container">
+                <div class="section-header">
+                    <h5 class="section-title"><i class="fas fa-users me-2"></i>Gestión de Pacientes</h5>
+                    <button class="btn btn-mrk" onclick="showNewPatientModal()">
+                        <i class="fas fa-plus me-1"></i> Nuevo Paciente
+                    </button>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-search"></i>
+                            </span>
+                            <input type="text" class="form-control" id="searchPacientes" placeholder="Buscar pacientes...">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filterObraSocial">
+                            <option value="">Todas las obras sociales</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-secondary w-100" onclick="loadPacientes()">
+                            <i class="fas fa-sync-alt me-1"></i> Actualizar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre Completo</th>
+                                <th>DNI</th>
+                                <th>Teléfono</th>
+                                <th>Obra Social</th>
+                                <th>Registro</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="pacientesTable">
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-users"></i>
+                                        <p>No hay pacientes registrados</p>
+                                        <button class="btn btn-mrk mt-2" onclick="showNewPatientModal()">
+                                            <i class="fas fa-plus me-1"></i> Agregar primer paciente
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sesiones Section (hidden by default) -->
+        <div class="section-content" id="sesiones-section" style="display: none;">
+            <div class="table-container">
+                <div class="section-header">
+                    <h5 class="section-title"><i class="fas fa-calendar-check me-2"></i>Gestión de Sesiones</h5>
+                    <button class="btn btn-mrk" onclick="showNewSessionModal()">
+                        <i class="fas fa-plus me-1"></i> Nueva Sesión
+                    </button>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-3">
+                        <input type="date" class="form-control" id="filterFecha">
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filterEstado">
+                            <option value="">Todos los estados</option>
+                            <option value="pendiente">Pendiente</option>
+                            <option value="realizada">Realizada</option>
+                            <option value="cancelada">Cancelada</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <select class="form-select" id="filterPaciente">
+                            <option value="">Todos los pacientes</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <button class="btn btn-outline-secondary w-100" onclick="loadSesiones()">
+                            <i class="fas fa-sync-alt me-1"></i> Actualizar
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Paciente</th>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Tratamiento</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="sesionesTable">
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-calendar"></i>
+                                        <p>No hay sesiones programadas</p>
+                                        <button class="btn btn-mrk mt-2" onclick="showNewSessionModal()">
+                                            <i class="fas fa-plus me-1"></i> Programar primera sesión
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Obras Sociales Section (hidden by default) -->
+        <div class="section-content" id="obras-sociales-section" style="display: none;">
+            <div class="table-container">
+                <div class="section-header">
+                    <h5 class="section-title"><i class="fas fa-hospital me-2"></i>Obras Sociales</h5>
+                    <button class="btn btn-mrk" onclick="showNewObraSocialModal()">
+                        <i class="fas fa-plus me-1"></i> Nueva Obra Social
+                    </button>
+                </div>
+                
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Nombre</th>
+                                <th>Código</th>
+                                <th>Teléfono</th>
+                                <th>Email</th>
+                                <th>Pacientes</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="obrasSocialesTable">
+                            <tr>
+                                <td colspan="7" class="text-center py-5">
+                                    <div class="empty-state">
+                                        <i class="fas fa-hospital"></i>
+                                        <p>No hay obras sociales registradas</p>
+                                        <button class="btn btn-mrk mt-2" onclick="showNewObraSocialModal()">
+                                            <i class="fas fa-plus me-1"></i> Agregar primera obra social
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Reportes Section (hidden by default) -->
+        <div class="section-content" id="reportes-section" style="display: none;">
+            <div class="table-container">
+                <div class="section-header">
+                    <h5 class="section-title"><i class="fas fa-chart-bar me-2"></i>Reportes y Estadísticas</h5>
+                </div>
+                
+                <div class="row mb-4">
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Sesiones por Mes</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="chartSesionesMensuales" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-4">
+                        <div class="card h-100">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Distribución por Obra Social</h6>
+                            </div>
+                            <div class="card-body">
+                                <canvas id="chartObrasSociales" height="200"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header bg-light">
+                        <h6 class="mb-0">Exportar Datos</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-outline-primary w-100" onclick="exportData('pacientes')">
+                                    <i class="fas fa-file-excel me-1"></i> Pacientes
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-outline-success w-100" onclick="exportData('sesiones')">
+                                    <i class="fas fa-file-pdf me-1"></i> Sesiones
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-outline-info w-100" onclick="exportData('financiero')">
+                                    <i class="fas fa-file-csv me-1"></i> Financiero
+                                </button>
+                            </div>
+                            <div class="col-md-3 mb-2">
+                                <button class="btn btn-outline-warning w-100" onclick="exportData('completo')">
+                                    <i class="fas fa-file-archive me-1"></i> Completo
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Configuración Section (hidden by default) -->
+        <div class="section-content" id="configuracion-section" style="display: none;">
+            <div class="table-container">
+                <div class="section-header">
+                    <h5 class="section-title"><i class="fas fa-cog me-2"></i>Configuración del Sistema</h5>
+                </div>
+                
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Información del Sistema</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Nombre de la Clínica</label>
+                                    <input type="text" class="form-control" value="MR Kinesiología">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Email de Contacto</label>
+                                    <input type="email" class="form-control" value="info@mrkinesiologia.com">
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Teléfono</label>
+                                    <input type="tel" class="form-control" value="+54 11 1234-5678">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-6">
+                        <div class="card mb-4">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Preferencias</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Moneda</label>
+                                    <select class="form-select">
+                                        <option selected>Pesos Argentinos (ARS)</option>
+                                        <option>Dólares (USD)</option>
+                                        <option>Euros (EUR)</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Formato de Fecha</label>
+                                    <select class="form-select">
+                                        <option selected>DD/MM/YYYY</option>
+                                        <option>MM/DD/YYYY</option>
+                                        <option>YYYY-MM-DD</option>
+                                    </select>
+                                </div>
+                                <div class="mb-3">
+                                    <label class="form-check-label fw-bold">
+                                        <input type="checkbox" class="form-check-input" checked>
+                                        Notificaciones por Email
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <button class="btn btn-mrk me-2">
+                        <i class="fas fa-save me-1"></i> Guardar Cambios
+                    </button>
+                    <button class="btn btn-outline-secondary">
+                        <i class="fas fa-times me-1"></i> Cancelar
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="app-footer">
+            <p class="mb-0">MR Kinesiología - Sistema de Gestión © 2024</p>
+            <small>Versión 1.0.0 | Última actualización: <span id="currentYear"></span></small>
+        </div>
+    </div>
+    
+    <!-- Modals will be added here in the next message -->
+    
+    <!-- JavaScript Libraries -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Main Application Script -->
+    <script>
+        // ==============================================
+        // CONFIGURACIÓN DEL SISTEMA
+        // ==============================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbznQUeGI0Kgfu4NLQbBIIirV31HDwGNWiG0sFwlaOTlZwp54aaw-BvDg--R_rDR2LpGrA/exec';
+        
+        // Estado global de la aplicación
+        const appState = {
+            currentUser: null,
+            token: null,
+            pacientes: [],
+            sesiones: [],
+            obrasSociales: [],
+            isSidebarOpen: true
+        };
+        
+        // ==============================================
+        // INICIALIZACIÓN
+        // ==============================================
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('MR Kinesiología - Sistema de Gestión');
             
-            btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Iniciando...';
-            btnLogin.disabled = true;
+            // Verificar autenticación
+            checkAuth();
+            
+            // Configurar UI
+            setupUI();
+            
+            // Cargar datos iniciales
+            loadInitialData();
+            
+            // Actualizar fecha
+            updateCurrentDate();
+            
+            // Configurar eventos
+            setupEventListeners();
+        });
+        
+        // ==============================================
+        // FUNCIONES DE AUTENTICACIÓN
+        // ==============================================
+        function checkAuth() {
+            const token = localStorage.getItem('mrk_token');
+            const user = localStorage.getItem('mrk_user');
+            
+            if (!token || !user) {
+                // Redirigir al login si no está autenticado
+                window.location.href = 'login.html';
+                return;
+            }
             
             try {
-                const response = await fetch(`${API_URL}?action=login`, {
+                appState.token = token;
+                appState.currentUser = JSON.parse(user);
+                
+                // Actualizar UI con datos del usuario
+                document.getElementById('currentUserEmail').textContent = appState.currentUser.email;
+                document.getElementById('userRole').textContent = appState.currentUser.rol.charAt(0).toUpperCase() + appState.currentUser.rol.slice(1);
+            } catch (error) {
+                console.error('Error cargando datos de usuario:', error);
+                logout();
+            }
+        }
+        
+        function logout() {
+            // Limpiar localStorage
+            localStorage.removeItem('mrk_token');
+            localStorage.removeItem('mrk_user');
+            localStorage.removeItem('mrk_last_login');
+            
+            // Redirigir al login
+            window.location.href = 'login.html';
+        }
+        
+        // ==============================================
+        // FUNCIONES DE UI
+        // ==============================================
+        function setupUI() {
+            // Año actual en el footer
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Estado de conexión
+            updateConnectionStatus(true);
+        }
+        
+        function updateCurrentDate() {
+            const now = new Date();
+            const options = { 
+                weekday: 'long', 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric' 
+            };
+            document.getElementById('currentDate').textContent = 
+                now.toLocaleDateString('es-ES', options);
+        }
+        
+        function updateConnectionStatus(isConnected) {
+            const statusElement = document.getElementById('connectionStatus');
+            if (isConnected) {
+                statusElement.innerHTML = '<i class="fas fa-circle me-1"></i> Conectado';
+                statusElement.className = 'status-badge';
+            } else {
+                statusElement.innerHTML = '<i class="fas fa-circle me-1"></i> Desconectado';
+                statusElement.className = 'status-badge bg-danger';
+            }
+        }
+        
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+        
+        // ==============================================
+        // FUNCIONES DE NAVEGACIÓN
+        // ==============================================
+        function setupEventListeners() {
+            // Toggle sidebar
+            document.getElementById('sidebarToggle').addEventListener('click', toggleSidebar);
+            
+            // Navegación entre secciones
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    loadSection(this.getAttribute('data-section'));
+                });
+            });
+            
+            // Búsqueda de pacientes
+            document.getElementById('searchPacientes')?.addEventListener('input', function() {
+                filterPacientes(this.value);
+            });
+            
+            // Filtros de sesiones
+            document.getElementById('filterFecha')?.addEventListener('change', filterSesiones);
+            document.getElementById('filterEstado')?.addEventListener('change', filterSesiones);
+            document.getElementById('filterPaciente')?.addEventListener('change', filterSesiones);
+            
+            // Filtro de obras sociales
+            document.getElementById('filterObraSocial')?.addEventListener('change', filterPacientesByObraSocial);
+        }
+        
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const content = document.getElementById('content');
+            
+            if (appState.isSidebarOpen) {
+                sidebar.style.marginLeft = '-250px';
+                content.style.marginLeft = '0';
+            } else {
+                sidebar.style.marginLeft = '0';
+                content.style.marginLeft = '250px';
+            }
+            
+            appState.isSidebarOpen = !appState.isSidebarOpen;
+        }
+        
+        function loadSection(section) {
+            // Ocultar todas las secciones
+            document.querySelectorAll('.section-content').forEach(el => {
+                el.style.display = 'none';
+            });
+            
+            // Mostrar sección seleccionada
+            document.getElementById(`${section}-section`).style.display = 'block';
+            
+            // Actualizar título de página
+            const titles = {
+                'dashboard': 'Dashboard',
+                'pacientes': 'Pacientes',
+                'sesiones': 'Sesiones',
+                'obras-sociales': 'Obras Sociales',
+                'reportes': 'Reportes',
+                'configuracion': 'Configuración'
+            };
+            document.getElementById('pageTitle').textContent = titles[section] || section;
+            
+            // Actualizar navegación activa
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === section) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Cargar datos específicos de la sección
+            switch(section) {
+                case 'pacientes':
+                    loadPacientes();
+                    break;
+                case 'sesiones':
+                    loadSesiones();
+                    break;
+                case 'obras-sociales':
+                    loadObrasSociales();
+                    break;
+                case 'reportes':
+                    loadReportes();
+                    break;
+            }
+        }
+        
+        // ==============================================
+        // FUNCIONES DE DATOS
+        // ==============================================
+        async function loadInitialData() {
+            showLoading(true);
+            
+            try {
+                // Cargar datos del dashboard
+                await loadDashboardData();
+                
+                // Cargar pacientes
+                await loadPacientes();
+                
+                // Cargar sesiones
+                await loadSesiones();
+                
+                // Cargar obras sociales
+                await loadObrasSociales();
+                
+                updateConnectionStatus(true);
+            } catch (error) {
+                console.error('Error cargando datos iniciales:', error);
+                updateConnectionStatus(false);
+                showAlert('Error cargando datos: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function makeRequest(action, data = {}) {
+            try {
+                const url = `${API_URL}?action=${action}`;
+                const options = {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify({ email, password })
-                });
+                    body: JSON.stringify(data)
+                };
                 
-                const result = await response.json();
+                const response = await fetch(url, options);
                 
-                if (result.success) {
-                    // Guardar token y usuario
-                    localStorage.setItem('mrk_token', result.token);
-                    localStorage.setItem('mrk_user', JSON.stringify(result.user));
-                    
-                    // Redirigir al sistema
-                    window.location.href = 'index.html';
-                } else {
-                    document.getElementById('message').innerHTML = `
-                        <div class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            ${result.error || 'Error en el login'}
-                        </div>
-                    `;
-                    btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
-                    btnLogin.disabled = false;
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
-            } catch (error) {
-                document.getElementById('message').innerHTML = `
-                    <div class="alert alert-danger">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Error de conexión con el servidor
-                    </div>
-                `;
-                btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
-                btnLogin.disabled = false;
-            }
-        });
-        
-        // Inicializar la base de datos si es la primera vez
-        async function initDatabase() {
-            try {
-                const response = await fetch(`${API_URL}?action=init`, {
-                    method: 'POST'
-                });
                 const result = await response.json();
-                console.log('Base de datos inicializada:', result);
+                
+                if (!result.success) {
+                    throw new Error(result.error || 'Error en la solicitud');
+                }
+                
+                return result;
             } catch (error) {
-                console.error('Error inicializando BD:', error);
+                console.error(`Error en ${action}:`, error);
+                throw error;
             }
         }
         
-        // Ejecutar inicialización al cargar
-        window.addEventListener('load', initDatabase);
+        async function loadDashboardData() {
+            try {
+                // Datos simulados (en una implementación real, vendrían de la API)
+                document.getElementById('totalPacientes').textContent = '12';
+                document.getElementById('sesionesHoy').textContent = '3';
+                document.getElementById('totalObrasSociales').textContent = '5';
+                document.getElementById('ingresosMes').textContent = '$45,000';
+                
+                // Sesiones próximas simuladas
+                const upcomingSessions = [
+                    { paciente: 'Juan Pérez', fecha: '15/03/2024', hora: '10:00', tratamiento: 'Rehabilitación', estado: 'pendiente' },
+                    { paciente: 'María Gómez', fecha: '15/03/2024', hora: '11:30', tratamiento: 'Masoterapia', estado: 'pendiente' },
+                    { paciente: 'Carlos Rodríguez', fecha: '16/03/2024', hora: '09:00', tratamiento: 'Electroterapia', estado: 'pendiente' }
+                ];
+                
+                renderUpcomingSessions(upcomingSessions);
+                
+                // Pacientes recientes simulados
+                const recentPatients = [
+                    { nombre: 'Ana Martínez', telefono: '11-1234-5678' },
+                    { nombre: 'Luis Fernández', telefono: '11-8765-4321' },
+                    { nombre: 'Sofía López', telefono: '11-5555-4444' }
+                ];
+                
+                renderRecentPatients(recentPatients);
+                
+            } catch (error) {
+                console.error('Error cargando dashboard:', error);
+            }
+        }
+        
+        async function loadPacientes() {
+            try {
+                showLoading(true);
+                
+                // En una implementación real:
+                // const result = await makeRequest('getPacientes');
+                // appState.pacientes = result.pacientes;
+                
+                // Datos simulados
+                appState.pacientes = [
+                    { id: 1, nombre: 'Juan', apellido: 'Pérez', dni: '30123456', telefono: '11-1234-5678', obraSocial: 'OSDE', fechaRegistro: '10/03/2024' },
+                    { id: 2, nombre: 'María', apellido: 'Gómez', dni: '28987654', telefono: '11-8765-4321', obraSocial: 'Swiss Medical', fechaRegistro: '05/03/2024' },
+                    { id: 3, nombre: 'Carlos', apellido: 'Rodríguez', dni: '35123456', telefono: '11-5555-4444', obraSocial: 'Galeno', fechaRegistro: '01/03/2024' },
+                    { id: 4, nombre: 'Ana', apellido: 'Martínez', dni: '32987654', telefono: '11-2222-3333', obraSocial: 'Particular', fechaRegistro: '28/02/2024' }
+                ];
+                
+                renderPacientesTable(appState.pacientes);
+                
+                // Actualizar filtro de obras sociales
+                updateObraSocialFilter();
+                
+            } catch (error) {
+                console.error('Error cargando pacientes:', error);
+                showAlert('Error cargando pacientes: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function loadSesiones() {
+            try {
+                showLoading(true);
+                
+                // Datos simulados
+                appState.sesiones = [
+                    { id: 1, paciente: 'Juan Pérez', fecha: '15/03/2024', hora: '10:00', tratamiento: 'Rehabilitación', estado: 'pendiente' },
+                    { id: 2, paciente: 'María Gómez', fecha: '15/03/2024', hora: '11:30', tratamiento: 'Masoterapia', estado: 'pendiente' },
+                    { id: 3, paciente: 'Carlos Rodríguez', fecha: '14/03/2024', hora: '09:00', tratamiento: 'Electroterapia', estado: 'realizada' },
+                    { id: 4, paciente: 'Ana Martínez', fecha: '13/03/2024', hora: '16:00', tratamiento: 'Kinesiología', estado: 'realizada' }
+                ];
+                
+                renderSesionesTable(appState.sesiones);
+                
+            } catch (error) {
+                console.error('Error cargando sesiones:', error);
+                showAlert('Error cargando sesiones: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function loadObrasSociales() {
+            try {
+                showLoading(true);
+                
+                // Datos simulados
+                appState.obrasSociales = [
+                    { id: 1, nombre: 'OSDE', codigo: 'OSDE-310', telefono: '0800-555-OSDE', email: 'contacto@osde.com.ar', pacientes: 4 },
+                    { id: 2, nombre: 'Swiss Medical', codigo: 'SMG-456', telefono: '0800-333-4444', email: 'info@swissmedical.com.ar', pacientes: 3 },
+                    { id: 3, nombre: 'Galeno', codigo: 'GAL-789', telefono: '0810-222-3333', email: 'consultas@galeno.com.ar', pacientes: 2 },
+                    { id: 4, nombre: 'Particular', codigo: 'PART', telefono: '', email: '', pacientes: 5 }
+                ];
+                
+                renderObrasSocialesTable(appState.obrasSociales);
+                
+            } catch (error) {
+                console.error('Error cargando obras sociales:', error);
+                showAlert('Error cargando obras sociales: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function loadReportes() {
+            try {
+                // Inicializar gráficos
+                initCharts();
+            } catch (error) {
+                console.error('Error cargando reportes:', error);
+            }
+        }
+        
+        // ==============================================
+        // FUNCIONES DE RENDERIZADO
+        // ==============================================
+        function renderUpcomingSessions(sessions) {
+            const tbody = document.getElementById('upcomingSessionsTable');
+            
+            if (!sessions || sessions.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-calendar-day"></i>
+                                <p>No hay sesiones programadas</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = sessions.map(session => `
+                <tr>
+                    <td>${session.paciente}</td>
+                    <td>${session.fecha}</td>
+                    <td>${session.hora}</td>
+                    <td>${session.tratamiento}</td>
+                    <td><span class="badge badge-${session.estado}">${session.estado.charAt(0).toUpperCase() + session.estado.slice(1)}</span></td>
+                    <td>
+                        <button class="action-btn view" title="Ver detalles">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit" title="Editar">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderRecentPatients(patients) {
+            const tbody = document.getElementById('recentPatientsTable');
+            
+            if (!patients || patients.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="2" class="text-center py-4">
+                            <div class="empty-state">
+                                <i class="fas fa-user-clock"></i>
+                                <p>No hay pacientes recientes</p>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = patients.map(patient => `
+                <tr>
+                    <td>${patient.nombre}</td>
+                    <td>${patient.telefono}</td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderPacientesTable(pacientes) {
+            const tbody = document.getElementById('pacientesTable');
+            
+            if (!pacientes || pacientes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-users"></i>
+                                <p>No hay pacientes registrados</p>
+                                <button class="btn btn-mrk mt-2" onclick="showNewPatientModal()">
+                                    <i class="fas fa-plus me-1"></i> Agregar primer paciente
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = pacientes.map(paciente => `
+                <tr>
+                    <td>${paciente.id}</td>
+                    <td>${paciente.nombre} ${paciente.apellido}</td>
+                    <td>${paciente.dni}</td>
+                    <td>${paciente.telefono}</td>
+                    <td>${paciente.obraSocial}</td>
+                    <td>${paciente.fechaRegistro}</td>
+                    <td>
+                        <button class="action-btn view" title="Ver detalles" onclick="viewPaciente(${paciente.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit" title="Editar" onclick="editPaciente(${paciente.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" title="Eliminar" onclick="deletePaciente(${paciente.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderSesionesTable(sesiones) {
+            const tbody = document.getElementById('sesionesTable');
+            
+            if (!sesiones || sesiones.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-calendar"></i>
+                                <p>No hay sesiones programadas</p>
+                                <button class="btn btn-mrk mt-2" onclick="showNewSessionModal()">
+                                    <i class="fas fa-plus me-1"></i> Programar primera sesión
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = sesiones.map(sesion => `
+                <tr>
+                    <td>${sesion.id}</td>
+                    <td>${sesion.paciente}</td>
+                    <td>${sesion.fecha}</td>
+                    <td>${sesion.hora}</td>
+                    <td>${sesion.tratamiento}</td>
+                    <td><span class="badge badge-${sesion.estado}">${sesion.estado.charAt(0).toUpperCase() + sesion.estado.slice(1)}</span></td>
+                    <td>
+                        <button class="action-btn view" title="Ver detalles" onclick="viewSesion(${sesion.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit" title="Cambiar estado" onclick="changeSessionStatus(${sesion.id})">
+                            <i class="fas fa-exchange-alt"></i>
+                        </button>
+                        <button class="action-btn delete" title="Cancelar" onclick="cancelSesion(${sesion.id})">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function renderObrasSocialesTable(obrasSociales) {
+            const tbody = document.getElementById('obrasSocialesTable');
+            
+            if (!obrasSociales || obrasSociales.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <div class="empty-state">
+                                <i class="fas fa-hospital"></i>
+                                <p>No hay obras sociales registradas</p>
+                                <button class="btn btn-mrk mt-2" onclick="showNewObraSocialModal()">
+                                    <i class="fas fa-plus me-1"></i> Agregar primera obra social
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+            
+            tbody.innerHTML = obrasSociales.map(obra => `
+                <tr>
+                    <td>${obra.id}</td>
+                    <td>${obra.nombre}</td>
+                    <td>${obra.codigo}</td>
+                    <td>${obra.telefono}</td>
+                    <td>${obra.email}</td>
+                    <td><span class="badge bg-secondary">${obra.pacientes} pacientes</span></td>
+                    <td>
+                        <button class="action-btn view" title="Ver detalles" onclick="viewObraSocial(${obra.id})">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                        <button class="action-btn edit" title="Editar" onclick="editObraSocial(${obra.id})">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="action-btn delete" title="Eliminar" onclick="deleteObraSocial(${obra.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // ==============================================
+        // FUNCIONES DE FILTRADO
+        // ==============================================
+        function filterPacientes(searchTerm) {
+            if (!searchTerm) {
+                renderPacientesTable(appState.pacientes);
+                return;
+            }
+            
+            const filtered = appState.pacientes.filter(paciente => {
+                const nombreCompleto = `${paciente.nombre} ${paciente.apellido}`.toLowerCase();
+                return nombreCompleto.includes(searchTerm.toLowerCase()) ||
+                       paciente.dni.includes(searchTerm) ||
+                       paciente.telefono.includes(searchTerm);
+            });
+            
+            renderPacientesTable(filtered);
+        }
+        
+        function filterPacientesByObraSocial() {
+            const obraSocialId = document.getElementById('filterObraSocial').value;
+            
+            if (!obraSocialId) {
+                renderPacientesTable(appState.pacientes);
+                return;
+            }
+            
+            const filtered = appState.pacientes.filter(paciente => 
+                paciente.obraSocialId == obraSocialId
+            );
+            
+            renderPacientesTable(filtered);
+        }
+        
+        function filterSesiones() {
+            const fecha = document.getElementById('filterFecha').value;
+            const estado = document.getElementById('filterEstado').value;
+            const paciente = document.getElementById('filterPaciente').value;
+            
+            let filtered = [...appState.sesiones];
+            
+            if (fecha) {
+                filtered = filtered.filter(sesion => sesion.fecha === fecha);
+            }
+            
+            if (estado) {
+                filtered = filtered.filter(sesion => sesion.estado === estado);
+            }
+            
+            if (paciente) {
+                filtered = filtered.filter(sesion => 
+                    sesion.paciente.toLowerCase().includes(paciente.toLowerCase())
+                );
+            }
+            
+            renderSesionesTable(filtered);
+        }
+        
+        function updateObraSocialFilter() {
+            const select = document.getElementById('filterObraSocial');
+            const obrasSocialesUnicas = [...new Set(appState.pacientes.map(p => p.obraSocial))];
+            
+            select.innerHTML = '<option value="">Todas las obras sociales</option>';
+            obrasSocialesUnicas.forEach(obra => {
+                select.innerHTML += `<option value="${obra}">${obra}</option>`;
+            });
+        }
+        
+        // ==============================================
+        // FUNCIONES DE GRÁFICOS
+        // ==============================================
+        function initCharts() {
+            // Gráfico de sesiones mensuales
+            const ctx1 = document.getElementById('chartSesionesMensuales').getContext('2d');
+            new Chart(ctx1, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Sesiones',
+                        data: [12, 19, 15, 25, 22, 30],
+                        borderColor: '#3498db',
+                        backgroundColor: 'rgba(52, 152, 219, 0.1)',
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+            
+            // Gráfico de obras sociales
+            const ctx2 = document.getElementById('chartObrasSociales').getContext('2d');
+            new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: ['OSDE', 'Swiss Medical', 'Galeno', 'Particular', 'Otros'],
+                    datasets: [{
+                        data: [30, 25, 20, 15, 10],
+                        backgroundColor: [
+                            '#3498db',
+                            '#2ecc71',
+                            '#f39c12',
+                            '#e74c3c',
+                            '#9b59b6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom'
+                        }
+                    }
+                }
+            });
+        }
+        
+        // ==============================================
+        // FUNCIONES DE MODALES (placeholders)
+        // ==============================================
+        function showNewPatientModal() {
+            showAlert('Funcionalidad de nuevo paciente en desarrollo', 'info');
+        }
+        
+        function showNewSessionModal() {
+            showAlert('Funcionalidad de nueva sesión en desarrollo', 'info');
+        }
+        
+        function showNewObraSocialModal() {
+            showAlert('Funcionalidad de nueva obra social en desarrollo', 'info');
+        }
+        
+        function viewPaciente(id) {
+            showAlert(`Viendo paciente ID: ${id}`, 'info');
+        }
+        
+        function editPaciente(id) {
+            showAlert(`Editando paciente ID: ${id}`, 'info');
+        }
+        
+        function deletePaciente(id) {
+            if (confirm('¿Está seguro de eliminar este paciente?')) {
+                showAlert(`Paciente ID: ${id} eliminado`, 'success');
+                loadPacientes(); // Recargar lista
+            }
+        }
+        
+        function viewSesion(id) {
+            showAlert(`Viendo sesión ID: ${id}`, 'info');
+        }
+        
+        function changeSessionStatus(id) {
+            showAlert(`Cambiando estado de sesión ID: ${id}`, 'info');
+        }
+        
+        function cancelSesion(id) {
+            if (confirm('¿Cancelar esta sesión?')) {
+                showAlert(`Sesión ID: ${id} cancelada`, 'warning');
+                loadSesiones(); // Recargar lista
+            }
+        }
+        
+        function viewObraSocial(id) {
+            showAlert(`Viendo obra social ID: ${id}`, 'info');
+        }
+        
+        function editObraSocial(id) {
+            showAlert(`Editando obra social ID: ${id}`, 'info');
+        }
+        
+        function deleteObraSocial(id) {
+            if (confirm('¿Eliminar esta obra social?')) {
+                showAlert(`Obra social ID: ${id} eliminada`, 'success');
+                loadObrasSociales(); // Recargar lista
+            }
+        }
+        
+        function exportData(type) {
+            showAlert(`Exportando datos de ${type}...`, 'info');
+            // Aquí iría la lógica real de exportación
+        }
+        
+        // ==============================================
+        // FUNCIONES UTILITARIAS
+        // ==============================================
+        function showAlert(message, type = 'info') {
+            // Crear alerta temporal
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show position-fixed`;
+            alertDiv.style.cssText = `
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+                min-width: 300px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            `;
+            alertDiv.innerHTML = `
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+            
+            document.body.appendChild(alertDiv);
+            
+            // Auto-remover después de 5 segundos
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.parentNode.removeChild(alertDiv);
+                }
+            }, 5000);
+        }
+        
+        // ==============================================
+        // INICIALIZACIÓN FINAL
+        // ==============================================
+        console.log('Sistema MR Kinesiología inicializado correctamente');
     </script>
 </body>
 </html>
