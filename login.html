@@ -252,39 +252,25 @@
         }
         
         // Login
-       document.getElementById('loginForm').addEventListener('submit', function(e) {
+    // Reemplaza tu función de login por:
+document.getElementById('loginForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     
     const email = document.getElementById('email').value;
     const password = document.getElementById('password').value;
-    const btn = e.target.querySelector('button');
     
-    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-    btn.disabled = true;
+    const result = await makeRequest('login', { email, password });
     
-    // Usar JSONP para evitar CORS
-    const callbackName = 'jsonp_callback_' + Date.now();
-    const script = document.createElement('script');
-    
-    // Construir URL con callback
-    const url = `${API_URL}?action=login&callback=${callbackName}`;
-    
-    // Crear función global para la respuesta
-    window[callbackName] = function(response) {
-        delete window[callbackName];
-        document.body.removeChild(script);
-        
-        if (response.success) {
-            localStorage.setItem('mrk_token', response.token);
-            localStorage.setItem('mrk_user', JSON.stringify(response.user));
-            window.location.href = 'index.html';
-        } else {
-            document.getElementById('message').innerHTML = 
-                `<div class="alert alert-danger">${response.error}</div>`;
-            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
-            btn.disabled = false;
-        }
-    };
+    if (result.success) {
+        // Guardar y redirigir
+        localStorage.setItem('mrk_token', result.token);
+        localStorage.setItem('mrk_user', JSON.stringify(result.user));
+        window.location.href = 'index.html';
+    } else {
+        document.getElementById('message').innerHTML = 
+            `<div class="alert alert-danger">${result.error}</div>`;
+    }
+});
     
     // Enviar datos via POST usando un formulario
     const form = document.createElement('form');
