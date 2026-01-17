@@ -400,6 +400,40 @@
     </style>
 </head>
 <body>
+    /* Estilos para modales */
+.modal-header {
+    border-radius: 12px 12px 0 0;
+}
+
+.avatar-large {
+    color: var(--secondary-color);
+}
+
+.form-control-static {
+    padding: 8px 0;
+    min-height: 40px;
+    border-bottom: 1px solid #e9ecef;
+}
+
+/* Mejoras para selects */
+.form-select {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3e%3cpath fill='none' stroke='%23343a40' stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M2 5l6 6 6-6'/%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    background-size: 16px 12px;
+}
+
+/* Mejoras para textareas */
+textarea.form-control {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Estilos para badges en modales */
+.badge {
+    font-size: 0.85em;
+    padding: 5px 10px;
+}
     <!-- Loading Overlay -->
     <div class="loading-overlay" id="loadingOverlay">
         <div class="loading-spinner"></div>
@@ -1596,70 +1630,401 @@
             });
         }
         
-        // ==============================================
-        // FUNCIONES DE MODALES (placeholders)
-        // ==============================================
-        function showNewPatientModal() {
-            showAlert('Funcionalidad de nuevo paciente en desarrollo', 'info');
+// ==============================================
+// FUNCIONES DE MODALES REALES
+// ==============================================
+
+function showNewPatientModal() {
+    // Limpiar formulario
+    document.getElementById('formNuevoPaciente').reset();
+    
+    // Establecer fecha actual como fecha de nacimiento sugerida
+    const today = new Date().toISOString().split('T')[0];
+    document.querySelector('input[name="fecha_nacimiento"]').value = today;
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('nuevoPacienteModal'));
+    modal.show();
+}
+
+function showNewSessionModal() {
+    // Limpiar formulario
+    document.getElementById('formNuevaSesion').reset();
+    
+    // Establecer fecha y hora actual
+    const now = new Date();
+    const today = now.toISOString().split('T')[0];
+    const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
+    
+    document.querySelector('input[name="fecha"]').value = today;
+    document.querySelector('input[name="hora"]').value = time;
+    
+    // Cargar lista de pacientes
+    const select = document.getElementById('selectPacienteSesion');
+    select.innerHTML = '<option value="">Seleccionar paciente</option>';
+    
+    appState.pacientes.forEach(paciente => {
+        select.innerHTML += `<option value="${paciente.id}">${paciente.nombre} ${paciente.apellido}</option>`;
+    });
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('nuevaSesionModal'));
+    modal.show();
+}
+
+function showNewObraSocialModal() {
+    // Limpiar formulario
+    document.getElementById('formNuevaObraSocial').reset();
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('nuevaObraSocialModal'));
+    modal.show();
+}
+
+// ==============================================
+// FUNCIONES PARA GUARDAR DATOS
+// ==============================================
+
+async function guardarPaciente() {
+    const form = document.getElementById('formNuevoPaciente');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Validación básica
+    if (!data.nombre || !data.apellido || !data.dni || !data.telefono) {
+        showAlert('Complete los campos obligatorios (*)', 'warning');
+        return;
+    }
+    
+    showLoading(true);
+    
+    try {
+        // Simular guardado (en producción, harías un fetch a la API)
+        const nuevoPaciente = {
+            id: appState.pacientes.length + 1,
+            nombre: data.nombre,
+            apellido: data.apellido,
+            dni: data.dni,
+            fechaNacimiento: data.fecha_nacimiento || '',
+            telefono: data.telefono,
+            email: data.email || '',
+            direccion: data.direccion || '',
+            obraSocial: data.obra_social || 'Particular',
+            nroAfiliado: data.nro_afiliado || '',
+            observaciones: data.observaciones || '',
+            fechaRegistro: new Date().toLocaleDateString('es-ES')
+        };
+        
+        // Agregar a la lista local
+        appState.pacientes.unshift(nuevoPaciente);
+        
+        // Actualizar tabla
+        renderPacientesTable(appState.pacientes);
+        
+        // Cerrar modal
+        bootstrap.Modal.getInstance(document.getElementById('nuevoPacienteModal')).hide();
+        
+        // Mostrar mensaje de éxito
+        showSuccessModal('Paciente guardado correctamente');
+        
+        // Actualizar estadísticas
+        document.getElementById('totalPacientes').textContent = appState.pacientes.length;
+        
+    } catch (error) {
+        console.error('Error guardando paciente:', error);
+        showAlert('Error al guardar paciente: ' + error.message, 'danger');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function guardarSesion() {
+    const form = document.getElementById('formNuevaSesion');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Validación básica
+    if (!data.paciente_id || !data.fecha || !data.hora || !data.tratamiento) {
+        showAlert('Complete los campos obligatorios (*)', 'warning');
+        return;
+    }
+    
+    showLoading(true);
+    
+    try {
+        // Encontrar paciente
+        const paciente = appState.pacientes.find(p => p.id == data.paciente_id);
+        
+        if (!paciente) {
+            throw new Error('Paciente no encontrado');
         }
         
-        function showNewSessionModal() {
-            showAlert('Funcionalidad de nueva sesión en desarrollo', 'info');
-        }
+        // Simular guardado
+        const nuevaSesion = {
+            id: appState.sesiones.length + 1,
+            paciente: `${paciente.nombre} ${paciente.apellido}`,
+            paciente_id: data.paciente_id,
+            fecha: data.fecha,
+            hora: data.hora,
+            tratamiento: data.tratamiento,
+            duracion: data.duracion || '45',
+            estado: 'pendiente',
+            observaciones: data.observaciones || ''
+        };
         
-        function showNewObraSocialModal() {
-            showAlert('Funcionalidad de nueva obra social en desarrollo', 'info');
-        }
+        // Agregar a la lista local
+        appState.sesiones.unshift(nuevaSesion);
         
-        function viewPaciente(id) {
-            showAlert(`Viendo paciente ID: ${id}`, 'info');
-        }
+        // Actualizar tabla
+        renderSesionesTable(appState.sesiones);
         
-        function editPaciente(id) {
-            showAlert(`Editando paciente ID: ${id}`, 'info');
-        }
+        // Cerrar modal
+        bootstrap.Modal.getInstance(document.getElementById('nuevaSesionModal')).hide();
         
-        function deletePaciente(id) {
-            if (confirm('¿Está seguro de eliminar este paciente?')) {
-                showAlert(`Paciente ID: ${id} eliminado`, 'success');
-                loadPacientes(); // Recargar lista
-            }
-        }
+        // Mostrar mensaje de éxito
+        showSuccessModal('Sesión programada correctamente');
         
-        function viewSesion(id) {
-            showAlert(`Viendo sesión ID: ${id}`, 'info');
-        }
+        // Actualizar estadísticas
+        const hoy = new Date().toISOString().split('T')[0];
+        const sesionesHoy = appState.sesiones.filter(s => s.fecha === hoy && s.estado === 'pendiente').length;
+        document.getElementById('sesionesHoy').textContent = sesionesHoy;
         
-        function changeSessionStatus(id) {
-            showAlert(`Cambiando estado de sesión ID: ${id}`, 'info');
-        }
+    } catch (error) {
+        console.error('Error guardando sesión:', error);
+        showAlert('Error al guardar sesión: ' + error.message, 'danger');
+    } finally {
+        showLoading(false);
+    }
+}
+
+async function guardarObraSocial() {
+    const form = document.getElementById('formNuevaObraSocial');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData.entries());
+    
+    // Validación básica
+    if (!data.nombre) {
+        showAlert('El nombre de la obra social es obligatorio', 'warning');
+        return;
+    }
+    
+    showLoading(true);
+    
+    try {
+        // Simular guardado
+        const nuevaObraSocial = {
+            id: appState.obrasSociales.length + 1,
+            nombre: data.nombre,
+            codigo: data.codigo || '',
+            telefono: data.telefono || '',
+            email: data.email || '',
+            direccion: data.direccion || '',
+            observaciones: data.observaciones || '',
+            pacientes: 0 // Inicialmente 0 pacientes
+        };
         
-        function cancelSesion(id) {
-            if (confirm('¿Cancelar esta sesión?')) {
-                showAlert(`Sesión ID: ${id} cancelada`, 'warning');
-                loadSesiones(); // Recargar lista
-            }
-        }
+        // Agregar a la lista local
+        appState.obrasSociales.unshift(nuevaObraSocial);
         
-        function viewObraSocial(id) {
-            showAlert(`Viendo obra social ID: ${id}`, 'info');
-        }
+        // Actualizar tabla
+        renderObrasSocialesTable(appState.obrasSociales);
         
-        function editObraSocial(id) {
-            showAlert(`Editando obra social ID: ${id}`, 'info');
-        }
+        // Cerrar modal
+        bootstrap.Modal.getInstance(document.getElementById('nuevaObraSocialModal')).hide();
         
-        function deleteObraSocial(id) {
-            if (confirm('¿Eliminar esta obra social?')) {
-                showAlert(`Obra social ID: ${id} eliminada`, 'success');
-                loadObrasSociales(); // Recargar lista
-            }
-        }
+        // Mostrar mensaje de éxito
+        showSuccessModal('Obra social guardada correctamente');
         
-        function exportData(type) {
-            showAlert(`Exportando datos de ${type}...`, 'info');
-            // Aquí iría la lógica real de exportación
+        // Actualizar estadísticas
+        document.getElementById('totalObrasSociales').textContent = appState.obrasSociales.length;
+        
+    } catch (error) {
+        console.error('Error guardando obra social:', error);
+        showAlert('Error al guardar obra social: ' + error.message, 'danger');
+    } finally {
+        showLoading(false);
+    }
+}
+
+// ==============================================
+// FUNCIONES PARA VER DETALLES
+// ==============================================
+
+function viewPaciente(id) {
+    const paciente = appState.pacientes.find(p => p.id == id);
+    
+    if (!paciente) {
+        showAlert('Paciente no encontrado', 'danger');
+        return;
+    }
+    
+    // Llenar datos del modal
+    document.getElementById('pacienteNombreCompleto').textContent = `${paciente.nombre} ${paciente.apellido}`;
+    document.getElementById('pacienteID').textContent = `ID: ${paciente.id}`;
+    document.getElementById('pacienteDNI').textContent = paciente.dni || '-';
+    document.getElementById('pacienteNacimiento').textContent = paciente.fechaNacimiento || '-';
+    document.getElementById('pacienteTelefono').textContent = paciente.telefono || '-';
+    document.getElementById('pacienteEmail').textContent = paciente.email || '-';
+    document.getElementById('pacienteDireccion').textContent = paciente.direccion || '-';
+    document.getElementById('pacienteObraSocial').textContent = paciente.obraSocial || '-';
+    document.getElementById('pacienteNroAfiliado').textContent = paciente.nroAfiliado || '-';
+    document.getElementById('pacienteObservaciones').textContent = paciente.observaciones || '-';
+    document.getElementById('pacienteFechaRegistro').textContent = paciente.fechaRegistro || '-';
+    
+    // Mostrar historial de sesiones
+    const sesionesPaciente = appState.sesiones.filter(s => s.paciente_id == id);
+    const tbody = document.getElementById('historialSesiones');
+    
+    if (sesionesPaciente.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="4" class="text-center py-3 text-muted">
+                    No hay sesiones registradas
+                </td>
+            </tr>
+        `;
+    } else {
+        tbody.innerHTML = sesionesPaciente.map(sesion => `
+            <tr>
+                <td>${sesion.fecha} ${sesion.hora}</td>
+                <td>${sesion.tratamiento}</td>
+                <td><span class="badge badge-${sesion.estado}">${sesion.estado.charAt(0).toUpperCase() + sesion.estado.slice(1)}</span></td>
+                <td>
+                    <button class="btn btn-sm btn-outline-primary" onclick="viewSesion(${sesion.id})">
+                        <i class="fas fa-eye"></i>
+                    </button>
+                </td>
+            </tr>
+        `).join('');
+    }
+    
+    // Guardar ID para edición
+    document.getElementById('verPacienteModal').dataset.pacienteId = id;
+    
+    // Mostrar modal
+    const modal = new bootstrap.Modal(document.getElementById('verPacienteModal'));
+    modal.show();
+}
+
+function editarPacienteActual() {
+    const pacienteId = document.getElementById('verPacienteModal').dataset.pacienteId;
+    
+    // Cerrar modal actual
+    bootstrap.Modal.getInstance(document.getElementById('verPacienteModal')).hide();
+    
+    // Abrir modal de edición (por ahora usamos el mismo que nuevo)
+    // TODO: Implementar modal de edición específico
+    showAlert('Funcionalidad de edición en desarrollo', 'info');
+}
+
+// ==============================================
+// FUNCIONES DE CONFIRMACIÓN
+// ==============================================
+
+function showConfirmModal(message, callback) {
+    document.getElementById('confirmMessage').textContent = message;
+    
+    const confirmBtn = document.getElementById('confirmActionButton');
+    const oldHandler = confirmBtn.onclick;
+    
+    confirmBtn.onclick = function() {
+        if (callback) callback();
+        bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+    };
+    
+    const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+    modal.show();
+    
+    // Restaurar handler original al cerrar
+    modal._element.addEventListener('hidden.bs.modal', function() {
+        confirmBtn.onclick = oldHandler;
+    });
+}
+
+function showSuccessModal(message) {
+    document.getElementById('successMessage').textContent = message;
+    const modal = new bootstrap.Modal(document.getElementById('successModal'));
+    modal.show();
+}
+
+// ==============================================
+// FUNCIONES DE ELIMINACIÓN MEJORADAS
+// ==============================================
+
+function deletePaciente(id) {
+    const paciente = appState.pacientes.find(p => p.id == id);
+    
+    if (!paciente) {
+        showAlert('Paciente no encontrado', 'danger');
+        return;
+    }
+    
+    showConfirmModal(
+        `¿Está seguro de eliminar al paciente ${paciente.nombre} ${paciente.apellido}? Esta acción no se puede deshacer.`,
+        function() {
+            // Eliminar de la lista
+            appState.pacientes = appState.pacientes.filter(p => p.id != id);
+            
+            // Actualizar tabla
+            renderPacientesTable(appState.pacientes);
+            
+            // Actualizar estadísticas
+            document.getElementById('totalPacientes').textContent = appState.pacientes.length;
+            
+            showSuccessModal('Paciente eliminado correctamente');
         }
+    );
+}
+
+function cancelSesion(id) {
+    const sesion = appState.sesiones.find(s => s.id == id);
+    
+    if (!sesion) {
+        showAlert('Sesión no encontrada', 'danger');
+        return;
+    }
+    
+    showConfirmModal(
+        `¿Cancelar la sesión de ${sesion.paciente} programada para ${sesion.fecha} a las ${sesion.hora}?`,
+        function() {
+            // Cambiar estado a cancelada
+            sesion.estado = 'cancelada';
+            
+            // Actualizar tabla
+            renderSesionesTable(appState.sesiones);
+            
+            showSuccessModal('Sesión cancelada correctamente');
+        }
+    );
+}
+
+function changeSessionStatus(id) {
+    const sesion = appState.sesiones.find(s => s.id == id);
+    
+    if (!sesion) {
+        showAlert('Sesión no encontrada', 'danger');
+        return;
+    }
+    
+    const nuevoEstado = sesion.estado === 'pendiente' ? 'realizada' : 'pendiente';
+    const textoEstado = nuevoEstado === 'realizada' ? 'marcar como realizada' : 'marcar como pendiente';
+    
+    showConfirmModal(
+        `¿${textoEstado.charAt(0).toUpperCase() + textoEstado.slice(1)} la sesión de ${sesion.paciente}?`,
+        function() {
+            // Cambiar estado
+            sesion.estado = nuevoEstado;
+            
+            // Actualizar tabla
+            renderSesionesTable(appState.sesiones);
+            
+            showSuccessModal(`Sesión ${nuevoEstado} correctamente`);
+        }
+    );
+}
+
+// Mantén las otras funciones como viewSesion, deleteObraSocial, etc., pero puedes actualizarlas
+// para usar showConfirmModal en lugar de confirm() nativo
         
         // ==============================================
         // FUNCIONES UTILITARIAS
@@ -1695,5 +2060,343 @@
         // ==============================================
         console.log('Sistema MR Kinesiología inicializado correctamente');
     </script>
+    <!-- ============================================= -->
+    <!-- MODALES DEL SISTEMA -->
+    <!-- ============================================= -->
+    
+    <!-- Modal Nuevo Paciente -->
+    <div class="modal fade" id="nuevoPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Nuevo Paciente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevoPaciente">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Nombre *</label>
+                                <input type="text" class="form-control" name="nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Apellido *</label>
+                                <input type="text" class="form-control" name="apellido" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">DNI *</label>
+                                <input type="text" class="form-control" name="dni" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" name="fecha_nacimiento">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Teléfono *</label>
+                                <input type="tel" class="form-control" name="telefono" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email</label>
+                                <input type="email" class="form-control" name="email">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Dirección</label>
+                            <input type="text" class="form-control" name="direccion">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Obra Social</label>
+                                <select class="form-select" name="obra_social" id="selectObraSocial">
+                                    <option value="">Seleccionar obra social</option>
+                                    <option value="OSDE">OSDE</option>
+                                    <option value="Swiss Medical">Swiss Medical</option>
+                                    <option value="Galeno">Galeno</option>
+                                    <option value="Particular">Particular</option>
+                                    <option value="Otra">Otra</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">N° Afiliado</label>
+                                <input type="text" class="form-control" name="nro_afiliado">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observaciones</label>
+                            <textarea class="form-control" name="observaciones" rows="3" placeholder="Información adicional del paciente..."></textarea>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle me-1"></i> Los campos marcados con * son obligatorios</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarPaciente()">Guardar Paciente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Nueva Sesión -->
+    <div class="modal fade" id="nuevaSesionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-calendar-plus me-2"></i>Nueva Sesión</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevaSesion">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Paciente *</label>
+                            <select class="form-select" name="paciente_id" id="selectPacienteSesion" required>
+                                <option value="">Seleccionar paciente</option>
+                                <!-- Se llenará dinámicamente -->
+                            </select>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Fecha *</label>
+                                <input type="date" class="form-control" name="fecha" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Hora *</label>
+                                <input type="time" class="form-control" name="hora" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Tratamiento *</label>
+                            <select class="form-select" name="tratamiento" required>
+                                <option value="">Seleccionar tratamiento</option>
+                                <option value="Rehabilitación">Rehabilitación</option>
+                                <option value="Masoterapia">Masoterapia</option>
+                                <option value="Electroterapia">Electroterapia</option>
+                                <option value="Kinesiología">Kinesiología</option>
+                                <option value="Fisioterapia">Fisioterapia</option>
+                                <option value="Terapia Manual">Terapia Manual</option>
+                                <option value="Punción Seca">Punción Seca</option>
+                                <option value="Vendaje Neuromuscular">Vendaje Neuromuscular</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Duración (minutos)</label>
+                            <select class="form-select" name="duracion">
+                                <option value="30">30 minutos</option>
+                                <option value="45" selected>45 minutos</option>
+                                <option value="60">60 minutos</option>
+                                <option value="90">90 minutos</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observaciones</label>
+                            <textarea class="form-control" name="observaciones" rows="3" placeholder="Detalles de la sesión..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="guardarSesion()">Guardar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Nueva Obra Social -->
+    <div class="modal fade" id="nuevaObraSocialModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="fas fa-hospital-plus me-2"></i>Nueva Obra Social</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevaObraSocial">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nombre *</label>
+                            <input type="text" class="form-control" name="nombre" required placeholder="Ej: OSDE, Swiss Medical, etc.">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Código</label>
+                                <input type="text" class="form-control" name="codigo" placeholder="Ej: OSDE-310">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Teléfono</label>
+                                <input type="tel" class="form-control" name="telefono" placeholder="Ej: 0800-555-1234">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" name="email" placeholder="contacto@obrasocial.com">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Dirección</label>
+                            <input type="text" class="form-control" name="direccion" placeholder="Dirección de la obra social">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observaciones</label>
+                            <textarea class="form-control" name="observaciones" rows="2" placeholder="Información adicional..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" onclick="guardarObraSocial()">Guardar Obra Social</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Ver Paciente -->
+    <div class="modal fade" id="verPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="fas fa-user me-2"></i>Detalles del Paciente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="avatar-large">
+                                <i class="fas fa-user-circle fa-6x text-info"></i>
+                            </div>
+                            <h4 class="mt-3" id="pacienteNombreCompleto">-</h4>
+                            <span class="badge bg-primary" id="pacienteID">ID: -</span>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">DNI</label>
+                                    <p class="form-control-static" id="pacienteDNI">-</p>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Fecha Nacimiento</label>
+                                    <p class="form-control-static" id="pacienteNacimiento">-</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Teléfono</label>
+                                    <p class="form-control-static" id="pacienteTelefono">-</p>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Email</label>
+                                    <p class="form-control-static" id="pacienteEmail">-</p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Dirección</label>
+                                <p class="form-control-static" id="pacienteDireccion">-</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Obra Social</label>
+                                    <p class="form-control-static" id="pacienteObraSocial">-</p>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">N° Afiliado</label>
+                                    <p class="form-control-static" id="pacienteNroAfiliado">-</p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Observaciones</label>
+                                <p class="form-control-static" id="pacienteObservaciones">-</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Fecha Registro</label>
+                                <p class="form-control-static" id="pacienteFechaRegistro">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Historial de Sesiones -->
+                    <div class="mt-4">
+                        <h6 class="border-bottom pb-2"><i class="fas fa-history me-2"></i>Historial de Sesiones</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tratamiento</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historialSesiones">
+                                    <tr>
+                                        <td colspan="4" class="text-center py-3 text-muted">
+                                            No hay sesiones registradas
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-info" onclick="editarPacienteActual()">Editar Paciente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Confirmación -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirmación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmMessage">¿Está seguro de realizar esta acción?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmActionButton">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Éxito -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-check-circle me-2"></i>Éxito</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <p id="successMessage">Operación realizada con éxito</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
