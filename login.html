@@ -1,83 +1,342 @@
 <!DOCTYPE html>
-<html>
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>MR Kinesiología - Login Simple</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MR Kinesiología - Login</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: Arial; padding: 20px; }
-        input { display: block; margin: 10px 0; padding: 10px; width: 300px; }
-        button { padding: 10px 20px; background: #3498db; color: white; border: none; cursor: pointer; }
-        .success { color: green; }
-        .error { color: red; }
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: white;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            animation: fadeIn 0.5s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo-icon {
+            color: var(--secondary-color);
+            font-size: 3.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .form-control {
+            padding: 12px 15px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, var(--secondary-color), #2980b9);
+            color: white;
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s;
+            margin-top: 10px;
+        }
+        
+        .btn-login:hover {
+            background: linear-gradient(135deg, #2980b9, #2573a7);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
+        }
+        
+        .btn-login:disabled {
+            background: #95a5a6;
+            transform: none;
+            box-shadow: none;
+        }
+        
+        .alert-box {
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 20px;
+        }
+        
+        .debug-panel {
+            background: #f8f9fa;
+            border: 1px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 15px;
+            margin-top: 25px;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
-    <h1>MR Kinesiología - Login</h1>
-    
-    <input id="email" value="admin@mrkinesiologia.com">
-    <input id="password" type="password" value="admin123">
-    <button onclick="login()">Iniciar Sesión</button>
-    
-    <div id="result" style="margin-top: 20px;"></div>
-    
-    <div style="margin-top: 30px;">
-        <h3>Debug:</h3>
-        <button onclick="testAPI()">Test API</button>
-        <button onclick="initDB()">Init DB</button>
-        <button onclick="testLoginGET()">Test Login (GET)</button>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h2 class="text-dark fw-bold">MR Kinesiología</h2>
+                <p class="text-muted">Sistema de Gestión Integral</p>
+            </div>
+            
+            <form id="loginForm">
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Email</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="fas fa-envelope text-secondary"></i>
+                        </span>
+                        <input type="email" class="form-control" id="email" 
+                               value="admin@mrkinesiologia.com" required
+                               placeholder="tu@email.com">
+                    </div>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label fw-bold">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text bg-light">
+                            <i class="fas fa-lock text-secondary"></i>
+                        </span>
+                        <input type="password" class="form-control" id="password" 
+                               value="admin123" required
+                               placeholder="••••••••">
+                    </div>
+                </div>
+                
+                <button type="submit" class="btn btn-login" id="btnLogin">
+                    <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión
+                </button>
+                
+                <div class="alert alert-info mt-3">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <small class="fw-medium">Credenciales por defecto:</small><br>
+                    <small>Email: <code>admin@mrkinesiologia.com</code></small><br>
+                    <small>Contraseña: <code>admin123</code></small>
+                </div>
+            </form>
+            
+            <div id="message" class="mt-3"></div>
+            
+            <!-- Panel de depuración -->
+            <div class="debug-panel">
+                <h6 class="mb-2"><i class="fas fa-bug me-1"></i> Estado del Sistema</h6>
+                <div id="debugInfo" class="mb-2">
+                    <div class="text-secondary">
+                        <i class="fas fa-spinner fa-spin me-1"></i> Verificando conexión...
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-outline-primary flex-fill" onclick="testAPI()">
+                        <i class="fas fa-plug me-1"></i> Probar API
+                    </button>
+                    <button class="btn btn-sm btn-outline-secondary flex-fill" onclick="initDatabase()">
+                        <i class="fas fa-database me-1"></i> Iniciar BD
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <script>
-        const API_URL = 'https://script.google.com/macros/s/AKfycbyM18g0Ig7Qw61uYwLnrdJQntATWR_oTojvIHoZvYoiHcE1QjXvm_tD6mazEig9TSeA1A/exec';
+        // ==============================================
+        // CONFIGURACIÓN - ACTUALIZA ESTA URL
+        // ==============================================
+        const API_URL = 'https://script.google.com/macros/s/AKfycbznQUeGI0Kgfu4NLQbBIIirV31HDwGNWiG0sFwlaOTlZwp54aaw-BvDg--R_rDR2LpGrA/exec';
+        // ==============================================
         
-        function showResult(text, type) {
-            const div = document.getElementById('result');
-            div.innerHTML = `<div class="${type}"><strong>${type === 'error' ? '❌' : '✅'} ${text}</strong></div>`;
+        // Elementos DOM
+        const loginForm = document.getElementById('loginForm');
+        const btnLogin = document.getElementById('btnLogin');
+        const messageDiv = document.getElementById('message');
+        const debugInfo = document.getElementById('debugInfo');
+        
+        // Inicialización
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('MR Kinesiología - Sistema de Login');
+            console.log('API URL:', API_URL);
+            testConnection();
+        });
+        
+        // Función para mostrar mensajes
+        function showMessage(text, type = 'info', duration = 0) {
+            const alertClass = {
+                'success': 'alert-success',
+                'danger': 'alert-danger',
+                'warning': 'alert-warning',
+                'info': 'alert-info'
+            }[type] || 'alert-info';
+            
+            messageDiv.innerHTML = `
+                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
+                    ${text}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            `;
+            
+            if (duration > 0) {
+                setTimeout(() => {
+                    if (messageDiv.firstChild) {
+                        messageDiv.firstChild.remove();
+                    }
+                }, duration);
+            }
         }
         
+        // Función para actualizar debug info
+        function updateDebugInfo(text, type = 'info') {
+            const colorClass = {
+                'success': 'text-success',
+                'danger': 'text-danger',
+                'warning': 'text-warning',
+                'info': 'text-info'
+            }[type] || 'text-secondary';
+            
+            debugInfo.innerHTML = `<div class="${colorClass}">${text}</div>`;
+        }
+        
+        // Test de conexión
+        async function testConnection() {
+            updateDebugInfo('<i class="fas fa-spinner fa-spin me-1"></i> Probando conexión...', 'info');
+            
+            try {
+                const response = await fetch(`${API_URL}?action=test`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    updateDebugInfo(
+                        `<i class="fas fa-check-circle me-1"></i> ${result.message} (v${result.version})`,
+                        'success'
+                    );
+                    return true;
+                } else {
+                    updateDebugInfo(
+                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
+                        'danger'
+                    );
+                    return false;
+                }
+            } catch (error) {
+                updateDebugInfo(
+                    `<i class="fas fa-times-circle me-1"></i> Error: ${error.message}`,
+                    'danger'
+                );
+                return false;
+            }
+        }
+        
+        // Test API
         async function testAPI() {
-            try {
-                const response = await fetch(API_URL + '?action=test');
-                const data = await response.json();
-                console.log('Test API:', data);
-                showResult('API: ' + data.message, data.success ? 'success' : 'error');
-            } catch (error) {
-                showResult('Error: ' + error.message, 'error');
-            }
-        }
-        
-        async function initDB() {
-            try {
-                const response = await fetch(API_URL + '?action=init');
-                const data = await response.json();
-                console.log('Init DB:', data);
-                showResult('Init: ' + (data.message || data.error), data.success ? 'success' : 'error');
-            } catch (error) {
-                showResult('Error: ' + error.message, 'error');
-            }
-        }
-        
-        async function testLoginGET() {
-            try {
-                const url = API_URL + '?action=login&email=admin@mrkinesiologia.com&password=admin123';
-                const response = await fetch(url);
-                const data = await response.json();
-                console.log('Login GET:', data);
-                showResult('Login GET: ' + (data.message || data.error), data.success ? 'success' : 'error');
-            } catch (error) {
-                showResult('Error: ' + error.message, 'error');
-            }
-        }
-        
-        async function login() {
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            
-            showResult('Conectando...', 'success');
+            showMessage('<i class="fas fa-spinner fa-spin me-1"></i> Probando API...', 'info');
             
             try {
-                // Método 1: Intentar POST primero
-                const response = await fetch(API_URL + '?action=login', {
+                const response = await fetch(`${API_URL}?action=test`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(
+                        `<i class="fas fa-check-circle me-1"></i> ${result.message}<br>
+                        <small>Versión: ${result.version} • ${new Date(result.timestamp).toLocaleTimeString()}</small>`,
+                        'success',
+                        5000
+                    );
+                } else {
+                    showMessage(`<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`, 'danger');
+                }
+            } catch (error) {
+                showMessage(`<i class="fas fa-times-circle me-1"></i> Error: ${error.message}`, 'danger');
+            }
+        }
+        
+        // Inicializar base de datos
+        async function initDatabase() {
+            showMessage('<i class="fas fa-spinner fa-spin me-1"></i> Inicializando base de datos...', 'info');
+            updateDebugInfo('<i class="fas fa-spinner fa-spin me-1"></i> Inicializando...', 'info');
+            
+            try {
+                const response = await fetch(`${API_URL}?action=init`);
+                const result = await response.json();
+                
+                if (result.success) {
+                    showMessage(
+                        `<i class="fas fa-check-circle me-1"></i> ${result.message}<br>
+                        <small>Usuario: ${result.usuario_admin} / ${result.password_admin}</small>`,
+                        'success',
+                        5000
+                    );
+                    updateDebugInfo(
+                        `<i class="fas fa-check-circle me-1"></i> Base de datos lista`,
+                        'success'
+                    );
+                } else {
+                    showMessage(`<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`, 'danger');
+                    updateDebugInfo(
+                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
+                        'warning'
+                    );
+                }
+            } catch (error) {
+                showMessage(`<i class="fas fa-times-circle me-1"></i> Error: ${error.message}`, 'danger');
+                updateDebugInfo(
+                    `<i class="fas fa-times-circle me-1"></i> Error de conexión`,
+                    'danger'
+                );
+            }
+        }
+        
+        // Login
+        async function loginUser(email, password) {
+            btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Verificando...';
+            btnLogin.disabled = true;
+            
+            showMessage('<i class="fas fa-spinner fa-spin me-1"></i> Verificando credenciales...', 'info');
+            updateDebugInfo('<i class="fas fa-spinner fa-spin me-1"></i> Autenticando...', 'info');
+            
+            try {
+                // Usar POST para login
+                const response = await fetch(`${API_URL}?action=login`, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -85,53 +344,127 @@
                     body: JSON.stringify({ email, password })
                 });
                 
-                const data = await response.json();
-                console.log('Login POST result:', data);
-                
-                if (data.success) {
-                    showResult('✅ ' + data.message, 'success');
-                    localStorage.setItem('mrk_token', data.token);
-                    localStorage.setItem('mrk_user', JSON.stringify(data.user));
-                    
-                    // Redirigir
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1000);
-                } else {
-                    showResult('❌ ' + data.error, 'error');
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
                 }
                 
-            } catch (error) {
-                console.log('POST falló, intentando GET...');
+                const result = await response.json();
                 
-                // Método 2: Si POST falla, usar GET
-                try {
-                    const url = API_URL + '?action=login&email=' + encodeURIComponent(email) + '&password=' + encodeURIComponent(password);
-                    const response = await fetch(url);
-                    const data = await response.json();
+                if (result.success) {
+                    // Guardar datos de sesión
+                    localStorage.setItem('mrk_token', result.token);
+                    localStorage.setItem('mrk_user', JSON.stringify(result.user));
+                    localStorage.setItem('mrk_last_login', new Date().toISOString());
                     
-                    if (data.success) {
-                        showResult('✅ ' + data.message, 'success');
-                        localStorage.setItem('mrk_token', data.token);
-                        localStorage.setItem('mrk_user', JSON.stringify(data.user));
+                    showMessage(
+                        `<i class="fas fa-check-circle me-1"></i> ${result.message}<br>
+                        <small>Bienvenido, ${result.user.nombre}!</small>`,
+                        'success'
+                    );
+                    updateDebugInfo(
+                        `<i class="fas fa-check-circle me-1"></i> Autenticación exitosa`,
+                        'success'
+                    );
+                    
+                    // Redirigir al dashboard después de 1.5 segundos
+                    setTimeout(() => {
+                        window.location.href = 'index.html';
+                    }, 1500);
+                    
+                    return true;
+                } else {
+                    showMessage(
+                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
+                        'danger'
+                    );
+                    updateDebugInfo(
+                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
+                        'warning'
+                    );
+                    
+                    btnLogin.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión';
+                    btnLogin.disabled = false;
+                    return false;
+                }
+            } catch (error) {
+                console.error('Error en login:', error);
+                
+                // Intentar con GET si POST falla
+                try {
+                    console.log('Intentando login vía GET...');
+                    const getResponse = await fetch(
+                        `${API_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
+                    );
+                    
+                    const getResult = await getResponse.json();
+                    
+                    if (getResult.success) {
+                        localStorage.setItem('mrk_token', getResult.token);
+                        localStorage.setItem('mrk_user', JSON.stringify(getResult.user));
+                        
+                        showMessage(
+                            `<i class="fas fa-check-circle me-1"></i> ${getResult.message}`,
+                            'success'
+                        );
                         
                         setTimeout(() => {
                             window.location.href = 'index.html';
-                        }, 1000);
+                        }, 1500);
+                        
+                        return true;
                     } else {
-                        showResult('❌ ' + data.error, 'error');
+                        showMessage(
+                            `<i class="fas fa-exclamation-triangle me-1"></i> ${getResult.error}`,
+                            'danger'
+                        );
+                        
+                        btnLogin.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión';
+                        btnLogin.disabled = false;
+                        return false;
                     }
                 } catch (getError) {
-                    showResult('❌ Error completo: ' + getError.message, 'error');
+                    showMessage(
+                        `<i class="fas fa-times-circle me-1"></i> Error de conexión: ${getError.message}`,
+                        'danger'
+                    );
+                    updateDebugInfo(
+                        `<i class="fas fa-times-circle me-1"></i> Error de conexión`,
+                        'danger'
+                    );
+                    
+                    btnLogin.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión';
+                    btnLogin.disabled = false;
+                    return false;
                 }
             }
         }
         
-        // Auto-test al cargar
-        window.addEventListener('load', function() {
-            console.log('Cargando prueba automática...');
-            testAPI();
+        // Event Listeners
+        loginForm.addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            if (!email || !password) {
+                showMessage('<i class="fas fa-exclamation-triangle me-1"></i> Completa todos los campos', 'warning');
+                return;
+            }
+            
+            await loginUser(email, password);
         });
+        
+        // Auto-inicializar si es la primera vez
+        const isFirstVisit = !localStorage.getItem('mrk_db_initialized');
+        if (isFirstVisit) {
+            setTimeout(() => {
+                initDatabase();
+                localStorage.setItem('mrk_db_initialized', 'true');
+            }, 1000);
+        }
     </script>
+    
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
