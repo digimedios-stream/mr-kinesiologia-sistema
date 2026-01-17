@@ -252,50 +252,65 @@
         }
         
         // Login
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value;
-            const password = document.getElementById('password').value;
-            const btnLogin = document.getElementById('btnLogin');
-            const messageDiv = document.getElementById('message');
-            
-            btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
-            btnLogin.disabled = true;
-            messageDiv.innerHTML = '';
-            
-            try {
-                console.log('Enviando login a:', API_URL);
-                console.log('Datos:', { email, password });
-                
-                const response = await fetch(`${API_URL}?action=login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                console.log('Respuesta recibida, status:', response.status);
-                
-                const result = await response.json();
-                console.log('Resultado:', result);
-                
-                if (result.success) {
-                    // Guardar token y usuario
-                    localStorage.setItem('mrk_token', result.token);
-                    localStorage.setItem('mrk_user', JSON.stringify(result.user));
-                    
-                    messageDiv.innerHTML = `
-                        <div class="alert alert-success">
-                            <i class="fas fa-check-circle"></i> Login exitoso! Redirigiendo...
-                        </div>
-                    `;
-                    
-                    // Redirigir después de 1 segundo
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1000);
+       document.getElementById('loginForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const btn = e.target.querySelector('button');
+    
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Conectando...';
+    btn.disabled = true;
+    
+    // Usar JSONP para evitar CORS
+    const callbackName = 'jsonp_callback_' + Date.now();
+    const script = document.createElement('script');
+    
+    // Construir URL con callback
+    const url = `${API_URL}?action=login&callback=${callbackName}`;
+    
+    // Crear función global para la respuesta
+    window[callbackName] = function(response) {
+        delete window[callbackName];
+        document.body.removeChild(script);
+        
+        if (response.success) {
+            localStorage.setItem('mrk_token', response.token);
+            localStorage.setItem('mrk_user', JSON.stringify(response.user));
+            window.location.href = 'index.html';
+        } else {
+            document.getElementById('message').innerHTML = 
+                `<div class="alert alert-danger">${response.error}</div>`;
+            btn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Iniciar Sesión';
+            btn.disabled = false;
+        }
+    };
+    
+    // Enviar datos via POST usando un formulario
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    
+    const emailInput = document.createElement('input');
+    emailInput.type = 'hidden';
+    emailInput.name = 'email';
+    emailInput.value = email;
+    
+    const passInput = document.createElement('input');
+    passInput.type = 'hidden';
+    passInput.name = 'password';
+    passInput.value = password;
+    
+    form.appendChild(emailInput);
+    form.appendChild(passInput);
+    document.body.appendChild(form);
+    form.submit();
+    
+    // Limpiar
+    setTimeout(() => {
+        document.body.removeChild(form);
+    }, 1000);
+});
                     
                 } else {
                     messageDiv.innerHTML = `
