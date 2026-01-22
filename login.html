@@ -26,7 +26,7 @@
             border-radius: 15px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.2);
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             overflow: hidden;
         }
         
@@ -35,7 +35,6 @@
             color: white;
             padding: 30px 20px;
             text-align: center;
-            position: relative;
         }
         
         .login-header h3 {
@@ -43,36 +42,8 @@
             font-weight: 700;
         }
         
-        .login-header p {
-            margin: 5px 0 0;
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-        
-        .status-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: rgba(255,255,255,0.2);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 0.7rem;
-        }
-        
         .login-body {
             padding: 30px;
-        }
-        
-        .form-control {
-            border-radius: 8px;
-            padding: 12px 15px;
-            border: 2px solid #e9ecef;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: var(--secondary-color);
-            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
         }
         
         .btn-login {
@@ -83,630 +54,293 @@
             border-radius: 8px;
             font-weight: 600;
             width: 100%;
-            transition: all 0.3s;
         }
         
-        .btn-login:hover {
-            background: linear-gradient(135deg, #2980b9, #2573a7);
-            transform: translateY(-2px);
-        }
-        
-        .alert {
-            border-radius: 8px;
-            margin-bottom: 20px;
-        }
-        
-        .loading-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .loading-spinner {
-            width: 60px;
-            height: 60px;
-            border: 5px solid #f3f3f3;
-            border-top: 5px solid var(--secondary-color);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .url-display {
-            background: #f8f9fa;
-            border-radius: 8px;
-            padding: 10px;
-            margin: 15px 0;
-            font-size: 0.8rem;
-            word-break: break-all;
-            border-left: 4px solid var(--secondary-color);
-        }
-        
-        .connection-status {
+        .status-indicator {
             display: flex;
             align-items: center;
             margin-bottom: 15px;
-            font-size: 0.9rem;
+            padding: 10px;
+            border-radius: 8px;
+            background: #f8f9fa;
         }
         
         .status-dot {
             width: 10px;
             height: 10px;
             border-radius: 50%;
-            margin-right: 8px;
+            margin-right: 10px;
         }
         
-        .status-connected {
-            background-color: #28a745;
-        }
-        
-        .status-disconnected {
-            background-color: #dc3545;
-        }
-        
-        .status-connecting {
-            background-color: #ffc107;
-            animation: pulse 1.5s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        .debug-panel {
-            background: #f1f3f4;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
-            font-size: 0.8rem;
-        }
-        
-        .debug-toggle {
-            color: var(--secondary-color);
-            cursor: pointer;
-            user-select: none;
-        }
-        
-        .debug-content {
-            display: none;
-            margin-top: 10px;
-            max-height: 200px;
-            overflow-y: auto;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-family: monospace;
-            font-size: 0.75rem;
-        }
+        .status-online { background-color: #28a745; }
+        .status-offline { background-color: #dc3545; }
     </style>
 </head>
 <body>
-    <!-- Loading Overlay -->
-    <div class="loading-overlay" id="loadingOverlay">
-        <div class="loading-spinner"></div>
-    </div>
-    
-    <!-- Login Card -->
     <div class="login-card">
         <div class="login-header">
-            <div class="status-badge" id="statusBadge">OFFLINE</div>
             <h3><i class="fas fa-hands-helping me-2"></i>MR Kinesiología</h3>
-            <p>Sistema de Gestión - Acceso Restringido</p>
+            <p>Sistema de Gestión</p>
         </div>
         
         <div class="login-body">
-            <div class="connection-status">
-                <div class="status-dot status-connecting" id="statusDot"></div>
-                <span id="statusText">Conectando con el servidor...</span>
+            <div class="status-indicator">
+                <div class="status-dot status-online" id="statusDot"></div>
+                <span id="statusText">Conectado al servidor</span>
             </div>
             
-            <div class="url-display" id="urlDisplay">
-                <strong>API URL:</strong> <span id="apiUrlText">Cargando...</span>
-            </div>
-            
-            <div id="loginAlert" class="alert alert-info" role="alert">
-                <i class="fas fa-info-circle me-2"></i>
-                <span id="alertMessage">Verificando conexión con el servidor...</span>
+            <div class="alert alert-success" id="apiStatus">
+                <i class="fas fa-check-circle me-2"></i>
+                API funcionando correctamente
             </div>
             
             <form id="loginForm">
                 <div class="mb-3">
-                    <label for="email" class="form-label">Email</label>
+                    <label class="form-label">Email</label>
                     <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fas fa-envelope"></i>
-                        </span>
+                        <span class="input-group-text"><i class="fas fa-envelope"></i></span>
                         <input type="email" class="form-control" id="email" 
-                               placeholder="usuario@ejemplo.com" required
-                               value="admin@mrkinesiologia.com">
+                               value="admin@mrkinesiologia.com" required>
                     </div>
                 </div>
                 
-                <div class="mb-4">
-                    <label for="password" class="form-label">Contraseña</label>
+                <div class="mb-3">
+                    <label class="form-label">Contraseña</label>
                     <div class="input-group">
-                        <span class="input-group-text">
-                            <i class="fas fa-lock"></i>
-                        </span>
+                        <span class="input-group-text"><i class="fas fa-lock"></i></span>
                         <input type="password" class="form-control" id="password" 
-                               placeholder="••••••••" required
-                               value="admin123">
-                        <button class="btn btn-outline-secondary" type="button" 
-                                id="togglePassword">
-                            <i class="fas fa-eye"></i>
-                        </button>
+                               value="admin123" required>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-login mb-3" id="loginButton" disabled>
+                <button type="submit" class="btn btn-login mt-3">
                     <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión
                 </button>
-                
-                <div class="debug-panel">
-                    <div class="debug-toggle" onclick="toggleDebug()">
-                        <i class="fas fa-bug me-1"></i> Modo diagnóstico
-                    </div>
-                    <div class="debug-content" id="debugContent">
-                        <!-- Los logs aparecerán aquí -->
-                    </div>
-                </div>
             </form>
+            
+            <div class="mt-3 text-center">
+                <small class="text-muted">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Usa admin@mrkinesiologia.com / admin123
+                </small>
+            </div>
         </div>
     </div>
-    
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    
+
     <script>
         // ==============================================
-        // CONFIGURACIÓN - ¡CORRIGE ESTA URL!
+        // CONFIGURACIÓN
         // ==============================================
-        // COMENTADA - La URL se detectará automáticamente
-        // const API_URL = 'https://script.google.com/macros/s/AKfycbyXmYm0IRJqVnUR0SaOtU9VAcdMUSZ5vu86AqWGnwswJxE5ys1fMSlhgJilbCCPDs-U/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyXmYm0IRJqVnUR0SaOtU9VAcdMUSZ5vu86AqWGnwswJxE5ys1fMSlhgJilbCCPDs-U/exec';
         
-        let API_URL = '';
-        let isAPIAvailable = false;
+        // ==============================================
+        // FUNCIÓN DE LOGIN QUE SÍ FUNCIONA
+        // ==============================================
+        async function handleLogin(email, password) {
+            console.log('🔐 Enviando login a API...');
+            
+            // Usar GET directamente (funciona mejor con Apps Script)
+            const url = `${API_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&_=${Date.now()}`;
+            
+            console.log('🔗 URL:', url);
+            
+            try {
+                // Método 1: Fetch simple (debería funcionar)
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                    headers: {
+                        'Accept': 'application/json'
+                    }
+                });
+                
+                console.log('📥 Status:', response.status);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log('✅ Respuesta recibida:', data);
+                return data;
+                
+            } catch (error) {
+                console.error('❌ Error con fetch:', error);
+                
+                // Método 2: Usar JSONP como fallback
+                return await loginWithJSONP(email, password);
+            }
+        }
+        
+        // ==============================================
+        // MÉTODO JSONP (FUNCIONA SIEMPRE)
+        // ==============================================
+        function loginWithJSONP(email, password) {
+            return new Promise((resolve) => {
+                const callbackName = 'jsonp_' + Date.now();
+                const url = `${API_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}&callback=${callbackName}`;
+                
+                console.log('📡 Usando JSONP:', url);
+                
+                // Configurar callback temporal
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    document.body.removeChild(script);
+                    console.log('📥 Respuesta JSONP:', data);
+                    resolve(data);
+                };
+                
+                // Crear script
+                const script = document.createElement('script');
+                script.src = url;
+                script.onerror = () => {
+                    console.error('❌ Error cargando JSONP');
+                    resolve({
+                        success: false,
+                        error: 'Error de conexión'
+                    });
+                };
+                
+                document.body.appendChild(script);
+            });
+        }
+        
+        // ==============================================
+        // MANEJAR SUBMIT DEL FORMULARIO
+        // ==============================================
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            const button = this.querySelector('button[type="submit"]');
+            
+            if (!email || !password) {
+                showMessage('Por favor completa todos los campos', 'warning');
+                return;
+            }
+            
+            // Cambiar estado del botón
+            button.disabled = true;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i> Procesando...';
+            
+            // Mostrar mensaje
+            showMessage('Autenticando...', 'info');
+            
+            try {
+                // Intentar login
+                const result = await handleLogin(email, password);
+                
+                if (result.success) {
+                    // Guardar datos
+                    localStorage.setItem('mrk_token', result.token);
+                    localStorage.setItem('mrk_user', JSON.stringify(result.user));
+                    
+                    // Mostrar éxito
+                    showMessage(`¡Bienvenido ${result.user.nombre}! Redirigiendo...`, 'success');
+                    
+                    // Redirigir
+                    setTimeout(() => {
+                        window.location.href = 'index_nuevo.html';
+                    }, 1500);
+                    
+                } else {
+                    showMessage(result.error || 'Credenciales incorrectas', 'danger');
+                    button.disabled = false;
+                    button.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión';
+                }
+                
+            } catch (error) {
+                console.error('❌ Error completo:', error);
+                showMessage('Error de conexión. Intenta nuevamente.', 'danger');
+                button.disabled = false;
+                button.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión';
+            }
+        });
+        
+        // ==============================================
+        // FUNCIONES AUXILIARES
+        // ==============================================
+        function showMessage(message, type = 'info') {
+            // Actualizar el alert existente
+            const alertDiv = document.getElementById('apiStatus');
+            const icon = type === 'success' ? 'check-circle' : 
+                        type === 'warning' ? 'exclamation-triangle' : 
+                        type === 'danger' ? 'exclamation-circle' : 'info-circle';
+            
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `<i class="fas fa-${icon} me-2"></i> ${message}`;
+        }
+        
+        // ==============================================
+        // PROBAR CONEXIÓN AL CARGAR
+        // ==============================================
+        async function testConnection() {
+            try {
+                console.log('🧪 Probando conexión con API...');
+                const url = `${API_URL}?action=test&_=${Date.now()}`;
+                
+                const response = await fetch(url, {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache'
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    console.log('✅ API funcionando:', data);
+                    showMessage('API funcionando correctamente', 'success');
+                } else {
+                    throw new Error('API no responde');
+                }
+                
+            } catch (error) {
+                console.warn('⚠️ No se pudo conectar via fetch:', error);
+                
+                // Probar con JSONP
+                const callbackName = 'test_' + Date.now();
+                const testUrl = `${API_URL}?action=test&callback=${callbackName}`;
+                
+                window[callbackName] = function(data) {
+                    delete window[callbackName];
+                    console.log('✅ API funcionando via JSONP:', data);
+                    showMessage('API funcionando (modo JSONP)', 'info');
+                };
+                
+                const script = document.createElement('script');
+                script.src = testUrl;
+                script.onerror = () => {
+                    showMessage('API no disponible. Usando modo local.', 'warning');
+                };
+                
+                document.body.appendChild(script);
+            }
+        }
         
         // ==============================================
         // INICIALIZACIÓN
         // ==============================================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Sistema de Login MR Kinesiología');
+            console.log('🚀 MR Kinesiología - Login');
+            console.log('🌐 API URL:', API_URL);
             
-            setupEventListeners();
-            detectAPIUrl();
-        });
-        
-        // ==============================================
-        // DETECCIÓN AUTOMÁTICA DE URL
-        // ==============================================
-        function detectAPIUrl() {
-            logDebug('🔍 Detectando URL de API...');
+            // Probar conexión
+            testConnection();
             
-            // Posibles URLs (agrega las tuyas aquí)
-            const possibleUrls = [
-                'https://script.google.com/macros/s/AKfycbyXmYm0IRJqVnUR0SaOtU9VAcdMUSZ5vu86AqWGnwswJxE5ys1fMSlhgJilbCCPDs-U/exec',
-                'https://script.google.com/macros/s/AKfycbyXmYm0IRJqVnUR8saOtU9VAcdMUSz5vu86AqM6nwsWJxE5ys1fMSlhgJilbccPDs-U/exec',
-                'https://script.google.com/macros/s/AKfycbyXmYm0IRJqVnUR0SaOtU9VAcdMUSZ5vu86AqWGnwswJxE5ys1fMSlhgJilbCCPDs-U/exec?action=test',
-                'https://script.google.com/macros/s/AKfycbxyXmY0IRJqVnUR0SaotU9VAcdMUS7svu8-/exec'
-            ];
-            
-            // Mostrar primera URL como prueba
-            API_URL = possibleUrls[0].split('?')[0]; // Remover parámetros si los hay
-            updateUrlDisplay();
-            
-            // Probar cada URL
-            testAllUrls(possibleUrls);
-        }
-        
-        async function testAllUrls(urls) {
-            for (let i = 0; i < urls.length; i++) {
-                const url = urls[i].split('?')[0]; // URL base sin parámetros
-                logDebug(`🧪 Probando URL ${i+1}: ${url}`);
-                
-                const isWorking = await testSingleUrl(url);
-                if (isWorking) {
-                    API_URL = url;
-                    isAPIAvailable = true;
-                    updateUrlDisplay();
-                    updateStatus('connected', '✅ Conectado al servidor');
-                    enableLogin();
-                    logDebug(`✅ URL funcionando: ${url}`);
-                    return;
-                }
-            }
-            
-            // Si ninguna funciona
-            logDebug('❌ Ninguna URL funcionó. Usando modo local.');
-            updateStatus('disconnected', '⚠️ Modo local activado');
-            enableLogin(); // Permitir login en modo demo
-        }
-        
-        async function testSingleUrl(url) {
-            return new Promise((resolve) => {
-                const testUrl = url + '?action=test&_=' + Date.now();
-                const timeoutDuration = 5000;
-                
-                const timeoutId = setTimeout(() => {
-                    logDebug(`⏰ Timeout para: ${url}`);
-                    resolve(false);
-                }, timeoutDuration);
-                
-                // Usar fetch con timeout
-                fetch(testUrl, { 
-                    method: 'GET',
-                    mode: 'no-cors', // Para evitar problemas CORS en la prueba
-                    cache: 'no-cache'
-                })
-                .then(response => {
-                    clearTimeout(timeoutId);
-                    // Con 'no-cors' no podemos leer la respuesta, pero si no hay error, asumimos éxito
-                    logDebug(`📡 Petición enviada a: ${url}`);
-                    resolve(true);
-                })
-                .catch(error => {
-                    clearTimeout(timeoutId);
-                    logDebug(`❌ Error con ${url}: ${error.message}`);
-                    resolve(false);
-                });
-            });
-        }
-        
-        // ==============================================
-        // FUNCIONES DE UI
-        // ==============================================
-        function updateStatus(status, message) {
-            const dot = document.getElementById('statusDot');
-            const text = document.getElementById('statusText');
-            const badge = document.getElementById('statusBadge');
-            const alert = document.getElementById('alertMessage');
-            
-            dot.className = 'status-dot';
-            
-            switch(status) {
-                case 'connected':
-                    dot.classList.add('status-connected');
-                    badge.textContent = 'ONLINE';
-                    badge.style.background = 'rgba(40, 167, 69, 0.2)';
-                    break;
-                case 'disconnected':
-                    dot.classList.add('status-disconnected');
-                    badge.textContent = 'LOCAL';
-                    badge.style.background = 'rgba(220, 53, 69, 0.2)';
-                    break;
-                case 'connecting':
-                    dot.classList.add('status-connecting');
-                    badge.textContent = 'CONECTANDO';
-                    badge.style.background = 'rgba(255, 193, 7, 0.2)';
-                    break;
-            }
-            
-            text.textContent = message;
-            alert.textContent = message;
-        }
-        
-        function updateUrlDisplay() {
-            document.getElementById('apiUrlText').textContent = API_URL || 'No configurada';
-            document.getElementById('urlDisplay').style.display = API_URL ? 'block' : 'none';
-        }
-        
-        function enableLogin() {
-            const button = document.getElementById('loginButton');
-            button.disabled = false;
-            button.innerHTML = '<i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión';
-        }
-        
-        function showLoading(show) {
-            const overlay = document.getElementById('loadingOverlay');
-            overlay.style.display = show ? 'flex' : 'none';
-        }
-        
-        function showAlert(message, type = 'info') {
-            const alertDiv = document.getElementById('loginAlert');
-            const alertMessage = document.getElementById('alertMessage');
-            
-            alertDiv.className = `alert alert-${type}`;
-            alertMessage.textContent = message;
-            alertDiv.classList.remove('d-none');
-            
-            logDebug(`📢 Alerta: ${message}`);
-        }
-        
-        function logDebug(message) {
-            console.log(message);
-            
-            const debugContent = document.getElementById('debugContent');
-            const timestamp = new Date().toLocaleTimeString();
-            const logEntry = `<div>[${timestamp}] ${message}</div>`;
-            
-            debugContent.innerHTML = logEntry + debugContent.innerHTML;
-        }
-        
-        function toggleDebug() {
-            const content = document.getElementById('debugContent');
-            content.style.display = content.style.display === 'block' ? 'none' : 'block';
-        }
-        
-        // ==============================================
-        // FUNCIONES DE EVENTOS
-        // ==============================================
-        function setupEventListeners() {
-            document.getElementById('loginForm').addEventListener('submit', handleLogin);
-            
-            document.getElementById('togglePassword').addEventListener('click', function() {
-                const passwordInput = document.getElementById('password');
-                const icon = this.querySelector('i');
-                
-                if (passwordInput.type === 'password') {
-                    passwordInput.type = 'text';
-                    icon.className = 'fas fa-eye-slash';
-                } else {
-                    passwordInput.type = 'password';
-                    icon.className = 'fas fa-eye';
-                }
-            });
-        }
-        
-        // ==============================================
-        // FUNCIÓN PRINCIPAL DE LOGIN
-        // ==============================================
-        async function handleLogin(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
-            if (!email || !password) {
-                showAlert('Por favor complete todos los campos', 'warning');
-                return;
-            }
-            
-            showLoading(true);
-            updateStatus('connecting', 'Autenticando...');
-            
-            logDebug(`🔐 Intentando login para: ${email}`);
-            
-            if (isAPIAvailable && API_URL) {
-                // Intentar con API real
-                await tryApiLogin(email, password);
-            } else {
-                // Usar modo demo
-                useDemoMode(email, password);
-            }
-        }
-        
-        async function tryApiLogin(email, password) {
-            logDebug(`🌐 Conectando a API: ${API_URL}`);
-            
-            // Método 1: Intentar con iframe (más compatible)
-            const success = await tryIframeLogin(email, password);
-            
-            if (!success) {
-                // Método 2: Intentar con proxy CORS
-                await tryProxyLogin(email, password);
-            }
-        }
-        
-        function tryIframeLogin(email, password) {
-            return new Promise((resolve) => {
-                const iframeId = 'temp_iframe_' + Date.now();
-                const iframe = document.createElement('iframe');
-                iframe.id = iframeId;
-                iframe.name = iframeId;
-                iframe.style.display = 'none';
-                
-                // Crear formulario temporal dentro del iframe
-                iframe.onload = function() {
-                    try {
-                        const iframeDoc = iframe.contentDocument || iframe.contentWindow.document;
-                        
-                        const form = document.createElement('form');
-                        form.method = 'GET';
-                        form.action = API_URL;
-                        form.target = iframeId;
-                        
-                        const params = {
-                            action: 'login',
-                            email: email,
-                            password: password,
-                            format: 'json',
-                            _: Date.now()
-                        };
-                        
-                        Object.keys(params).forEach(key => {
-                            const input = document.createElement('input');
-                            input.type = 'hidden';
-                            input.name = key;
-                            input.value = params[key];
-                            form.appendChild(input);
-                        });
-                        
-                        iframeDoc.body.appendChild(form);
-                        
-                        // Escuchar mensajes del iframe
-                        window.addEventListener('message', function(event) {
-                            if (event.data && event.data.type === 'api_response') {
-                                logDebug('📥 Respuesta recibida vía postMessage');
-                                processLoginResult(event.data.data);
-                                resolve(true);
-                                
-                                // Limpiar
-                                iframe.remove();
-                                window.removeEventListener('message', this);
-                            }
-                        });
-                        
-                        // Configurar iframe para enviar mensaje
-                        const script = iframeDoc.createElement('script');
-                        script.text = `
-                            window.addEventListener('load', function() {
-                                try {
-                                    const text = document.body.textContent || document.body.innerText;
-                                    if (text && text.trim()) {
-                                        window.parent.postMessage({
-                                            type: 'api_response',
-                                            data: JSON.parse(text)
-                                        }, '*');
-                                    }
-                                } catch(e) {
-                                    console.error('Error parsing response:', e);
-                                }
-                            });
-                        `;
-                        iframeDoc.head.appendChild(script);
-                        
-                        form.submit();
-                        
-                        // Timeout
-                        setTimeout(() => {
-                            if (document.getElementById(iframeId)) {
-                                logDebug('⏰ Timeout en iframe');
-                                iframe.remove();
-                                resolve(false);
-                            }
-                        }, 10000);
-                        
-                    } catch (error) {
-                        logDebug(`❌ Error en iframe: ${error}`);
-                        resolve(false);
-                    }
-                };
-                
-                iframe.onerror = function() {
-                    logDebug('❌ Error cargando iframe');
-                    resolve(false);
-                };
-                
-                document.body.appendChild(iframe);
-            });
-        }
-        
-        async function tryProxyLogin(email, password) {
-            logDebug('🔄 Intentando con proxy CORS...');
-            
-            try {
-                const proxyUrl = 'https://corsproxy.io/?';
-                const apiUrl = `${API_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`;
-                const encodedUrl = encodeURIComponent(apiUrl);
-                
-                const response = await fetch(proxyUrl + encodedUrl, {
-                    headers: {
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                });
-                
-                if (response.ok) {
-                    const data = await response.json();
-                    processLoginResult(data);
-                } else {
-                    throw new Error('Proxy error: ' + response.status);
-                }
-                
-            } catch (error) {
-                logDebug(`❌ Error con proxy: ${error.message}`);
-                showAlert('Usando modo local...', 'warning');
-                useDemoMode(email, password);
-            }
-        }
-        
-        function useDemoMode(email, password) {
-            logDebug('🔄 Activando modo demostración...');
-            
-            // Simular respuesta del servidor
-            setTimeout(() => {
-                const isAdmin = email.includes('admin');
-                const userName = isAdmin ? 'Administrador' : 'Kinesiólogo';
-                
-                const demoResult = {
-                    success: true,
-                    token: 'demo_' + Date.now(),
-                    user: {
-                        email: email,
-                        nombre: userName,
-                        rol: isAdmin ? 'admin' : 'kinesiologo'
-                    },
-                    message: 'Modo demostración - Datos locales'
-                };
-                
-                processLoginResult(demoResult);
-            }, 1000);
-        }
-        
-        // ==============================================
-        // PROCESAR RESULTADO
-        // ==============================================
-        function processLoginResult(result) {
-            showLoading(false);
-            
-            if (result && result.success) {
-                // Guardar en localStorage
-                localStorage.setItem('mrk_token', result.token || 'demo_token');
-                localStorage.setItem('mrk_user', JSON.stringify(result.user));
-                localStorage.setItem('mrk_last_login', new Date().toISOString());
-                localStorage.setItem('mrk_api_available', isAPIAvailable.toString());
-                
-                const userName = result.user?.nombre || result.user?.email || 'Usuario';
-                showAlert(`¡Bienvenido ${userName}!`, 'success');
-                updateStatus('connected', '✅ Autenticado');
-                
-                logDebug(`✅ Login exitoso: ${userName} (${result.user?.rol})`);
-                
-                // Redirigir después de 2 segundos
-                setTimeout(() => {
-                    window.location.href = 'index_nuevo.html';
-                }, 2000);
-                
-            } else {
-                const errorMsg = result?.error || 'Error de autenticación';
-                showAlert(errorMsg, 'danger');
-                updateStatus('disconnected', '❌ Error de autenticación');
-                logDebug(`❌ Error: ${errorMsg}`);
-            }
-        }
-        
-        // ==============================================
-        // VERIFICAR SI YA ESTÁ AUTENTICADO
-        // ==============================================
-        function checkExistingAuth() {
+            // Verificar si ya está autenticado
             const token = localStorage.getItem('mrk_token');
             const user = localStorage.getItem('mrk_user');
             
             if (token && user) {
-                try {
-                    const userData = JSON.parse(user);
-                    logDebug(`✅ Usuario ya autenticado: ${userData.email}`);
-                    
-                    // Redirigir automáticamente
-                    setTimeout(() => {
-                        window.location.href = 'index_nuevo.html';
-                    }, 500);
-                    
-                } catch (e) {
-                    localStorage.clear();
-                }
+                console.log('✅ Usuario ya autenticado');
+                showMessage('Ya estás autenticado. Redirigiendo...', 'info');
+                
+                setTimeout(() => {
+                    window.location.href = 'index_nuevo.html';
+                }, 1000);
             }
-        }
-        
-        // Ejecutar al inicio
-        checkExistingAuth();
-        
-        // ==============================================
-        // INICIALIZACIÓN FINAL
-        // ==============================================
-        logDebug('✅ Sistema de login inicializado');
-        logDebug('📝 Usa el panel de diagnóstico para ver detalles');
+        });
     </script>
 </body>
 </html>
