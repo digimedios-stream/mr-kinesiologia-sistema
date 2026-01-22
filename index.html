@@ -397,6 +397,459 @@
             margin-bottom: 15px;
             opacity: 0.3;
         }
+        
+        /* ============================================= */
+        /* ESTILOS PARA CALENDARIO */
+        /* ============================================= */
+
+        .calendar-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .calendar-header {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+
+        .calendar-day-header {
+            padding: 10px;
+            font-weight: 600;
+            color: var(--primary-color);
+            background-color: rgba(52, 152, 219, 0.1);
+            border-radius: 8px;
+        }
+
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 5px;
+        }
+
+        .calendar-day {
+            min-height: 120px;
+            padding: 10px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            background-color: white;
+            transition: all 0.3s;
+        }
+
+        .calendar-day:hover {
+            background-color: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+
+        .calendar-day.today {
+            background-color: rgba(52, 152, 219, 0.1);
+            border-color: var(--secondary-color);
+        }
+
+        .calendar-day.weekend {
+            background-color: rgba(243, 156, 18, 0.05);
+        }
+
+        .calendar-day.empty {
+            background-color: #f8f9fa;
+            border: 1px dashed #dee2e6;
+        }
+
+        .calendar-day-number {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+
+        .calendar-day.today .calendar-day-number {
+            color: var(--secondary-color);
+            font-weight: 700;
+        }
+
+        .calendar-events {
+            max-height: 80px;
+            overflow-y: auto;
+        }
+
+        .calendar-event {
+            padding: 3px 6px;
+            margin-bottom: 3px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .calendar-event:hover {
+            transform: translateX(2px);
+        }
+
+        .calendar-event.success {
+            background-color: rgba(39, 174, 96, 0.1);
+            color: #27ae60;
+            border-left: 3px solid #27ae60;
+        }
+
+        .calendar-event.warning {
+            background-color: rgba(243, 156, 18, 0.1);
+            color: #f39c12;
+            border-left: 3px solid #f39c12;
+        }
+
+        .calendar-event.danger {
+            background-color: rgba(231, 76, 60, 0.1);
+            color: #e74c3c;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .calendar-event.info {
+            background-color: rgba(52, 152, 219, 0.1);
+            color: var(--secondary-color);
+            border-left: 3px solid var(--secondary-color);
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA NOTIFICACIONES */
+        /* ============================================= */
+
+        .toast {
+            min-width: 300px;
+            max-width: 350px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+
+        .toast-header {
+            border-bottom: none;
+            border-radius: 10px 10px 0 0 !important;
+        }
+
+        .toast-body {
+            padding: 15px;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA FORMULARIOS MEJORADOS */
+        /* ============================================= */
+
+        .card.border-primary {
+            border-width: 2px;
+        }
+
+        .card.border-warning {
+            border-width: 2px;
+        }
+
+        .input-group-text.bg-light {
+            background-color: #f8f9fa !important;
+        }
+
+        /* ============================================= */
+        /* MEJORAS RESPONSIVAS */
+        /* ============================================= */
+
+        @media (max-width: 768px) {
+            .calendar-day {
+                min-height: 80px;
+                padding: 5px;
+            }
+            
+            .calendar-day-number {
+                font-size: 0.9rem;
+            }
+            
+            .calendar-event {
+                font-size: 0.7rem;
+                padding: 2px 4px;
+            }
+            
+            .toast {
+                min-width: 250px;
+                max-width: 280px;
+                margin: 0 auto 10px;
+            }
+
+            .calendar-container {
+                padding: 10px;
+            }
+
+            .calendar-grid,
+            .calendar-header {
+                gap: 2px;
+            }
+
+            .calendar-day-header {
+                padding: 8px 5px;
+                font-size: 0.85rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .calendar-day {
+                min-height: 60px;
+            }
+            
+            .calendar-day-number {
+                font-size: 0.8rem;
+                text-align: center;
+                margin-bottom: 2px;
+            }
+            
+            .calendar-events {
+                max-height: 45px;
+            }
+            
+            .calendar-event {
+                font-size: 0.65rem;
+                margin-bottom: 1px;
+                padding: 1px 3px;
+            }
+            
+            .toast {
+                min-width: 90vw;
+                max-width: 95vw;
+                margin: 5px auto;
+            }
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA SCROLLBAR PERSONALIZADO */
+        /* ============================================= */
+        
+        .calendar-events::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        .calendar-events::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 2px;
+        }
+        
+        .calendar-events::-webkit-scrollbar-thumb {
+            background: #c1c1c1;
+            border-radius: 2px;
+        }
+        
+        .calendar-events::-webkit-scrollbar-thumb:hover {
+            background: #a8a8a8;
+        }
+
+        /* ============================================= */
+        /* ANIMACIONES Y EFECTOS */
+        /* ============================================= */
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .calendar-day {
+            animation: fadeIn 0.3s ease-out forwards;
+            animation-delay: calc(var(--day-index, 0) * 0.02s);
+        }
+        
+        .calendar-event {
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA ESTADOS ACTIVOS/SELECCIONADOS */
+        /* ============================================= */
+        
+        .calendar-day.selected {
+            background-color: rgba(155, 89, 182, 0.1);
+            border-color: #9b59b6;
+            box-shadow: 0 0 0 2px rgba(155, 89, 182, 0.2);
+        }
+        
+        .calendar-day.has-event {
+            border-bottom: 3px solid var(--secondary-color);
+        }
+        
+        .calendar-day.other-month {
+            opacity: 0.6;
+            background-color: #f8f9fa;
+        }
+        
+        .calendar-day.disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+            background-color: #e9ecef;
+        }
+        
+        .calendar-day.disabled:hover {
+            transform: none;
+            background-color: #e9ecef;
+            box-shadow: none;
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA CABECERA DE CALENDARIO (MES/AÑO) */
+        /* ============================================= */
+        
+        .calendar-month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            color: white;
+        }
+        
+        .calendar-month-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin: 0;
+        }
+        
+        .calendar-nav-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+        
+        .calendar-nav-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .calendar-nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA VISTA DE LISTA DE EVENTOS */
+        /* ============================================= */
+        
+        .event-list-item {
+            padding: 12px 15px;
+            border-left: 4px solid;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            background: white;
+            transition: all 0.3s;
+        }
+        
+        .event-list-item:hover {
+            transform: translateX(5px);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .event-time {
+            font-size: 0.85rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+        
+        .event-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--primary-color);
+        }
+        
+        .event-description {
+            font-size: 0.9rem;
+            color: #495057;
+            margin-bottom: 0;
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA TOOLTIPS Y POPOVERS */
+        /* ============================================= */
+        
+        .calendar-event-tooltip {
+            position: absolute;
+            z-index: 1000;
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            min-width: 250px;
+            max-width: 300px;
+            display: none;
+        }
+        
+        .calendar-event-tooltip.show {
+            display: block;
+            animation: fadeIn 0.2s ease-out;
+        }
+        
+        .tooltip-event-title {
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+            font-size: 1rem;
+        }
+        
+        .tooltip-event-details {
+            font-size: 0.85rem;
+            color: #6c757d;
+            line-height: 1.4;
+        }
+
+        /* ============================================= */
+        /* ESTILOS PARA CARGA Y ESTADOS VACÍOS */
+        /* ============================================= */
+        
+        .calendar-loading {
+            position: relative;
+            min-height: 400px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .calendar-loading::after {
+            content: '';
+            width: 40px;
+            height: 40px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            color: #dee2e6;
+            margin-bottom: 15px;
+        }
+        
+        .empty-state-text {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .empty-state-subtext {
+            font-size: 0.9rem;
+            color: #adb5bd;
+        }
     </style>
 </head>
 <body>
@@ -425,6 +878,11 @@
         <div class="nav-container">
             <nav>
                 <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" data-section="calendario">
+                            <i class="fas fa-calendar-alt"></i> Calendario
+                        </a>
+                    </li>
                     <li class="nav-item">
                         <a class="nav-link active" href="#" data-section="dashboard">
                             <i class="fas fa-tachometer-alt"></i> Dashboard
@@ -816,6 +1274,130 @@
             </div>
         </div>
         
+        <!-- Calendario Section (hidden by default) -->
+        <div class="section-content" id="calendario-section" style="display: none;">
+            <div class="table-container">
+                <div class="section-header">
+                    <h5 class="section-title"><i class="fas fa-calendar-alt me-2"></i>Calendario de Sesiones</h5>
+                    <div class="d-flex gap-2">
+                        <button class="btn btn-mrk" onclick="cargarCalendario('mes')">
+                            <i class="fas fa-calendar me-1"></i> Vista Mensual
+                        </button>
+                        <button class="btn btn-outline-secondary" onclick="cargarCalendario('semana')">
+                            <i class="fas fa-calendar-week me-1"></i> Vista Semanal
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Controles del calendario -->
+                <div class="row mb-4">
+                    <div class="col-md-8">
+                        <div class="d-flex align-items-center gap-3">
+                            <button class="btn btn-outline-secondary" onclick="cambiarMesCalendario(-1)">
+                                <i class="fas fa-chevron-left"></i>
+                            </button>
+                            <h4 class="mb-0" id="tituloCalendario">Marzo 2024</h4>
+                            <button class="btn btn-outline-secondary" onclick="cambiarMesCalendario(1)">
+                                <i class="fas fa-chevron-right"></i>
+                            </button>
+                            <button class="btn btn-outline-primary ms-3" onclick="irAHoy()">
+                                <i class="fas fa-calendar-day me-1"></i> Hoy
+                            </button>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text bg-light">
+                                <i class="fas fa-filter"></i>
+                            </span>
+                            <select class="form-select" id="filtroCalendario" onchange="filtrarCalendario()">
+                                <option value="todas">Todas las sesiones</option>
+                                <option value="pendientes">Solo pendientes</option>
+                                <option value="realizadas">Solo realizadas</option>
+                                <option value="hoy">Solo hoy</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Calendario -->
+                <div class="calendar-container mb-4">
+                    <!-- Encabezados de días -->
+                    <div class="calendar-header">
+                        <div class="calendar-day-header">Dom</div>
+                        <div class="calendar-day-header">Lun</div>
+                        <div class="calendar-day-header">Mar</div>
+                        <div class="calendar-day-header">Mié</div>
+                        <div class="calendar-day-header">Jue</div>
+                        <div class="calendar-day-header">Vie</div>
+                        <div class="calendar-day-header">Sáb</div>
+                    </div>
+                    
+                    <!-- Días del mes -->
+                    <div class="calendar-grid" id="calendarioGrid">
+                        <div class="text-center py-5 text-muted">
+                            <i class="fas fa-spinner fa-spin fa-2x"></i>
+                            <p class="mt-2">Cargando calendario...</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Leyenda y Resumen -->
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Leyenda</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-6 mb-2">
+                                        <span class="badge bg-success me-2">●</span>
+                                        <small>Sesión realizada</small>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <span class="badge bg-warning me-2">●</span>
+                                        <small>Sesión pendiente</small>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <span class="badge bg-danger me-2">●</span>
+                                        <small>Sesión cancelada</small>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <span class="badge bg-info me-2">●</span>
+                                        <small>Sesión de hoy</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="card">
+                            <div class="card-header bg-light">
+                                <h6 class="mb-0">Resumen del Mes</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-4 text-center">
+                                        <h4 class="text-success" id="totalRealizadas">0</h4>
+                                        <small>Realizadas</small>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h4 class="text-warning" id="totalPendientes">0</h4>
+                                        <small>Pendientes</small>
+                                    </div>
+                                    <div class="col-4 text-center">
+                                        <h4 class="text-primary" id="totalIngresos">$0</h4>
+                                        <small>Ingresos</small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
         <!-- Configuración Section (hidden by default) -->
         <div class="section-content" id="configuracion-section" style="display: none;">
             <div class="table-container">
@@ -897,7 +1479,497 @@
         </div>
     </div>
     
-    <!-- Modals will be added here in the next message -->
+    <!-- ============================================= -->
+    <!-- MODALES DEL SISTEMA -->
+    <!-- ============================================= -->
+    
+    <!-- Modal Nuevo Paciente -->
+    <div class="modal fade" id="nuevoPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Nuevo Paciente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevoPaciente">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Nombre *</label>
+                                <input type="text" class="form-control" name="nombre" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Apellido *</label>
+                                <input type="text" class="form-control" name="apellido" required>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">DNI *</label>
+                                <input type="text" class="form-control" name="dni" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Fecha de Nacimiento</label>
+                                <input type="date" class="form-control" name="fecha_nacimiento">
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Teléfono *</label>
+                                <input type="tel" class="form-control" name="telefono" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Email</label>
+                                <input type="email" class="form-control" name="email">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Dirección</label>
+                            <input type="text" class="form-control" name="direccion">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Obra Social</label>
+                                <select class="form-select" name="obra_social" id="selectObraSocial">
+                                    <option value="">Seleccionar obra social</option>
+                                    <option value="OSDE">OSDE</option>
+                                    <option value="Swiss Medical">Swiss Medical</option>
+                                    <option value="Galeno">Galeno</option>
+                                    <option value="Particular">Particular</option>
+                                    <option value="Otra">Otra</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">N° Afiliado</label>
+                                <input type="text" class="form-control" name="nro_afiliado">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observaciones</label>
+                            <textarea class="form-control" name="observaciones" rows="3" placeholder="Información adicional del paciente..."></textarea>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle me-1"></i> Los campos marcados con * son obligatorios</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="guardarPaciente()">Guardar Paciente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Nueva Sesión / Plan de Tratamiento -->
+    <div class="modal fade" id="nuevaSesionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-calendar-plus me-2"></i>Nuevo Plan de Tratamiento</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevaSesion">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Paciente *</label>
+                                <select class="form-select" name="paciente_id" id="selectPacienteSesion" required onchange="actualizarInfoPaciente()">
+                                    <option value="">Seleccionar paciente</option>
+                                    <!-- Se llenará dinámicamente -->
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Información del Paciente</label>
+                                <div class="card bg-light">
+                                    <div class="card-body p-3">
+                                        <div id="infoPaciente" class="small">
+                                            <span class="text-muted">Seleccione un paciente para ver su información</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Fecha Inicio *</label>
+                                <input type="date" class="form-control" name="fecha_inicio" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Hora *</label>
+                                <input type="time" class="form-control" name="hora" required>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label class="form-label fw-bold">Frecuencia</label>
+                                <select class="form-select" name="frecuencia">
+                                    <option value="diaria">Diaria</option>
+                                    <option value="alternada" selected>Día por medio</option>
+                                    <option value="semanal">Semanal</option>
+                                    <option value="personalizada">Personalizada</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- SISTEMA DE SESIONES MÚLTIPLES -->
+                        <div class="card mb-3 border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <h6 class="mb-0"><i class="fas fa-layer-group me-2"></i>Plan de Sesiones</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Sesiones Totales *</label>
+                                        <div class="input-group">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="cambiarSesiones(-1)">-</button>
+                                            <input type="number" class="form-control text-center" name="sesiones_totales" id="sesionesTotales" 
+                                                   min="1" max="30" value="1" required>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="cambiarSesiones(1)">+</button>
+                                            <span class="input-group-text">sesiones</span>
+                                        </div>
+                                        <small class="text-muted">Cantidad total de sesiones del tratamiento</small>
+                                    </div>
+                                    
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Sesiones Realizadas</label>
+                                        <div class="input-group">
+                                            <button type="button" class="btn btn-outline-secondary" onclick="cambiarSesionesRealizadas(-1)">-</button>
+                                            <input type="number" class="form-control text-center" name="sesiones_realizadas" 
+                                                   id="sesionesRealizadas" min="0" max="30" value="0" required>
+                                            <button type="button" class="btn btn-outline-secondary" onclick="cambiarSesionesRealizadas(1)">+</button>
+                                            <span class="input-group-text">sesiones</span>
+                                        </div>
+                                        <small class="text-muted">Sesiones ya realizadas (iniciar en 0)</small>
+                                    </div>
+                                </div>
+                                
+                                <div class="progress mb-3" style="height: 25px;">
+                                    <div class="progress-bar bg-success" id="progresoSesiones" role="progressbar" 
+                                         style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">
+                                        0%
+                                    </div>
+                                </div>
+                                <div class="text-center small text-muted" id="contadorSesiones">
+                                    0 de 1 sesiones realizadas
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- SISTEMA DE COSTOS CON PLUS -->
+                        <div class="card mb-3 border-warning">
+                            <div class="card-header bg-warning text-dark">
+                                <h6 class="mb-0"><i class="fas fa-dollar-sign me-2"></i>Información de Costos</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Costo Base por Sesión *</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">$</span>
+                                            <input type="number" class="form-control" name="costo_base" id="costoBase" 
+                                                   min="0" step="100" value="1500" required>
+                                            <span class="input-group-text">ARS</span>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Plus Obra Social</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">+ $</span>
+                                            <input type="number" class="form-control" name="plus_obra_social" id="plusObraSocial" 
+                                                   value="0" readonly>
+                                            <span class="input-group-text bg-light">ARS</span>
+                                        </div>
+                                        <small class="text-muted" id="nombreObraSocial">Sin obra social</small>
+                                    </div>
+                                    
+                                    <div class="col-md-4 mb-3">
+                                        <label class="form-label fw-bold">Costo Total por Sesión</label>
+                                        <div class="input-group">
+                                            <span class="input-group-text">= $</span>
+                                            <input type="number" class="form-control" name="costo_sesion" id="costoSesion" 
+                                                   value="1500" readonly>
+                                            <span class="input-group-text bg-success text-white">ARS</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <h6 class="card-title">Costo Total del Tratamiento</h6>
+                                                <h3 class="text-success" id="costoTotalTratamiento">$1,500</h3>
+                                                <small class="text-muted">Costo por sesión × Sesiones totales</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="card bg-light">
+                                            <div class="card-body text-center">
+                                                <h6 class="card-title">Saldo Pendiente</h6>
+                                                <h3 class="text-warning" id="saldoPendiente">$1,500</h3>
+                                                <small class="text-muted">Costo total - Sesiones realizadas</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Tratamiento *</label>
+                                <select class="form-select" name="tratamiento" required>
+                                    <option value="">Seleccionar tratamiento</option>
+                                    <option value="Rehabilitación">Rehabilitación</option>
+                                    <option value="Masoterapia">Masoterapia</option>
+                                    <option value="Electroterapia">Electroterapia</option>
+                                    <option value="Kinesiología">Kinesiología</option>
+                                    <option value="Fisioterapia">Fisioterapia</option>
+                                    <option value="Terapia Manual">Terapia Manual</option>
+                                    <option value="Punción Seca">Punción Seca</option>
+                                    <option value="Vendaje Neuromuscular">Vendaje Neuromuscular</option>
+                                </select>
+                            </div>
+                            
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Duración por Sesión</label>
+                                <select class="form-select" name="duracion">
+                                    <option value="30">30 minutos</option>
+                                    <option value="45" selected>45 minutos</option>
+                                    <option value="60">60 minutos</option>
+                                    <option value="90">90 minutos</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observaciones del Tratamiento</label>
+                            <textarea class="form-control" name="observaciones" rows="3" placeholder="Detalles del plan de tratamiento, objetivos, etc..."></textarea>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-success" onclick="guardarPlanTratamiento()">Guardar Plan de Tratamiento</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Nueva Obra Social con PLUS -->
+    <div class="modal fade" id="nuevaObraSocialModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title"><i class="fas fa-hospital-plus me-2"></i>Nueva Obra Social</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevaObraSocial">
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Nombre *</label>
+                            <input type="text" class="form-control" name="nombre" required placeholder="Ej: OSDE, Swiss Medical, etc.">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Código</label>
+                                <input type="text" class="form-control" name="codigo" placeholder="Ej: OSDE-310">
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Teléfono</label>
+                                <input type="tel" class="form-control" name="telefono" placeholder="Ej: 0800-555-1234">
+                            </div>
+                        </div>
+                        
+                        <!-- NUEVO CAMPO: PLUS DE OBRA SOCIAL -->
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">
+                                <i class="fas fa-plus-circle me-1"></i> Plus de Obra Social (ARS)
+                            </label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" name="plus" min="0" step="100" value="0" placeholder="Monto adicional por sesión">
+                                <span class="input-group-text">.00</span>
+                            </div>
+                            <small class="text-muted">Este monto se sumará al costo base de cada sesión</small>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Email</label>
+                            <input type="email" class="form-control" name="email" placeholder="contacto@obrasocial.com">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Dirección</label>
+                            <input type="text" class="form-control" name="direccion" placeholder="Dirección de la obra social">
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Observaciones</label>
+                            <textarea class="form-control" name="observaciones" rows="2" placeholder="Información adicional..."></textarea>
+                        </div>
+                        
+                        <div class="alert alert-info">
+                            <small><i class="fas fa-info-circle me-1"></i> El "Plus" es un monto adicional que se cobra por sesión según la obra social.</small>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-warning" onclick="guardarObraSocial()">Guardar Obra Social</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Ver Paciente -->
+    <div class="modal fade" id="verPacienteModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header bg-info text-white">
+                    <h5 class="modal-title"><i class="fas fa-user me-2"></i>Detalles del Paciente</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-4 text-center mb-4">
+                            <div class="avatar-large">
+                                <i class="fas fa-user-circle fa-6x text-info"></i>
+                            </div>
+                            <h4 class="mt-3" id="pacienteNombreCompleto">-</h4>
+                            <span class="badge bg-primary" id="pacienteID">ID: -</span>
+                        </div>
+                        <div class="col-md-8">
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">DNI</label>
+                                    <p class="form-control-static" id="pacienteDNI">-</p>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Fecha Nacimiento</label>
+                                    <p class="form-control-static" id="pacienteNacimiento">-</p>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Teléfono</label>
+                                    <p class="form-control-static" id="pacienteTelefono">-</p>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Email</label>
+                                    <p class="form-control-static" id="pacienteEmail">-</p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Dirección</label>
+                                <p class="form-control-static" id="pacienteDireccion">-</p>
+                            </div>
+                            <div class="row">
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">Obra Social</label>
+                                    <p class="form-control-static" id="pacienteObraSocial">-</p>
+                                </div>
+                                <div class="col-6 mb-3">
+                                    <label class="form-label fw-bold text-muted">N° Afiliado</label>
+                                    <p class="form-control-static" id="pacienteNroAfiliado">-</p>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Observaciones</label>
+                                <p class="form-control-static" id="pacienteObservaciones">-</p>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label fw-bold text-muted">Fecha Registro</label>
+                                <p class="form-control-static" id="pacienteFechaRegistro">-</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Historial de Sesiones -->
+                    <div class="mt-4">
+                        <h6 class="border-bottom pb-2"><i class="fas fa-history me-2"></i>Historial de Sesiones</h6>
+                        <div class="table-responsive">
+                            <table class="table table-sm">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Tratamiento</th>
+                                        <th>Sesiones</th>
+                                        <th>Estado</th>
+                                        <th>Acciones</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historialSesiones">
+                                    <tr>
+                                        <td colspan="5" class="text-center py-3 text-muted">
+                                            No hay sesiones registradas
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-info" onclick="editarPacienteActual()">Editar Paciente</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Confirmación -->
+    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirmación</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <p id="confirmMessage">¿Está seguro de realizar esta acción?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmActionButton">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal Éxito -->
+    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-sm">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="fas fa-check-circle me-2"></i>Éxito</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center">
+                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                    <p id="successMessage">Operación realizada con éxito</p>
+                </div>
+                <div class="modal-footer justify-content-center">
+                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Sistema de Notificaciones -->
+    <div class="toast-container position-fixed top-0 end-0 p-3" style="z-index: 9999;">
+        <!-- Las notificaciones se agregarán aquí dinámicamente -->
+    </div>
     
     <!-- JavaScript Libraries -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -908,7 +1980,7 @@
         // ==============================================
         // CONFIGURACIÓN DEL SISTEMA
         // ==============================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbznQUeGI0Kgfu4NLQbBIIirV31HDwGNWiG0sFwlaOTlZwp54aaw-BvDg--R_rDR2LpGrA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxzGyWS2Hceioi_XLg5VeRwiYFbpRniqVDmUjK8rv3QkZ1LVNesPzvLGGUPLHsDs6-IMw/exec';
         
         // Estado global de la aplicación
         const appState = {
@@ -918,6 +1990,12 @@
             sesiones: [],
             obrasSociales: [],
             isSidebarOpen: true
+        };
+        
+        // Estado del calendario
+        let calendarioEstado = {
+            fechaActual: new Date(),
+            vista: 'mes'
         };
         
         // ==============================================
@@ -1076,6 +2154,7 @@
                 'pacientes': 'Pacientes',
                 'sesiones': 'Sesiones',
                 'obras-sociales': 'Obras Sociales',
+                'calendario': 'Calendario',
                 'reportes': 'Reportes',
                 'configuracion': 'Configuración'
             };
@@ -1099,6 +2178,9 @@
                     break;
                 case 'obras-sociales':
                     loadObrasSociales();
+                    break;
+                case 'calendario':
+                    cargarCalendario();
                     break;
                 case 'reportes':
                     loadReportes();
@@ -1126,6 +2208,10 @@
                 await loadObrasSociales();
                 
                 updateConnectionStatus(true);
+                
+                // Verificar recordatorios
+                verificarRecordatorios();
+                
             } catch (error) {
                 console.error('Error cargando datos iniciales:', error);
                 updateConnectionStatus(false);
@@ -1253,10 +2339,10 @@
                 
                 // Datos simulados
                 appState.obrasSociales = [
-                    { id: 1, nombre: 'OSDE', codigo: 'OSDE-310', telefono: '0800-555-OSDE', email: 'contacto@osde.com.ar', pacientes: 4 },
-                    { id: 2, nombre: 'Swiss Medical', codigo: 'SMG-456', telefono: '0800-333-4444', email: 'info@swissmedical.com.ar', pacientes: 3 },
-                    { id: 3, nombre: 'Galeno', codigo: 'GAL-789', telefono: '0810-222-3333', email: 'consultas@galeno.com.ar', pacientes: 2 },
-                    { id: 4, nombre: 'Particular', codigo: 'PART', telefono: '', email: '', pacientes: 5 }
+                    { id: 1, nombre: 'OSDE', codigo: 'OSDE-310', telefono: '0800-555-OSDE', email: 'contacto@osde.com.ar', pacientes: 4, plus: 500 },
+                    { id: 2, nombre: 'Swiss Medical', codigo: 'SMG-456', telefono: '0800-333-4444', email: 'info@swissmedical.com.ar', pacientes: 3, plus: 300 },
+                    { id: 3, nombre: 'Galeno', codigo: 'GAL-789', telefono: '0810-222-3333', email: 'consultas@galeno.com.ar', pacientes: 2, plus: 200 },
+                    { id: 4, nombre: 'Particular', codigo: 'PART', telefono: '', email: '', pacientes: 5, plus: 0 }
                 ];
                 
                 renderObrasSocialesTable(appState.obrasSociales);
@@ -1596,401 +2682,740 @@
             });
         }
         
-// ==============================================
-// FUNCIONES DE MODALES REALES
-// ==============================================
-
-function showNewPatientModal() {
-    // Limpiar formulario
-    document.getElementById('formNuevoPaciente').reset();
-    
-    // Establecer fecha actual como fecha de nacimiento sugerida
-    const today = new Date().toISOString().split('T')[0];
-    document.querySelector('input[name="fecha_nacimiento"]').value = today;
-    
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('nuevoPacienteModal'));
-    modal.show();
-}
-
-function showNewSessionModal() {
-    // Limpiar formulario
-    document.getElementById('formNuevaSesion').reset();
-    
-    // Establecer fecha y hora actual
-    const now = new Date();
-    const today = now.toISOString().split('T')[0];
-    const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
-    
-    document.querySelector('input[name="fecha"]').value = today;
-    document.querySelector('input[name="hora"]').value = time;
-    
-    // Cargar lista de pacientes
-    const select = document.getElementById('selectPacienteSesion');
-    select.innerHTML = '<option value="">Seleccionar paciente</option>';
-    
-    appState.pacientes.forEach(paciente => {
-        select.innerHTML += `<option value="${paciente.id}">${paciente.nombre} ${paciente.apellido}</option>`;
-    });
-    
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('nuevaSesionModal'));
-    modal.show();
-}
-
-function showNewObraSocialModal() {
-    // Limpiar formulario
-    document.getElementById('formNuevaObraSocial').reset();
-    
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('nuevaObraSocialModal'));
-    modal.show();
-}
-
-// ==============================================
-// FUNCIONES PARA GUARDAR DATOS
-// ==============================================
-
-async function guardarPaciente() {
-    const form = document.getElementById('formNuevoPaciente');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    
-    // Validación básica
-    if (!data.nombre || !data.apellido || !data.dni || !data.telefono) {
-        showAlert('Complete los campos obligatorios (*)', 'warning');
-        return;
-    }
-    
-    showLoading(true);
-    
-    try {
-        // Simular guardado (en producción, harías un fetch a la API)
-        const nuevoPaciente = {
-            id: appState.pacientes.length + 1,
-            nombre: data.nombre,
-            apellido: data.apellido,
-            dni: data.dni,
-            fechaNacimiento: data.fecha_nacimiento || '',
-            telefono: data.telefono,
-            email: data.email || '',
-            direccion: data.direccion || '',
-            obraSocial: data.obra_social || 'Particular',
-            nroAfiliado: data.nro_afiliado || '',
-            observaciones: data.observaciones || '',
-            fechaRegistro: new Date().toLocaleDateString('es-ES')
-        };
-        
-        // Agregar a la lista local
-        appState.pacientes.unshift(nuevoPaciente);
-        
-        // Actualizar tabla
-        renderPacientesTable(appState.pacientes);
-        
-        // Cerrar modal
-        bootstrap.Modal.getInstance(document.getElementById('nuevoPacienteModal')).hide();
-        
-        // Mostrar mensaje de éxito
-        showSuccessModal('Paciente guardado correctamente');
-        
-        // Actualizar estadísticas
-        document.getElementById('totalPacientes').textContent = appState.pacientes.length;
-        
-    } catch (error) {
-        console.error('Error guardando paciente:', error);
-        showAlert('Error al guardar paciente: ' + error.message, 'danger');
-    } finally {
-        showLoading(false);
-    }
-}
-
-async function guardarSesion() {
-    const form = document.getElementById('formNuevaSesion');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    
-    // Validación básica
-    if (!data.paciente_id || !data.fecha || !data.hora || !data.tratamiento) {
-        showAlert('Complete los campos obligatorios (*)', 'warning');
-        return;
-    }
-    
-    showLoading(true);
-    
-    try {
-        // Encontrar paciente
-        const paciente = appState.pacientes.find(p => p.id == data.paciente_id);
-        
-        if (!paciente) {
-            throw new Error('Paciente no encontrado');
+        // ==============================================
+        // FUNCIONES DE MODALES
+        // ==============================================
+        function showNewPatientModal() {
+            // Limpiar formulario
+            document.getElementById('formNuevoPaciente').reset();
+            
+            // Establecer fecha actual como fecha de nacimiento sugerida
+            const today = new Date().toISOString().split('T')[0];
+            document.querySelector('input[name="fecha_nacimiento"]').value = today;
+            
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('nuevoPacienteModal'));
+            modal.show();
         }
         
-        // Simular guardado
-        const nuevaSesion = {
-            id: appState.sesiones.length + 1,
-            paciente: `${paciente.nombre} ${paciente.apellido}`,
-            paciente_id: data.paciente_id,
-            fecha: data.fecha,
-            hora: data.hora,
-            tratamiento: data.tratamiento,
-            duracion: data.duracion || '45',
-            estado: 'pendiente',
-            observaciones: data.observaciones || ''
-        };
-        
-        // Agregar a la lista local
-        appState.sesiones.unshift(nuevaSesion);
-        
-        // Actualizar tabla
-        renderSesionesTable(appState.sesiones);
-        
-        // Cerrar modal
-        bootstrap.Modal.getInstance(document.getElementById('nuevaSesionModal')).hide();
-        
-        // Mostrar mensaje de éxito
-        showSuccessModal('Sesión programada correctamente');
-        
-        // Actualizar estadísticas
-        const hoy = new Date().toISOString().split('T')[0];
-        const sesionesHoy = appState.sesiones.filter(s => s.fecha === hoy && s.estado === 'pendiente').length;
-        document.getElementById('sesionesHoy').textContent = sesionesHoy;
-        
-    } catch (error) {
-        console.error('Error guardando sesión:', error);
-        showAlert('Error al guardar sesión: ' + error.message, 'danger');
-    } finally {
-        showLoading(false);
-    }
-}
-
-async function guardarObraSocial() {
-    const form = document.getElementById('formNuevaObraSocial');
-    const formData = new FormData(form);
-    const data = Object.fromEntries(formData.entries());
-    
-    // Validación básica
-    if (!data.nombre) {
-        showAlert('El nombre de la obra social es obligatorio', 'warning');
-        return;
-    }
-    
-    showLoading(true);
-    
-    try {
-        // Simular guardado
-        const nuevaObraSocial = {
-            id: appState.obrasSociales.length + 1,
-            nombre: data.nombre,
-            codigo: data.codigo || '',
-            telefono: data.telefono || '',
-            email: data.email || '',
-            direccion: data.direccion || '',
-            observaciones: data.observaciones || '',
-            pacientes: 0 // Inicialmente 0 pacientes
-        };
-        
-        // Agregar a la lista local
-        appState.obrasSociales.unshift(nuevaObraSocial);
-        
-        // Actualizar tabla
-        renderObrasSocialesTable(appState.obrasSociales);
-        
-        // Cerrar modal
-        bootstrap.Modal.getInstance(document.getElementById('nuevaObraSocialModal')).hide();
-        
-        // Mostrar mensaje de éxito
-        showSuccessModal('Obra social guardada correctamente');
-        
-        // Actualizar estadísticas
-        document.getElementById('totalObrasSociales').textContent = appState.obrasSociales.length;
-        
-    } catch (error) {
-        console.error('Error guardando obra social:', error);
-        showAlert('Error al guardar obra social: ' + error.message, 'danger');
-    } finally {
-        showLoading(false);
-    }
-}
-
-// ==============================================
-// FUNCIONES PARA VER DETALLES
-// ==============================================
-
-function viewPaciente(id) {
-    const paciente = appState.pacientes.find(p => p.id == id);
-    
-    if (!paciente) {
-        showAlert('Paciente no encontrado', 'danger');
-        return;
-    }
-    
-    // Llenar datos del modal
-    document.getElementById('pacienteNombreCompleto').textContent = `${paciente.nombre} ${paciente.apellido}`;
-    document.getElementById('pacienteID').textContent = `ID: ${paciente.id}`;
-    document.getElementById('pacienteDNI').textContent = paciente.dni || '-';
-    document.getElementById('pacienteNacimiento').textContent = paciente.fechaNacimiento || '-';
-    document.getElementById('pacienteTelefono').textContent = paciente.telefono || '-';
-    document.getElementById('pacienteEmail').textContent = paciente.email || '-';
-    document.getElementById('pacienteDireccion').textContent = paciente.direccion || '-';
-    document.getElementById('pacienteObraSocial').textContent = paciente.obraSocial || '-';
-    document.getElementById('pacienteNroAfiliado').textContent = paciente.nroAfiliado || '-';
-    document.getElementById('pacienteObservaciones').textContent = paciente.observaciones || '-';
-    document.getElementById('pacienteFechaRegistro').textContent = paciente.fechaRegistro || '-';
-    
-    // Mostrar historial de sesiones
-    const sesionesPaciente = appState.sesiones.filter(s => s.paciente_id == id);
-    const tbody = document.getElementById('historialSesiones');
-    
-    if (sesionesPaciente.length === 0) {
-        tbody.innerHTML = `
-            <tr>
-                <td colspan="4" class="text-center py-3 text-muted">
-                    No hay sesiones registradas
-                </td>
-            </tr>
-        `;
-    } else {
-        tbody.innerHTML = sesionesPaciente.map(sesion => `
-            <tr>
-                <td>${sesion.fecha} ${sesion.hora}</td>
-                <td>${sesion.tratamiento}</td>
-                <td><span class="badge badge-${sesion.estado}">${sesion.estado.charAt(0).toUpperCase() + sesion.estado.slice(1)}</span></td>
-                <td>
-                    <button class="btn btn-sm btn-outline-primary" onclick="viewSesion(${sesion.id})">
-                        <i class="fas fa-eye"></i>
-                    </button>
-                </td>
-            </tr>
-        `).join('');
-    }
-    
-    // Guardar ID para edición
-    document.getElementById('verPacienteModal').dataset.pacienteId = id;
-    
-    // Mostrar modal
-    const modal = new bootstrap.Modal(document.getElementById('verPacienteModal'));
-    modal.show();
-}
-
-function editarPacienteActual() {
-    const pacienteId = document.getElementById('verPacienteModal').dataset.pacienteId;
-    
-    // Cerrar modal actual
-    bootstrap.Modal.getInstance(document.getElementById('verPacienteModal')).hide();
-    
-    // Abrir modal de edición (por ahora usamos el mismo que nuevo)
-    // TODO: Implementar modal de edición específico
-    showAlert('Funcionalidad de edición en desarrollo', 'info');
-}
-
-// ==============================================
-// FUNCIONES DE CONFIRMACIÓN
-// ==============================================
-
-function showConfirmModal(message, callback) {
-    document.getElementById('confirmMessage').textContent = message;
-    
-    const confirmBtn = document.getElementById('confirmActionButton');
-    const oldHandler = confirmBtn.onclick;
-    
-    confirmBtn.onclick = function() {
-        if (callback) callback();
-        bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
-    };
-    
-    const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
-    modal.show();
-    
-    // Restaurar handler original al cerrar
-    modal._element.addEventListener('hidden.bs.modal', function() {
-        confirmBtn.onclick = oldHandler;
-    });
-}
-
-function showSuccessModal(message) {
-    document.getElementById('successMessage').textContent = message;
-    const modal = new bootstrap.Modal(document.getElementById('successModal'));
-    modal.show();
-}
-
-// ==============================================
-// FUNCIONES DE ELIMINACIÓN MEJORADAS
-// ==============================================
-
-function deletePaciente(id) {
-    const paciente = appState.pacientes.find(p => p.id == id);
-    
-    if (!paciente) {
-        showAlert('Paciente no encontrado', 'danger');
-        return;
-    }
-    
-    showConfirmModal(
-        `¿Está seguro de eliminar al paciente ${paciente.nombre} ${paciente.apellido}? Esta acción no se puede deshacer.`,
-        function() {
-            // Eliminar de la lista
-            appState.pacientes = appState.pacientes.filter(p => p.id != id);
+        function showNewSessionModal() {
+            // Limpiar formulario
+            document.getElementById('formNuevaSesion').reset();
             
-            // Actualizar tabla
-            renderPacientesTable(appState.pacientes);
+            // Establecer fecha y hora actual
+            const now = new Date();
+            const today = now.toISOString().split('T')[0];
+            const time = now.getHours().toString().padStart(2, '0') + ':' + now.getMinutes().toString().padStart(2, '0');
             
-            // Actualizar estadísticas
-            document.getElementById('totalPacientes').textContent = appState.pacientes.length;
+            document.querySelector('input[name="fecha_inicio"]').value = today;
+            document.querySelector('input[name="hora"]').value = time;
             
-            showSuccessModal('Paciente eliminado correctamente');
+            // Cargar lista de pacientes
+            const select = document.getElementById('selectPacienteSesion');
+            select.innerHTML = '<option value="">Seleccionar paciente</option>';
+            
+            appState.pacientes.forEach(paciente => {
+                select.innerHTML += `<option value="${paciente.id}">${paciente.nombre} ${paciente.apellido}</option>`;
+            });
+            
+            // Inicializar valores
+            document.getElementById('costoBase').value = 1500;
+            document.getElementById('plusObraSocial').value = 0;
+            document.getElementById('costoSesion').value = 1500;
+            document.getElementById('costoTotalTratamiento').textContent = '$1,500';
+            document.getElementById('saldoPendiente').textContent = '$1,500';
+            
+            actualizarProgresoSesiones();
+            
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('nuevaSesionModal'));
+            modal.show();
         }
-    );
-}
-
-function cancelSesion(id) {
-    const sesion = appState.sesiones.find(s => s.id == id);
-    
-    if (!sesion) {
-        showAlert('Sesión no encontrada', 'danger');
-        return;
-    }
-    
-    showConfirmModal(
-        `¿Cancelar la sesión de ${sesion.paciente} programada para ${sesion.fecha} a las ${sesion.hora}?`,
-        function() {
-            // Cambiar estado a cancelada
-            sesion.estado = 'cancelada';
+        
+        function showNewObraSocialModal() {
+            // Limpiar formulario
+            document.getElementById('formNuevaObraSocial').reset();
             
-            // Actualizar tabla
-            renderSesionesTable(appState.sesiones);
-            
-            showSuccessModal('Sesión cancelada correctamente');
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('nuevaObraSocialModal'));
+            modal.show();
         }
-    );
-}
-
-function changeSessionStatus(id) {
-    const sesion = appState.sesiones.find(s => s.id == id);
-    
-    if (!sesion) {
-        showAlert('Sesión no encontrada', 'danger');
-        return;
-    }
-    
-    const nuevoEstado = sesion.estado === 'pendiente' ? 'realizada' : 'pendiente';
-    const textoEstado = nuevoEstado === 'realizada' ? 'marcar como realizada' : 'marcar como pendiente';
-    
-    showConfirmModal(
-        `¿${textoEstado.charAt(0).toUpperCase() + textoEstado.slice(1)} la sesión de ${sesion.paciente}?`,
-        function() {
-            // Cambiar estado
-            sesion.estado = nuevoEstado;
+        
+        // ==============================================
+        // FUNCIONES PARA GUARDAR DATOS
+        // ==============================================
+        async function guardarPaciente() {
+            const form = document.getElementById('formNuevoPaciente');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
             
-            // Actualizar tabla
-            renderSesionesTable(appState.sesiones);
+            // Validación básica
+            if (!data.nombre || !data.apellido || !data.dni || !data.telefono) {
+                showAlert('Complete los campos obligatorios (*)', 'warning');
+                return;
+            }
             
-            showSuccessModal(`Sesión ${nuevoEstado} correctamente`);
+            showLoading(true);
+            
+            try {
+                // Simular guardado (en producción, harías un fetch a la API)
+                const nuevoPaciente = {
+                    id: appState.pacientes.length + 1,
+                    nombre: data.nombre,
+                    apellido: data.apellido,
+                    dni: data.dni,
+                    fechaNacimiento: data.fecha_nacimiento || '',
+                    telefono: data.telefono,
+                    email: data.email || '',
+                    direccion: data.direccion || '',
+                    obraSocial: data.obra_social || 'Particular',
+                    nroAfiliado: data.nro_afiliado || '',
+                    observaciones: data.observaciones || '',
+                    fechaRegistro: new Date().toLocaleDateString('es-ES')
+                };
+                
+                // Agregar a la lista local
+                appState.pacientes.unshift(nuevoPaciente);
+                
+                // Actualizar tabla
+                renderPacientesTable(appState.pacientes);
+                
+                // Cerrar modal
+                bootstrap.Modal.getInstance(document.getElementById('nuevoPacienteModal')).hide();
+                
+                // Mostrar mensaje de éxito
+                showSuccessModal('Paciente guardado correctamente');
+                
+                // Actualizar estadísticas
+                document.getElementById('totalPacientes').textContent = appState.pacientes.length;
+                
+            } catch (error) {
+                console.error('Error guardando paciente:', error);
+                showAlert('Error al guardar paciente: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
         }
-    );
-}
-
-// Mantén las otras funciones como viewSesion, deleteObraSocial, etc., pero puedes actualizarlas
-// para usar showConfirmModal en lugar de confirm() nativo
+        
+        async function guardarPlanTratamiento() {
+            const form = document.getElementById('formNuevaSesion');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Validación básica
+            if (!data.paciente_id || !data.fecha_inicio || !data.hora || !data.tratamiento || !data.sesiones_totales) {
+                showAlert('Complete los campos obligatorios (*)', 'warning');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Encontrar paciente
+                const paciente = appState.pacientes.find(p => p.id == data.paciente_id);
+                
+                if (!paciente) {
+                    throw new Error('Paciente no encontrado');
+                }
+                
+                // Calcular costos
+                const costoBase = parseFloat(data.costo_base) || 1500;
+                const plusObraSocial = parseFloat(data.plus_obra_social) || 0;
+                const costoSesion = costoBase + plusObraSocial;
+                const costoTotal = costoSesion * parseInt(data.sesiones_totales);
+                
+                // Crear plan de tratamiento
+                const nuevoPlan = {
+                    id: appState.sesiones.length + 1,
+                    paciente: `${paciente.nombre} ${paciente.apellido}`,
+                    paciente_id: data.paciente_id,
+                    fecha: data.fecha_inicio,
+                    hora: data.hora,
+                    tratamiento: data.tratamiento,
+                    duracion: data.duracion || '45',
+                    estado: 'pendiente',
+                    sesiones_totales: parseInt(data.sesiones_totales),
+                    sesiones_realizadas: parseInt(data.sesiones_realizadas) || 0,
+                    costo_base: costoBase,
+                    plus_obra_social: plusObraSocial,
+                    costo_sesion: costoSesion,
+                    costo_total: costoTotal,
+                    frecuencia: data.frecuencia || 'alternada',
+                    observaciones: data.observaciones || ''
+                };
+                
+                // Agregar a la lista local
+                appState.sesiones.unshift(nuevoPlan);
+                
+                // Actualizar tabla
+                renderSesionesTable(appState.sesiones);
+                
+                // Cerrar modal
+                bootstrap.Modal.getInstance(document.getElementById('nuevaSesionModal')).hide();
+                
+                // Mostrar mensaje de éxito
+                document.getElementById('successMessage').textContent = 'Plan de tratamiento guardado correctamente';
+                const successModal = new bootstrap.Modal(document.getElementById('successModal'));
+                successModal.show();
+                
+                // Mostrar notificación
+                mostrarNotificacion(
+                    'Nuevo Plan de Tratamiento',
+                    `Plan creado para ${paciente.nombre} ${paciente.apellido} - ${data.sesiones_totales} sesiones`,
+                    'success'
+                );
+                
+                // Actualizar estadísticas
+                const hoy = new Date().toISOString().split('T')[0];
+                const sesionesHoy = appState.sesiones.filter(s => 
+                    s.fecha === hoy && s.estado === 'pendiente'
+                ).length;
+                document.getElementById('sesionesHoy').textContent = sesionesHoy;
+                
+                // Actualizar calendario si está visible
+                if (document.getElementById('calendario-section').style.display !== 'none') {
+                    actualizarCalendario();
+                }
+                
+            } catch (error) {
+                console.error('Error guardando plan de tratamiento:', error);
+                showAlert('Error al guardar plan: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        async function guardarObraSocial() {
+            const form = document.getElementById('formNuevaObraSocial');
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+            
+            // Validación básica
+            if (!data.nombre) {
+                showAlert('El nombre de la obra social es obligatorio', 'warning');
+                return;
+            }
+            
+            showLoading(true);
+            
+            try {
+                // Simular guardado
+                const nuevaObraSocial = {
+                    id: appState.obrasSociales.length + 1,
+                    nombre: data.nombre,
+                    codigo: data.codigo || '',
+                    telefono: data.telefono || '',
+                    email: data.email || '',
+                    direccion: data.direccion || '',
+                    observaciones: data.observaciones || '',
+                    plus: parseFloat(data.plus) || 0,
+                    pacientes: 0
+                };
+                
+                // Agregar a la lista local
+                appState.obrasSociales.unshift(nuevaObraSocial);
+                
+                // Actualizar tabla
+                renderObrasSocialesTable(appState.obrasSociales);
+                
+                // Cerrar modal
+                bootstrap.Modal.getInstance(document.getElementById('nuevaObraSocialModal')).hide();
+                
+                // Mostrar mensaje de éxito
+                showSuccessModal('Obra social guardada correctamente');
+                
+                // Actualizar estadísticas
+                document.getElementById('totalObrasSociales').textContent = appState.obrasSociales.length;
+                
+            } catch (error) {
+                console.error('Error guardando obra social:', error);
+                showAlert('Error al guardar obra social: ' + error.message, 'danger');
+            } finally {
+                showLoading(false);
+            }
+        }
+        
+        // ==============================================
+        // FUNCIONES PARA VER DETALLES
+        // ==============================================
+        function viewPaciente(id) {
+            const paciente = appState.pacientes.find(p => p.id == id);
+            
+            if (!paciente) {
+                showAlert('Paciente no encontrado', 'danger');
+                return;
+            }
+            
+            // Llenar datos del modal
+            document.getElementById('pacienteNombreCompleto').textContent = `${paciente.nombre} ${paciente.apellido}`;
+            document.getElementById('pacienteID').textContent = `ID: ${paciente.id}`;
+            document.getElementById('pacienteDNI').textContent = paciente.dni || '-';
+            document.getElementById('pacienteNacimiento').textContent = paciente.fechaNacimiento || '-';
+            document.getElementById('pacienteTelefono').textContent = paciente.telefono || '-';
+            document.getElementById('pacienteEmail').textContent = paciente.email || '-';
+            document.getElementById('pacienteDireccion').textContent = paciente.direccion || '-';
+            document.getElementById('pacienteObraSocial').textContent = paciente.obraSocial || '-';
+            document.getElementById('pacienteNroAfiliado').textContent = paciente.nroAfiliado || '-';
+            document.getElementById('pacienteObservaciones').textContent = paciente.observaciones || '-';
+            document.getElementById('pacienteFechaRegistro').textContent = paciente.fechaRegistro || '-';
+            
+            // Mostrar historial de sesiones
+            const sesionesPaciente = appState.sesiones.filter(s => s.paciente_id == id);
+            const tbody = document.getElementById('historialSesiones');
+            
+            if (sesionesPaciente.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="5" class="text-center py-3 text-muted">
+                            No hay sesiones registradas
+                        </td>
+                    </tr>
+                `;
+            } else {
+                tbody.innerHTML = sesionesPaciente.map(sesion => {
+                    const sesionesRealizadas = sesion.sesiones_realizadas || 0;
+                    const sesionesTotales = sesion.sesiones_totales || 1;
+                    
+                    return `
+                        <tr>
+                            <td>${sesion.fecha} ${sesion.hora}</td>
+                            <td>${sesion.tratamiento}</td>
+                            <td>${sesionesRealizadas}/${sesionesTotales}</td>
+                            <td><span class="badge badge-${sesion.estado}">${sesion.estado.charAt(0).toUpperCase() + sesion.estado.slice(1)}</span></td>
+                            <td>
+                                <button class="btn btn-sm btn-outline-primary" onclick="viewSesion(${sesion.id})">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            // Guardar ID para edición
+            document.getElementById('verPacienteModal').dataset.pacienteId = id;
+            
+            // Mostrar modal
+            const modal = new bootstrap.Modal(document.getElementById('verPacienteModal'));
+            modal.show();
+        }
+        
+        function editarPacienteActual() {
+            const pacienteId = document.getElementById('verPacienteModal').dataset.pacienteId;
+            
+            // Cerrar modal actual
+            bootstrap.Modal.getInstance(document.getElementById('verPacienteModal')).hide();
+            
+            // Abrir modal de edición
+            showAlert('Funcionalidad de edición en desarrollo', 'info');
+        }
+        
+        // ==============================================
+        // FUNCIONES DE CONFIRMACIÓN
+        // ==============================================
+        function showConfirmModal(message, callback) {
+            document.getElementById('confirmMessage').textContent = message;
+            
+            const confirmBtn = document.getElementById('confirmActionButton');
+            
+            // Remover event listeners anteriores
+            const newConfirmBtn = confirmBtn.cloneNode(true);
+            confirmBtn.parentNode.replaceChild(newConfirmBtn, confirmBtn);
+            
+            // Agregar nuevo event listener
+            document.getElementById('confirmActionButton').onclick = function() {
+                if (callback) callback();
+                bootstrap.Modal.getInstance(document.getElementById('confirmModal')).hide();
+            };
+            
+            const modal = new bootstrap.Modal(document.getElementById('confirmModal'));
+            modal.show();
+        }
+        
+        function showSuccessModal(message) {
+            document.getElementById('successMessage').textContent = message;
+            const modal = new bootstrap.Modal(document.getElementById('successModal'));
+            modal.show();
+        }
+        
+        // ==============================================
+        // FUNCIONES DE ELIMINACIÓN
+        // ==============================================
+        function deletePaciente(id) {
+            const paciente = appState.pacientes.find(p => p.id == id);
+            
+            if (!paciente) {
+                showAlert('Paciente no encontrado', 'danger');
+                return;
+            }
+            
+            showConfirmModal(
+                `¿Está seguro de eliminar al paciente ${paciente.nombre} ${paciente.apellido}? Esta acción no se puede deshacer.`,
+                function() {
+                    // Eliminar de la lista
+                    appState.pacientes = appState.pacientes.filter(p => p.id != id);
+                    
+                    // Actualizar tabla
+                    renderPacientesTable(appState.pacientes);
+                    
+                    // Actualizar estadísticas
+                    document.getElementById('totalPacientes').textContent = appState.pacientes.length;
+                    
+                    showSuccessModal('Paciente eliminado correctamente');
+                }
+            );
+        }
+        
+        function cancelSesion(id) {
+            const sesion = appState.sesiones.find(s => s.id == id);
+            
+            if (!sesion) {
+                showAlert('Sesión no encontrada', 'danger');
+                return;
+            }
+            
+            showConfirmModal(
+                `¿Cancelar la sesión de ${sesion.paciente} programada para ${sesion.fecha} a las ${sesion.hora}?`,
+                function() {
+                    // Cambiar estado a cancelada
+                    sesion.estado = 'cancelada';
+                    
+                    // Actualizar tabla
+                    renderSesionesTable(appState.sesiones);
+                    
+                    showSuccessModal('Sesión cancelada correctamente');
+                }
+            );
+        }
+        
+        function changeSessionStatus(id) {
+            const sesion = appState.sesiones.find(s => s.id == id);
+            
+            if (!sesion) {
+                showAlert('Sesión no encontrada', 'danger');
+                return;
+            }
+            
+            const nuevoEstado = sesion.estado === 'pendiente' ? 'realizada' : 'pendiente';
+            const textoEstado = nuevoEstado === 'realizada' ? 'marcar como realizada' : 'marcar como pendiente';
+            
+            showConfirmModal(
+                `¿${textoEstado.charAt(0).toUpperCase() + textoEstado.slice(1)} la sesión de ${sesion.paciente}?`,
+                function() {
+                    // Cambiar estado
+                    sesion.estado = nuevoEstado;
+                    
+                    // Actualizar tabla
+                    renderSesionesTable(appState.sesiones);
+                    
+                    showSuccessModal(`Sesión ${nuevoEstado} correctamente`);
+                }
+            );
+        }
+        
+        // ==============================================
+        // SISTEMA DE SESIONES MÚLTIPLES
+        // ==============================================
+        function actualizarInfoPaciente() {
+            const pacienteId = document.getElementById('selectPacienteSesion').value;
+            const paciente = appState.pacientes.find(p => p.id == pacienteId);
+            const infoDiv = document.getElementById('infoPaciente');
+            const plusInput = document.getElementById('plusObraSocial');
+            const nombreObraSocial = document.getElementById('nombreObraSocial');
+            
+            if (paciente) {
+                // Mostrar información del paciente
+                infoDiv.innerHTML = `
+                    <strong>${paciente.nombre} ${paciente.apellido}</strong><br>
+                    <small>DNI: ${paciente.dni || 'No registrado'}</small><br>
+                    <small>Tel: ${paciente.telefono || 'No registrado'}</small><br>
+                    <small>Obra Social: ${paciente.obraSocial || 'Particular'}</small>
+                `;
+                
+                // Buscar plus de la obra social
+                let plus = 0;
+                if (paciente.obraSocial && paciente.obraSocial !== 'Particular') {
+                    const obraSocial = appState.obrasSociales.find(o => 
+                        o.nombre === paciente.obraSocial
+                    );
+                    if (obraSocial && obraSocial.plus) {
+                        plus = obraSocial.plus;
+                        nombreObraSocial.textContent = `Plus de ${paciente.obraSocial}`;
+                    } else {
+                        nombreObraSocial.textContent = `${paciente.obraSocial} (sin plus)`;
+                    }
+                } else {
+                    nombreObraSocial.textContent = 'Particular (sin plus)';
+                }
+                
+                // Actualizar campo plus
+                plusInput.value = plus;
+                
+                // Recalcular costos
+                calcularCostos();
+                
+            } else {
+                infoDiv.innerHTML = '<span class="text-muted">Seleccione un paciente para ver su información</span>';
+                plusInput.value = 0;
+                nombreObraSocial.textContent = 'Sin obra social';
+                calcularCostos();
+            }
+        }
+        
+        function cambiarSesiones(cambio) {
+            const input = document.getElementById('sesionesTotales');
+            let valor = parseInt(input.value) + cambio;
+            
+            if (valor < 1) valor = 1;
+            if (valor > 30) valor = 30;
+            
+            input.value = valor;
+            actualizarProgresoSesiones();
+            calcularCostos();
+        }
+        
+        function cambiarSesionesRealizadas(cambio) {
+            const inputRealizadas = document.getElementById('sesionesRealizadas');
+            const inputTotales = document.getElementById('sesionesTotales');
+            
+            let valor = parseInt(inputRealizadas.value) + cambio;
+            const max = parseInt(inputTotales.value);
+            
+            if (valor < 0) valor = 0;
+            if (valor > max) valor = max;
+            
+            inputRealizadas.value = valor;
+            actualizarProgresoSesiones();
+            calcularCostos();
+        }
+        
+        function actualizarProgresoSesiones() {
+            const realizadas = parseInt(document.getElementById('sesionesRealizadas').value) || 0;
+            const totales = parseInt(document.getElementById('sesionesTotales').value) || 1;
+            
+            const porcentaje = totales > 0 ? Math.round((realizadas / totales) * 100) : 0;
+            
+            // Actualizar barra de progreso
+            const barra = document.getElementById('progresoSesiones');
+            barra.style.width = `${porcentaje}%`;
+            barra.setAttribute('aria-valuenow', porcentaje);
+            barra.textContent = `${porcentaje}%`;
+            
+            // Actualizar contador
+            document.getElementById('contadorSesiones').textContent = 
+                `${realizadas} de ${totales} sesiones realizadas`;
+        }
+        
+        function calcularCostos() {
+            const costoBase = parseFloat(document.getElementById('costoBase').value) || 1500;
+            const plusObraSocial = parseFloat(document.getElementById('plusObraSocial').value) || 0;
+            const sesionesTotales = parseInt(document.getElementById('sesionesTotales').value) || 1;
+            const sesionesRealizadas = parseInt(document.getElementById('sesionesRealizadas').value) || 0;
+            
+            // Costo por sesión
+            const costoSesion = costoBase + plusObraSocial;
+            document.getElementById('costoSesion').value = costoSesion;
+            
+            // Costo total del tratamiento
+            const costoTotal = costoSesion * sesionesTotales;
+            document.getElementById('costoTotalTratamiento').textContent = 
+                `$${costoTotal.toLocaleString('es-AR')}`;
+            
+            // Saldo pendiente
+            const saldoPendiente = costoTotal - (costoSesion * sesionesRealizadas);
+            document.getElementById('saldoPendiente').textContent = 
+                `$${saldoPendiente.toLocaleString('es-AR')}`;
+        }
+        
+        // ==============================================
+        // FUNCIONALIDADES DE CALENDARIO
+        // ==============================================
+        function cargarCalendario(vista = 'mes') {
+            calendarioEstado.vista = vista;
+            actualizarCalendario();
+        }
+        
+        function cambiarMesCalendario(cambio) {
+            const nuevaFecha = new Date(calendarioEstado.fechaActual);
+            nuevaFecha.setMonth(nuevaFecha.getMonth() + cambio);
+            calendarioEstado.fechaActual = nuevaFecha;
+            actualizarCalendario();
+        }
+        
+        function irAHoy() {
+            calendarioEstado.fechaActual = new Date();
+            actualizarCalendario();
+        }
+        
+        function actualizarCalendario() {
+            const fecha = calendarioEstado.fechaActual;
+            const año = fecha.getFullYear();
+            const mes = fecha.getMonth();
+            
+            // Actualizar título
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
+                           'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            document.getElementById('tituloCalendario').textContent = `${meses[mes]} ${año}`;
+            
+            // Obtener primer día del mes
+            const primerDia = new Date(año, mes, 1);
+            const ultimoDia = new Date(año, mes + 1, 0);
+            
+            // Obtener día de la semana del primer día
+            let diaInicio = primerDia.getDay();
+            
+            // Obtener total de días en el mes
+            const totalDias = ultimoDia.getDate();
+            
+            // Obtener sesiones para este mes
+            const sesionesMes = appState.sesiones.filter(sesion => {
+                const fechaSesion = new Date(sesion.fecha);
+                return fechaSesion.getFullYear() === año && fechaSesion.getMonth() === mes;
+            });
+            
+            // Generar calendario
+            let calendarioHTML = '';
+            
+            // Espacios en blanco para días anteriores al primer día del mes
+            for (let i = 0; i < diaInicio; i++) {
+                calendarioHTML += `<div class="calendar-day empty"></div>`;
+            }
+            
+            // Días del mes
+            const hoy = new Date().toDateString();
+            
+            for (let dia = 1; dia <= totalDias; dia++) {
+                const fechaDia = new Date(año, mes, dia);
+                const esHoy = fechaDia.toDateString() === hoy;
+                
+                // Sesiones para este día
+                const sesionesDia = sesionesMes.filter(sesion => {
+                    const fechaSesion = new Date(sesion.fecha);
+                    return fechaSesion.getDate() === dia;
+                });
+                
+                let clasesDia = 'calendar-day';
+                if (esHoy) clasesDia += ' today';
+                if (fechaDia.getDay() === 0 || fechaDia.getDay() === 6) clasesDia += ' weekend';
+                
+                let sesionesHTML = '';
+                sesionesDia.forEach(sesion => {
+                    let claseEstado = '';
+                    if (sesion.estado === 'realizada') claseEstado = 'success';
+                    else if (sesion.estado === 'pendiente') claseEstado = 'warning';
+                    else if (sesion.estado === 'cancelada') claseEstado = 'danger';
+                    
+                    sesionesHTML += `
+                        <div class="calendar-event ${claseEstado}" 
+                             onclick="verSesionCalendario(${sesion.id})"
+                             title="${sesion.paciente} - ${sesion.tratamiento}">
+                            <small>${sesion.hora} - ${sesion.paciente.split(' ')[0]}</small>
+                        </div>
+                    `;
+                });
+                
+                calendarioHTML += `
+                    <div class="${clasesDia}">
+                        <div class="calendar-day-number">${dia}</div>
+                        <div class="calendar-events">${sesionesHTML}</div>
+                    </div>
+                `;
+            }
+            
+            // Actualizar grid del calendario
+            document.getElementById('calendarioGrid').innerHTML = calendarioHTML;
+            
+            // Actualizar resumen
+            actualizarResumenCalendario(sesionesMes);
+        }
+        
+        function actualizarResumenCalendario(sesionesMes) {
+            const realizadas = sesionesMes.filter(s => s.estado === 'realizada').length;
+            const pendientes = sesionesMes.filter(s => s.estado === 'pendiente').length;
+            
+            // Calcular ingresos (simulado)
+            const ingresos = realizadas * 1500;
+            
+            document.getElementById('totalRealizadas').textContent = realizadas;
+            document.getElementById('totalPendientes').textContent = pendientes;
+            document.getElementById('totalIngresos').textContent = `$${ingresos.toLocaleString('es-AR')}`;
+        }
+        
+        function verSesionCalendario(sesionId) {
+            const sesion = appState.sesiones.find(s => s.id === sesionId);
+            if (sesion) {
+                showAlert(`<strong>Sesión:</strong> ${sesion.paciente}<br>
+                          <strong>Fecha:</strong> ${sesion.fecha} ${sesion.hora}<br>
+                          <strong>Tratamiento:</strong> ${sesion.tratamiento}<br>
+                          <strong>Estado:</strong> ${sesion.estado}<br>
+                          <strong>Sesiones:</strong> ${sesion.sesiones_realizadas || 0}/${sesion.sesiones_totales || 1}`, 
+                          'info');
+            }
+        }
+        
+        function filtrarCalendario() {
+            // Implementación simple de filtrado
+            actualizarCalendario();
+        }
+        
+        // ==============================================
+        // FUNCIONES DE NOTIFICACIONES
+        // ==============================================
+        function mostrarNotificacion(titulo, mensaje, tipo = 'info', duracion = 5000) {
+            // Crear elemento toast
+            const toastId = 'toast-' + Date.now();
+            const icon = tipo === 'success' ? 'check-circle' : 
+                        tipo === 'warning' ? 'exclamation-triangle' : 'info-circle';
+            
+            const toastHTML = `
+                <div id="${toastId}" class="toast" role="alert" aria-live="assertive" aria-atomic="true">
+                    <div class="toast-header bg-${tipo} text-white">
+                        <i class="fas fa-${icon} me-2"></i>
+                        <strong class="me-auto">${titulo}</strong>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+                    </div>
+                    <div class="toast-body">
+                        ${mensaje}
+                    </div>
+                </div>
+            `;
+            
+            // Agregar al contenedor
+            document.querySelector('.toast-container').insertAdjacentHTML('beforeend', toastHTML);
+            
+            // Mostrar y auto-eliminar
+            const toastElement = document.getElementById(toastId);
+            const toast = new bootstrap.Toast(toastElement, {
+                autohide: true,
+                delay: duracion
+            });
+            
+            toast.show();
+            
+            // Eliminar después de mostrar
+            toastElement.addEventListener('hidden.bs.toast', function() {
+                toastElement.remove();
+            });
+        }
+        
+        function verificarRecordatorios() {
+            const hoy = new Date().toDateString();
+            
+            // Verificar sesiones para hoy
+            const sesionesHoy = appState.sesiones.filter(sesion => {
+                const fechaSesion = new Date(sesion.fecha);
+                return fechaSesion.toDateString() === hoy && sesion.estado === 'pendiente';
+            });
+            
+            if (sesionesHoy.length > 0) {
+                mostrarNotificacion(
+                    'Sesiones para Hoy',
+                    `Tienes ${sesionesHoy.length} sesión(es) pendiente(s) para hoy`,
+                    'warning',
+                    10000
+                );
+            }
+        }
         
         // ==============================================
         // FUNCIONES UTILITARIAS
@@ -2022,347 +3447,40 @@ function changeSessionStatus(id) {
         }
         
         // ==============================================
+        // FUNCIONES AUXILIARES (placeholder)
+        // ==============================================
+        function viewSesion(id) {
+            showAlert(`Funcionalidad de ver sesión en desarrollo. ID: ${id}`, 'info');
+        }
+        
+        function editPaciente(id) {
+            showAlert(`Funcionalidad de editar paciente en desarrollo. ID: ${id}`, 'info');
+        }
+        
+        function viewObraSocial(id) {
+            showAlert(`Funcionalidad de ver obra social en desarrollo. ID: ${id}`, 'info');
+        }
+        
+        function editObraSocial(id) {
+            showAlert(`Funcionalidad de editar obra social en desarrollo. ID: ${id}`, 'info');
+        }
+        
+        function deleteObraSocial(id) {
+            showAlert(`Funcionalidad de eliminar obra social en desarrollo. ID: ${id}`, 'info');
+        }
+        
+        function exportData(type) {
+            showAlert(`Funcionalidad de exportar ${type} en desarrollo`, 'info');
+        }
+        
+        function registrarSesion(id) {
+            showAlert(`Funcionalidad de registrar sesión en desarrollo. ID: ${id}`, 'info');
+        }
+        
+        // ==============================================
         // INICIALIZACIÓN FINAL
         // ==============================================
         console.log('Sistema MR Kinesiología inicializado correctamente');
     </script>
-    <!-- ============================================= -->
-    <!-- MODALES DEL SISTEMA -->
-    <!-- ============================================= -->
-    
-    <!-- Modal Nuevo Paciente -->
-    <div class="modal fade" id="nuevoPacienteModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title"><i class="fas fa-user-plus me-2"></i>Nuevo Paciente</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formNuevoPaciente">
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Nombre *</label>
-                                <input type="text" class="form-control" name="nombre" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Apellido *</label>
-                                <input type="text" class="form-control" name="apellido" required>
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">DNI *</label>
-                                <input type="text" class="form-control" name="dni" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Fecha de Nacimiento</label>
-                                <input type="date" class="form-control" name="fecha_nacimiento">
-                            </div>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Teléfono *</label>
-                                <input type="tel" class="form-control" name="telefono" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Email</label>
-                                <input type="email" class="form-control" name="email">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Dirección</label>
-                            <input type="text" class="form-control" name="direccion">
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Obra Social</label>
-                                <select class="form-select" name="obra_social" id="selectObraSocial">
-                                    <option value="">Seleccionar obra social</option>
-                                    <option value="OSDE">OSDE</option>
-                                    <option value="Swiss Medical">Swiss Medical</option>
-                                    <option value="Galeno">Galeno</option>
-                                    <option value="Particular">Particular</option>
-                                    <option value="Otra">Otra</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">N° Afiliado</label>
-                                <input type="text" class="form-control" name="nro_afiliado">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Observaciones</label>
-                            <textarea class="form-control" name="observaciones" rows="3" placeholder="Información adicional del paciente..."></textarea>
-                        </div>
-                        
-                        <div class="alert alert-info">
-                            <small><i class="fas fa-info-circle me-1"></i> Los campos marcados con * son obligatorios</small>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-primary" onclick="guardarPaciente()">Guardar Paciente</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Nueva Sesión -->
-    <div class="modal fade" id="nuevaSesionModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title"><i class="fas fa-calendar-plus me-2"></i>Nueva Sesión</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formNuevaSesion">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Paciente *</label>
-                            <select class="form-select" name="paciente_id" id="selectPacienteSesion" required>
-                                <option value="">Seleccionar paciente</option>
-                                <!-- Se llenará dinámicamente -->
-                            </select>
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Fecha *</label>
-                                <input type="date" class="form-control" name="fecha" required>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Hora *</label>
-                                <input type="time" class="form-control" name="hora" required>
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Tratamiento *</label>
-                            <select class="form-select" name="tratamiento" required>
-                                <option value="">Seleccionar tratamiento</option>
-                                <option value="Rehabilitación">Rehabilitación</option>
-                                <option value="Masoterapia">Masoterapia</option>
-                                <option value="Electroterapia">Electroterapia</option>
-                                <option value="Kinesiología">Kinesiología</option>
-                                <option value="Fisioterapia">Fisioterapia</option>
-                                <option value="Terapia Manual">Terapia Manual</option>
-                                <option value="Punción Seca">Punción Seca</option>
-                                <option value="Vendaje Neuromuscular">Vendaje Neuromuscular</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Duración (minutos)</label>
-                            <select class="form-select" name="duracion">
-                                <option value="30">30 minutos</option>
-                                <option value="45" selected>45 minutos</option>
-                                <option value="60">60 minutos</option>
-                                <option value="90">90 minutos</option>
-                            </select>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Observaciones</label>
-                            <textarea class="form-control" name="observaciones" rows="3" placeholder="Detalles de la sesión..."></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-success" onclick="guardarSesion()">Guardar Sesión</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Nueva Obra Social -->
-    <div class="modal fade" id="nuevaObraSocialModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-warning text-dark">
-                    <h5 class="modal-title"><i class="fas fa-hospital-plus me-2"></i>Nueva Obra Social</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <form id="formNuevaObraSocial">
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Nombre *</label>
-                            <input type="text" class="form-control" name="nombre" required placeholder="Ej: OSDE, Swiss Medical, etc.">
-                        </div>
-                        
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Código</label>
-                                <input type="text" class="form-control" name="codigo" placeholder="Ej: OSDE-310">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label class="form-label fw-bold">Teléfono</label>
-                                <input type="tel" class="form-control" name="telefono" placeholder="Ej: 0800-555-1234">
-                            </div>
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Email</label>
-                            <input type="email" class="form-control" name="email" placeholder="contacto@obrasocial.com">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Dirección</label>
-                            <input type="text" class="form-control" name="direccion" placeholder="Dirección de la obra social">
-                        </div>
-                        
-                        <div class="mb-3">
-                            <label class="form-label fw-bold">Observaciones</label>
-                            <textarea class="form-control" name="observaciones" rows="2" placeholder="Información adicional..."></textarea>
-                        </div>
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-warning" onclick="guardarObraSocial()">Guardar Obra Social</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Ver Paciente -->
-    <div class="modal fade" id="verPacienteModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title"><i class="fas fa-user me-2"></i>Detalles del Paciente</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-4 text-center mb-4">
-                            <div class="avatar-large">
-                                <i class="fas fa-user-circle fa-6x text-info"></i>
-                            </div>
-                            <h4 class="mt-3" id="pacienteNombreCompleto">-</h4>
-                            <span class="badge bg-primary" id="pacienteID">ID: -</span>
-                        </div>
-                        <div class="col-md-8">
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold text-muted">DNI</label>
-                                    <p class="form-control-static" id="pacienteDNI">-</p>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold text-muted">Fecha Nacimiento</label>
-                                    <p class="form-control-static" id="pacienteNacimiento">-</p>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold text-muted">Teléfono</label>
-                                    <p class="form-control-static" id="pacienteTelefono">-</p>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold text-muted">Email</label>
-                                    <p class="form-control-static" id="pacienteEmail">-</p>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-muted">Dirección</label>
-                                <p class="form-control-static" id="pacienteDireccion">-</p>
-                            </div>
-                            <div class="row">
-                                <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold text-muted">Obra Social</label>
-                                    <p class="form-control-static" id="pacienteObraSocial">-</p>
-                                </div>
-                                <div class="col-6 mb-3">
-                                    <label class="form-label fw-bold text-muted">N° Afiliado</label>
-                                    <p class="form-control-static" id="pacienteNroAfiliado">-</p>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-muted">Observaciones</label>
-                                <p class="form-control-static" id="pacienteObservaciones">-</p>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label fw-bold text-muted">Fecha Registro</label>
-                                <p class="form-control-static" id="pacienteFechaRegistro">-</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- Historial de Sesiones -->
-                    <div class="mt-4">
-                        <h6 class="border-bottom pb-2"><i class="fas fa-history me-2"></i>Historial de Sesiones</h6>
-                        <div class="table-responsive">
-                            <table class="table table-sm">
-                                <thead>
-                                    <tr>
-                                        <th>Fecha</th>
-                                        <th>Tratamiento</th>
-                                        <th>Estado</th>
-                                        <th>Acciones</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="historialSesiones">
-                                    <tr>
-                                        <td colspan="4" class="text-center py-3 text-muted">
-                                            No hay sesiones registradas
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                    <button type="button" class="btn btn-info" onclick="editarPacienteActual()">Editar Paciente</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Confirmación -->
-    <div class="modal fade" id="confirmModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title"><i class="fas fa-exclamation-triangle me-2"></i>Confirmación</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body">
-                    <p id="confirmMessage">¿Está seguro de realizar esta acción?</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn btn-danger" id="confirmActionButton">Confirmar</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Modal Éxito -->
-    <div class="modal fade" id="successModal" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog modal-sm">
-            <div class="modal-content">
-                <div class="modal-header bg-success text-white">
-                    <h5 class="modal-title"><i class="fas fa-check-circle me-2"></i>Éxito</h5>
-                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body text-center">
-                    <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
-                    <p id="successMessage">Operación realizada con éxito</p>
-                </div>
-                <div class="modal-footer justify-content-center">
-                    <button type="button" class="btn btn-success" data-bs-dismiss="modal">Aceptar</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </body>
 </html>
