@@ -10,7 +10,6 @@
         :root {
             --primary-color: #2c3e50;
             --secondary-color: #3498db;
-            --success-color: #27ae60;
         }
         
         body {
@@ -22,40 +21,41 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         
-        .login-container {
-            width: 100%;
-            max-width: 420px;
-            padding: 20px;
-        }
-        
         .login-card {
             background: white;
             border-radius: 15px;
-            padding: 40px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            animation: fadeIn 0.5s ease-in;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            width: 100%;
+            max-width: 400px;
+            overflow: hidden;
         }
         
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .logo {
+        .login-header {
+            background: var(--primary-color);
+            color: white;
+            padding: 30px 20px;
             text-align: center;
-            margin-bottom: 30px;
         }
         
-        .logo-icon {
-            color: var(--secondary-color);
-            font-size: 3.5rem;
-            margin-bottom: 15px;
+        .login-header h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+        
+        .login-header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+        
+        .login-body {
+            padding: 30px;
         }
         
         .form-control {
-            padding: 12px 15px;
-            border: 2px solid #e0e0e0;
             border-radius: 8px;
+            padding: 12px 15px;
+            border: 2px solid #e9ecef;
             transition: all 0.3s;
         }
         
@@ -67,404 +67,260 @@
         .btn-login {
             background: linear-gradient(135deg, var(--secondary-color), #2980b9);
             color: white;
-            width: 100%;
-            padding: 14px;
             border: none;
+            padding: 12px;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 1rem;
+            width: 100%;
             transition: all 0.3s;
-            margin-top: 10px;
         }
         
         .btn-login:hover {
             background: linear-gradient(135deg, #2980b9, #2573a7);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(52, 152, 219, 0.4);
         }
         
-        .btn-login:disabled {
-            background: #95a5a6;
-            transform: none;
-            box-shadow: none;
-        }
-        
-        .alert-box {
+        .alert {
             border-radius: 8px;
-            padding: 15px;
-            margin-top: 20px;
+            margin-bottom: 20px;
         }
         
-        .debug-panel {
-            background: #f8f9fa;
-            border: 1px dashed #dee2e6;
-            border-radius: 8px;
-            padding: 15px;
-            margin-top: 25px;
-            font-size: 0.85rem;
+        .loading-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--secondary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
         }
     </style>
 </head>
 <body>
-    <div class="login-container">
-        <div class="login-card">
-            <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-hands-helping"></i>
-                </div>
-                <h2 class="text-dark fw-bold">MR Kinesiología</h2>
-                <p class="text-muted">Sistema de Gestión Integral</p>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+    
+    <!-- Login Card -->
+    <div class="login-card">
+        <div class="login-header">
+            <h3><i class="fas fa-hands-helping me-2"></i>MR Kinesiología</h3>
+            <p>Sistema de Gestión - Acceso Restringido</p>
+        </div>
+        
+        <div class="login-body">
+            <div id="loginAlert" class="alert alert-danger d-none" role="alert">
+                <!-- Mensajes de error aparecerán aquí -->
             </div>
             
             <form id="loginForm">
                 <div class="mb-3">
-                    <label class="form-label fw-bold">Email</label>
+                    <label for="email" class="form-label">Email</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
-                            <i class="fas fa-envelope text-secondary"></i>
+                        <span class="input-group-text">
+                            <i class="fas fa-envelope"></i>
                         </span>
                         <input type="email" class="form-control" id="email" 
-                               value="admin@mrkinesiologia.com" required
-                               placeholder="tu@email.com">
+                               placeholder="usuario@ejemplo.com" required>
                     </div>
                 </div>
                 
-                <div class="mb-3">
-                    <label class="form-label fw-bold">Contraseña</label>
+                <div class="mb-4">
+                    <label for="password" class="form-label">Contraseña</label>
                     <div class="input-group">
-                        <span class="input-group-text bg-light">
-                            <i class="fas fa-lock text-secondary"></i>
+                        <span class="input-group-text">
+                            <i class="fas fa-lock"></i>
                         </span>
                         <input type="password" class="form-control" id="password" 
-                               value="admin123" required
-                               placeholder="••••••••">
+                               placeholder="••••••••" required>
+                        <button class="btn btn-outline-secondary" type="button" 
+                                id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
                     </div>
                 </div>
                 
-                <button type="submit" class="btn btn-login" id="btnLogin">
+                <button type="submit" class="btn btn-login mb-3">
                     <i class="fas fa-sign-in-alt me-2"></i> Iniciar Sesión
                 </button>
                 
-                <div class="alert alert-info mt-3">
-                    <i class="fas fa-info-circle me-2"></i>
-                    <small class="fw-medium">Credenciales por defecto:</small><br>
-                    <small>Email: <code>admin@mrkinesiologia.com</code></small><br>
-                    <small>Contraseña: <code>admin123</code></small>
+                <div class="text-center">
+                    <small class="text-muted">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Solo personal autorizado
+                    </small>
                 </div>
             </form>
-            
-            <div id="message" class="mt-3"></div>
-            
-            <!-- Panel de depuración -->
-            <div class="debug-panel">
-                <h6 class="mb-2"><i class="fas fa-bug me-1"></i> Estado del Sistema</h6>
-                <div id="debugInfo" class="mb-2">
-                    <div class="text-secondary">
-                        <i class="fas fa-spinner fa-spin me-1"></i> Verificando conexión...
-                    </div>
-                </div>
-                <div class="d-flex gap-2">
-                    <button class="btn btn-sm btn-outline-primary flex-fill" onclick="testAPI()">
-                        <i class="fas fa-plug me-1"></i> Probar API
-                    </button>
-                    <button class="btn btn-sm btn-outline-secondary flex-fill" onclick="initDatabase()">
-                        <i class="fas fa-database me-1"></i> Iniciar BD
-                    </button>
-                </div>
-            </div>
         </div>
     </div>
-
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
     <script>
         // ==============================================
-        // CONFIGURACIÓN - ACTUALIZA ESTA URL
+        // CONFIGURACIÓN - ¡IMPORTANTE! Usa tu NUEVA URL
         // ==============================================
-        const API_URL = 'https://script.google.com/macros/s/AKfycbznQUeGI0Kgfu4NLQbBIIirV31HDwGNWiG0sFwlaOTlZwp54aaw-BvDg--R_rDR2LpGrA/exec';
+        const API_URL = 'https://script.google.com/macros/s/AKfycbxzGyWS2Hceioi_XLg5VeRwiYFbpRniqVDmUjK8rv3QkZ1LVNesPzvLGGUPLHsDs6-IMw/exec';
+        
         // ==============================================
-        
-        // Elementos DOM
-        const loginForm = document.getElementById('loginForm');
-        const btnLogin = document.getElementById('btnLogin');
-        const messageDiv = document.getElementById('message');
-        const debugInfo = document.getElementById('debugInfo');
-        
-        // Inicialización
+        // INICIALIZACIÓN
+        // ==============================================
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('MR Kinesiología - Sistema de Login');
-            console.log('API URL:', API_URL);
-            testConnection();
+            console.log('Sistema de Login MR Kinesiología');
+            
+            // Verificar si ya está autenticado
+            checkExistingAuth();
+            
+            // Configurar eventos
+            setupEventListeners();
         });
         
-        // Función para mostrar mensajes
-        function showMessage(text, type = 'info', duration = 0) {
-            const alertClass = {
-                'success': 'alert-success',
-                'danger': 'alert-danger',
-                'warning': 'alert-warning',
-                'info': 'alert-info'
-            }[type] || 'alert-info';
-            
-            messageDiv.innerHTML = `
-                <div class="alert ${alertClass} alert-dismissible fade show" role="alert">
-                    ${text}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                </div>
+        // ==============================================
+        // FUNCIONES DE UI
+        // ==============================================
+        function showLoading(show) {
+            const overlay = document.getElementById('loadingOverlay');
+            overlay.style.display = show ? 'flex' : 'none';
+        }
+        
+        function showAlert(message, type = 'danger') {
+            const alertDiv = document.getElementById('loginAlert');
+            alertDiv.className = `alert alert-${type}`;
+            alertDiv.innerHTML = `
+                <i class="fas fa-exclamation-circle me-2"></i>
+                ${message}
+                <button type="button" class="btn-close float-end" 
+                        onclick="this.parentElement.classList.add('d-none')"></button>
             `;
+            alertDiv.classList.remove('d-none');
+        }
+        
+        // ==============================================
+        // FUNCIONES DE EVENTOS
+        // ==============================================
+        function setupEventListeners() {
+            // Formulario de login
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
             
-            if (duration > 0) {
-                setTimeout(() => {
-                    if (messageDiv.firstChild) {
-                        messageDiv.firstChild.remove();
-                    }
-                }, duration);
+            // Mostrar/ocultar contraseña
+            document.getElementById('togglePassword').addEventListener('click', function() {
+                const passwordInput = document.getElementById('password');
+                const icon = this.querySelector('i');
+                
+                if (passwordInput.type === 'password') {
+                    passwordInput.type = 'text';
+                    icon.className = 'fas fa-eye-slash';
+                } else {
+                    passwordInput.type = 'password';
+                    icon.className = 'fas fa-eye';
+                }
+            });
+            
+            // Enter para enviar
+            document.getElementById('password').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    handleLogin(e);
+                }
+            });
+        }
+        
+        // ==============================================
+        // FUNCIONES DE AUTENTICACIÓN
+        // ==============================================
+        function checkExistingAuth() {
+            const token = localStorage.getItem('mrk_token');
+            const user = localStorage.getItem('mrk_user');
+            
+            // Si ya hay token y usuario, redirigir al dashboard
+            if (token && user) {
+                console.log('Usuario ya autenticado, redirigiendo...');
+                window.location.href = 'index_nuevo.html';
             }
         }
         
-        // Función para actualizar debug info
-        function updateDebugInfo(text, type = 'info') {
-            const colorClass = {
-                'success': 'text-success',
-                'danger': 'text-danger',
-                'warning': 'text-warning',
-                'info': 'text-info'
-            }[type] || 'text-secondary';
+        async function handleLogin(e) {
+            e.preventDefault();
             
-            debugInfo.innerHTML = `<div class="${colorClass}">${text}</div>`;
-        }
-        
-        // Test de conexión
-        async function testConnection() {
-            updateDebugInfo('<i class="fas fa-spinner fa-spin me-1"></i> Probando conexión...', 'info');
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+            
+            // Validación básica
+            if (!email || !password) {
+                showAlert('Por favor complete todos los campos');
+                return;
+            }
+            
+            showLoading(true);
             
             try {
-                const response = await fetch(`${API_URL}?action=test`);
+                // Preparar datos para la API
+                const loginData = {
+                    action: 'login',
+                    email: email,
+                    password: password
+                };
+                
+                console.log('Enviando solicitud de login a:', API_URL);
+                
+                // Hacer la solicitud a Google Apps Script
+                const response = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(loginData)
+                });
                 
                 if (!response.ok) {
                     throw new Error(`HTTP ${response.status}: ${response.statusText}`);
                 }
                 
                 const result = await response.json();
+                console.log('Respuesta de login:', result);
                 
                 if (result.success) {
-                    updateDebugInfo(
-                        `<i class="fas fa-check-circle me-1"></i> ${result.message} (v${result.version})`,
-                        'success'
-                    );
-                    return true;
-                } else {
-                    updateDebugInfo(
-                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
-                        'danger'
-                    );
-                    return false;
-                }
-            } catch (error) {
-                updateDebugInfo(
-                    `<i class="fas fa-times-circle me-1"></i> Error: ${error.message}`,
-                    'danger'
-                );
-                return false;
-            }
-        }
-        
-        // Test API
-        async function testAPI() {
-            showMessage('<i class="fas fa-spinner fa-spin me-1"></i> Probando API...', 'info');
-            
-            try {
-                const response = await fetch(`${API_URL}?action=test`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage(
-                        `<i class="fas fa-check-circle me-1"></i> ${result.message}<br>
-                        <small>Versión: ${result.version} • ${new Date(result.timestamp).toLocaleTimeString()}</small>`,
-                        'success',
-                        5000
-                    );
-                } else {
-                    showMessage(`<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`, 'danger');
-                }
-            } catch (error) {
-                showMessage(`<i class="fas fa-times-circle me-1"></i> Error: ${error.message}`, 'danger');
-            }
-        }
-        
-        // Inicializar base de datos
-        async function initDatabase() {
-            showMessage('<i class="fas fa-spinner fa-spin me-1"></i> Inicializando base de datos...', 'info');
-            updateDebugInfo('<i class="fas fa-spinner fa-spin me-1"></i> Inicializando...', 'info');
-            
-            try {
-                const response = await fetch(`${API_URL}?action=init`);
-                const result = await response.json();
-                
-                if (result.success) {
-                    showMessage(
-                        `<i class="fas fa-check-circle me-1"></i> ${result.message}<br>
-                        <small>Usuario: ${result.usuario_admin} / ${result.password_admin}</small>`,
-                        'success',
-                        5000
-                    );
-                    updateDebugInfo(
-                        `<i class="fas fa-check-circle me-1"></i> Base de datos lista`,
-                        'success'
-                    );
-                } else {
-                    showMessage(`<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`, 'danger');
-                    updateDebugInfo(
-                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
-                        'warning'
-                    );
-                }
-            } catch (error) {
-                showMessage(`<i class="fas fa-times-circle me-1"></i> Error: ${error.message}`, 'danger');
-                updateDebugInfo(
-                    `<i class="fas fa-times-circle me-1"></i> Error de conexión`,
-                    'danger'
-                );
-            }
-        }
-        
-        // Login
-        async function loginUser(email, password) {
-            btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Verificando...';
-            btnLogin.disabled = true;
-            
-            showMessage('<i class="fas fa-spinner fa-spin me-1"></i> Verificando credenciales...', 'info');
-            updateDebugInfo('<i class="fas fa-spinner fa-spin me-1"></i> Autenticando...', 'info');
-            
-            try {
-                // Usar POST para login
-                const response = await fetch(`${API_URL}?action=login`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ email, password })
-                });
-                
-                if (!response.ok) {
-                    throw new Error(`HTTP ${response.status}`);
-                }
-                
-                const result = await response.json();
-                
-                if (result.success) {
-                    // Guardar datos de sesión
+                    // Guardar token y datos de usuario
                     localStorage.setItem('mrk_token', result.token);
                     localStorage.setItem('mrk_user', JSON.stringify(result.user));
                     localStorage.setItem('mrk_last_login', new Date().toISOString());
                     
-                    showMessage(
-                        `<i class="fas fa-check-circle me-1"></i> ${result.message}<br>
-                        <small>Bienvenido, ${result.user.nombre}!</small>`,
-                        'success'
-                    );
-                    updateDebugInfo(
-                        `<i class="fas fa-check-circle me-1"></i> Autenticación exitosa`,
-                        'success'
-                    );
+                    // Redirigir al dashboard
+                    window.location.href = 'index_nuevo.html';
                     
-                    // Redirigir al dashboard después de 1.5 segundos
-                    setTimeout(() => {
-                        window.location.href = 'index.html';
-                    }, 1500);
-                    
-                    return true;
                 } else {
-                    showMessage(
-                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
-                        'danger'
-                    );
-                    updateDebugInfo(
-                        `<i class="fas fa-exclamation-triangle me-1"></i> ${result.error}`,
-                        'warning'
-                    );
-                    
-                    btnLogin.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión';
-                    btnLogin.disabled = false;
-                    return false;
+                    showAlert(result.error || 'Credenciales incorrectas');
                 }
+                
             } catch (error) {
                 console.error('Error en login:', error);
-                
-                // Intentar con GET si POST falla
-                try {
-                    console.log('Intentando login vía GET...');
-                    const getResponse = await fetch(
-                        `${API_URL}?action=login&email=${encodeURIComponent(email)}&password=${encodeURIComponent(password)}`
-                    );
-                    
-                    const getResult = await getResponse.json();
-                    
-                    if (getResult.success) {
-                        localStorage.setItem('mrk_token', getResult.token);
-                        localStorage.setItem('mrk_user', JSON.stringify(getResult.user));
-                        
-                        showMessage(
-                            `<i class="fas fa-check-circle me-1"></i> ${getResult.message}`,
-                            'success'
-                        );
-                        
-                        setTimeout(() => {
-                            window.location.href = 'index.html';
-                        }, 1500);
-                        
-                        return true;
-                    } else {
-                        showMessage(
-                            `<i class="fas fa-exclamation-triangle me-1"></i> ${getResult.error}`,
-                            'danger'
-                        );
-                        
-                        btnLogin.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión';
-                        btnLogin.disabled = false;
-                        return false;
-                    }
-                } catch (getError) {
-                    showMessage(
-                        `<i class="fas fa-times-circle me-1"></i> Error de conexión: ${getError.message}`,
-                        'danger'
-                    );
-                    updateDebugInfo(
-                        `<i class="fas fa-times-circle me-1"></i> Error de conexión`,
-                        'danger'
-                    );
-                    
-                    btnLogin.innerHTML = '<i class="fas fa-sign-in-alt me-1"></i> Iniciar Sesión';
-                    btnLogin.disabled = false;
-                    return false;
-                }
+                showAlert('Error de conexión: ' + error.message);
+            } finally {
+                showLoading(false);
             }
         }
         
-        // Event Listeners
-        loginForm.addEventListener('submit', async function(e) {
-            e.preventDefault();
-            
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-            
-            if (!email || !password) {
-                showMessage('<i class="fas fa-exclamation-triangle me-1"></i> Completa todos los campos', 'warning');
-                return;
-            }
-            
-            await loginUser(email, password);
-        });
-        
-        // Auto-inicializar si es la primera vez
-        const isFirstVisit = !localStorage.getItem('mrk_db_initialized');
-        if (isFirstVisit) {
-            setTimeout(() => {
-                initDatabase();
-                localStorage.setItem('mrk_db_initialized', 'true');
-            }, 1000);
-        }
+        // ==============================================
+        // INICIALIZACIÓN FINAL
+        // ==============================================
+        console.log('Login system ready');
     </script>
-    
-    <!-- Bootstrap JS -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
