@@ -28,7 +28,7 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center p-4 relative overflow-hidden">
+    <div className="min-h-screen bg-white dark:bg-slate-950 flex items-center justify-center p-4 relative overflow-hidden transition-colors duration-500">
       <Toaster position="top-right" />
       
       {/* Background blobs */}
@@ -46,18 +46,18 @@ const Login = () => {
             <Activity className="text-white w-8 h-8" strokeWidth={3} />
           </div>
           <div className="space-y-1">
-            <h1 className="text-4xl font-manrope font-extrabold tracking-tight text-slate-900">MR Kinesiología</h1>
-            <p className="text-sm font-bold text-slate-400 uppercase tracking-widest">Sistema de Gestión Clínica</p>
+            <h1 className="text-4xl font-manrope font-extrabold tracking-tight text-slate-900 dark:text-white">MR Kinesiología</h1>
+            <p className="text-sm font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest">Sistema de Gestión Clínica</p>
           </div>
         </div>
 
         {/* Card */}
-        <div className="bg-white/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl shadow-slate-200/50 border border-slate-100">
+        <div className="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl p-10 rounded-3xl shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-100 dark:border-slate-800">
           <form onSubmit={handleLogin} className="space-y-6">
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Email Profesional</label>
+              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Email Profesional</label>
               <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600 group-focus-within:text-primary transition-colors">
                   <Mail size={18} strokeWidth={2.5} />
                 </div>
                 <input 
@@ -66,16 +66,16 @@ const Login = () => {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full bg-slate-50 border-transparent rounded-2xl pl-12 pr-4 py-4 text-sm font-semibold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-primary/20 focus:bg-white focus:border-primary transition-all duration-200 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border-transparent rounded-2xl pl-12 pr-4 py-4 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-slate-900 focus:border-primary transition-all duration-200 outline-none"
                   placeholder="ejemplo@kinesio.com"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Contraseña</label>
+              <label className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest ml-1">Contraseña</label>
               <div className="relative group">
-                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-600 group-focus-within:text-primary transition-colors">
                   <Lock size={18} strokeWidth={2.5} />
                 </div>
                 <input 
@@ -84,7 +84,7 @@ const Login = () => {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full bg-slate-50 border-transparent rounded-2xl pl-12 pr-4 py-4 text-sm font-semibold text-slate-900 placeholder:text-slate-300 focus:ring-2 focus:ring-primary/20 focus:bg-white focus:border-primary transition-all duration-200 outline-none"
+                  className="w-full bg-slate-50 dark:bg-slate-950 border-transparent rounded-2xl pl-12 pr-4 py-4 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-700 focus:ring-2 focus:ring-primary/20 focus:bg-white dark:focus:bg-slate-900 focus:border-primary transition-all duration-200 outline-none"
                   placeholder="••••••••"
                 />
               </div>
@@ -107,8 +107,8 @@ const Login = () => {
           </form>
         </div>
 
-        <p className="text-center text-xs font-bold text-slate-300 uppercase tracking-widest">
-          MR Kinesiología © 2026
+        <p className="text-center text-xs font-bold text-slate-300 dark:text-slate-700 uppercase tracking-widest">
+          DigimediosApps © 2026
         </p>
       </motion.div>
     </div>

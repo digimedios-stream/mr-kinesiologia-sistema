@@ -1,6 +1,6 @@
 {
   "name": "MR Kinesiología",
-  "short_name": "MR Kined",
+  "short_name": "MR",
   "description": "Sistema de gestión clínica y kinesiología",
   "start_url": "/",
   "display": "standalone",

@@ -77,7 +77,7 @@ const Sidebar = () => {
               <Stethoscope size={24} strokeWidth={2.5} />
             </div>
             <div className="animate-in fade-in duration-300">
-              <h1 className="text-primary font-manrope font-extrabold text-lg leading-none tracking-tight">MR Kined</h1>
+              <h1 className="text-primary font-manrope font-extrabold text-lg leading-none tracking-tight">MR</h1>
               <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Precisión Clínica</p>
             </div>
           </div>
@@ -136,7 +136,7 @@ const Sidebar = () => {
               MR
             </div>
             <div className="overflow-hidden">
-              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">Lic. Roman Macarena</p>
+              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">Licenciada MR</p>
               <p className="text-[10px] text-slate-400 font-bold uppercase">Kinesióloga</p>
             </div>
           </div>
