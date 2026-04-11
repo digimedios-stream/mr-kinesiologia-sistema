@@ -132,16 +132,20 @@ const ProfessionalCalendar = () => {
 
       <style dangerouslySetInnerHTML={{ __html: `
         .fc { 
-          --fc-button-bg-color: transparent;
+          --fc-button-bg-color: #f8fafc;
           --fc-button-border-color: #e2e8f0;
-          --fc-button-hover-bg-color: #f8fafc;
+          --fc-button-hover-bg-color: #f1f5f9;
           --fc-button-active-bg-color: #0ea5e9;
+          --fc-button-text-color: #475569;
+          --fc-button-hover-text-color: #0f172a;
           --fc-border-color: #f1f5f9;
         }
         .dark .fc {
           --fc-border-color: #1e293b;
+          --fc-button-bg-color: #1e293b;
           --fc-button-border-color: #334155;
-          --fc-button-hover-bg-color: #1e293b;
+          --fc-button-hover-bg-color: #334155;
+          --fc-button-text-color: #f1f5f9;
           color: white;
         }
         .fc .fc-toolbar-title {
