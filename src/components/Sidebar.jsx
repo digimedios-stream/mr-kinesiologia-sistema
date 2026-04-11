@@ -25,7 +25,7 @@ function cn(...inputs) {
 }
 
 const Sidebar = () => {
-  const [isOpen, setIsOpen] = React.useState(true);
+  const [isOpen, setIsOpen] = React.useState(false); // Default closed on mobile
   const { isDark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -47,18 +47,28 @@ const Sidebar = () => {
 
   return (
     <>
+      {/* Mobile Toggle Button - Floating */}
+      {!isOpen && (
+        <button 
+          onClick={() => setIsOpen(true)}
+          className="fixed top-6 left-6 z-[60] lg:hidden p-3 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-2xl shadow-xl text-primary animate-in fade-in zoom-in duration-300"
+        >
+          <Menu size={24} strokeWidth={2.5} />
+        </button>
+      )}
+
       {/* Mobile Overlay */}
       <div 
         className={cn(
-          "fixed inset-0 bg-slate-900/50 z-40 lg:hidden transition-opacity",
+          "fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-40 lg:hidden transition-all duration-300",
           isOpen ? "opacity-100 visible" : "opacity-0 invisible"
         )}
         onClick={() => setIsOpen(false)}
       />
 
       <aside className={cn(
-        "fixed left-0 top-0 h-screen bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 z-50 transition-all duration-300 flex flex-col shadow-xl lg:shadow-none",
-        isOpen ? "w-64 translate-x-0" : "w-20 -translate-x-full lg:translate-x-0"
+        "fixed left-0 top-0 h-screen bg-white dark:bg-slate-900 border-r border-slate-100 dark:border-slate-800 z-50 transition-all duration-500 ease-out flex flex-col shadow-2xl lg:shadow-none",
+        isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full lg:translate-x-0"
       )}>
         {/* Header */}
         <div className="p-6 flex items-center justify-between">
@@ -66,12 +76,10 @@ const Sidebar = () => {
             <div className="w-10 h-10 rounded-xl kinetic-gradient flex items-center justify-center text-white shadow-lg shadow-primary/20">
               <Stethoscope size={24} strokeWidth={2.5} />
             </div>
-            {isOpen && (
-              <div className="animate-in fade-in duration-300">
-                <h1 className="text-primary font-manrope font-extrabold text-lg leading-none tracking-tight">MR Kined</h1>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Precisión Clínica</p>
-              </div>
-            )}
+            <div className="animate-in fade-in duration-300">
+              <h1 className="text-primary font-manrope font-extrabold text-lg leading-none tracking-tight">MR Kined</h1>
+              <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1">Precisión Clínica</p>
+            </div>
           </div>
           <button 
             className="lg:hidden p-2 text-slate-400 hover:text-primary transition-colors"
@@ -106,6 +114,7 @@ const Sidebar = () => {
             <NavLink
               key={item.path}
               to={item.path}
+              onClick={() => setIsOpen(false)} // Close on click for mobile
               className={({ isActive }) => cn(
                 "flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-200 group",
                 isActive 
@@ -113,38 +122,30 @@ const Sidebar = () => {
                   : "text-slate-500 hover:bg-slate-50 dark:hover:bg-slate-800/50 hover:text-slate-900 dark:hover:text-white"
               )}
             >
-              <item.icon className={cn("shrink-0", isOpen ? "w-5 h-5" : "w-6 h-6")} strokeWidth={2.5} />
-              {isOpen && <span className="flex-1 text-sm">{item.label}</span>}
-              {isOpen && <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />}
+              <item.icon className="shrink-0 w-5 h-5" strokeWidth={2.5} />
+              <span className="flex-1 text-sm">{item.label}</span>
+              <ChevronRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" />
             </NavLink>
           ))}
         </nav>
 
         {/* User Profile / Logout */}
         <div className="p-4 border-t border-slate-50 dark:border-slate-800">
-          <div className={cn(
-            "flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-800 mb-3",
-            !isOpen && "justify-center px-0"
-          )}>
+          <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-800 mb-3">
             <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold shrink-0 shadow-sm">
               MR
             </div>
-            {isOpen && (
-              <div className="overflow-hidden">
-                <p className="text-sm font-bold text-slate-900 dark:text-white truncate">Lic. Roman Macarena</p>
-                <p className="text-[10px] text-slate-400 font-bold uppercase">Kinesióloga</p>
-              </div>
-            )}
+            <div className="overflow-hidden">
+              <p className="text-sm font-bold text-slate-900 dark:text-white truncate">Lic. Roman Macarena</p>
+              <p className="text-[10px] text-slate-400 font-bold uppercase">Kinesióloga</p>
+            </div>
           </div>
           <button 
             onClick={handleLogout}
-            className={cn(
-              "w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors duration-200",
-              !isOpen && "justify-center px-0"
-            )}
+            className="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors duration-200"
           >
             <LogOut size={20} className="shrink-0" strokeWidth={2.5} />
-            {isOpen && <span className="font-bold text-sm">Cerrar Sesión</span>}
+            <span className="font-bold text-sm">Cerrar Sesión</span>
           </button>
         </div>
       </aside>
