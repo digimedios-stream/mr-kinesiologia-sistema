@@ -15,6 +15,7 @@ const ProfessionalCalendar = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [patients, setPatients] = useState([]);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
   
   const [newTurn, setNewTurn] = useState({
     paciente_id: '',
@@ -26,6 +27,9 @@ const ProfessionalCalendar = () => {
   useEffect(() => {
     fetchEvents();
     fetchPatients();
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   const fetchEvents = async () => {
@@ -82,32 +86,33 @@ const ProfessionalCalendar = () => {
     <div className="p-4 md:p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
       <Toaster position="top-right" />
       
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-12 lg:mt-0">
-        <div>
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mt-20 lg:mt-0">
+        <div className="text-center md:text-left">
           <h1 className="text-2xl md:text-3xl font-manrope font-extrabold text-slate-900 dark:text-white leading-tight">Agenda Médica</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Gestión de turnos y disponibilidad horaria</p>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Gestión de turnos y disponibilidad</p>
         </div>
         <button 
           onClick={() => setShowModal(true)}
-          className="flex items-center justify-center gap-2 px-6 py-3 kinetic-gradient text-white text-xs font-bold rounded-2xl shadow-xl hover:opacity-95 active:scale-95 transition-all"
+          className="flex items-center justify-center gap-2 px-6 py-4 kinetic-gradient text-white text-xs font-bold rounded-2xl shadow-xl active:scale-95 transition-all"
         >
           <Plus size={16} strokeWidth={3} />
           NUEVO TURNO
         </button>
       </div>
 
-      <div className="bg-white dark:bg-slate-900 rounded-[32px] md:rounded-[40px] shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-slate-800 p-4 md:p-8">
+      <div className="bg-white dark:bg-slate-900 rounded-[30px] md:rounded-[40px] shadow-2xl shadow-slate-200/50 dark:shadow-none border border-slate-50 dark:border-slate-800 p-3 md:p-8 overflow-hidden">
         {loading ? (
           <div className="py-20 flex justify-center"><Loader2 size={40} className="animate-spin text-primary/30" /></div>
         ) : (
           <div className="calendar-container">
             <FullCalendar
+              key={isMobile ? 'mobile' : 'desktop'}
               plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin, listPlugin]}
-              initialView={window.innerWidth < 768 ? 'listWeek' : 'timeGridWeek'}
+              initialView={isMobile ? 'listWeek' : 'timeGridWeek'}
               headerToolbar={{
                 left: 'prev,next today',
                 center: 'title',
-                right: window.innerWidth < 768 ? 'listWeek,dayGridMonth' : 'dayGridMonth,timeGridWeek,timeGridDay'
+                right: isMobile ? 'listWeek,dayGridMonth' : 'dayGridMonth,timeGridWeek'
               }}
               locales={[esLocale]}
               locale="es"
@@ -131,58 +136,49 @@ const ProfessionalCalendar = () => {
           --fc-button-border-color: #e2e8f0;
           --fc-button-hover-bg-color: #f8fafc;
           --fc-button-active-bg-color: #0ea5e9;
-          --fc-button-active-border-color: #0ea5e9;
           --fc-border-color: #f1f5f9;
-          font-family: 'Manrope', sans-serif;
         }
         .dark .fc {
           --fc-border-color: #1e293b;
           --fc-button-border-color: #334155;
           --fc-button-hover-bg-color: #1e293b;
-          --fc-page-bg-color: #0f172a;
           color: white;
         }
         .fc .fc-toolbar-title {
-          font-size: 1.1rem !important;
+          font-size: 1rem !important;
           font-weight: 800;
-          text-transform: capitalize;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
         @media (max-width: 768px) {
           .fc .fc-toolbar {
+            display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 12px;
+          }
+          .fc .fc-toolbar-chunk:nth-child(2) {
+            order: -1;
+            width: 100%;
+            text-align: center;
           }
           .fc .fc-toolbar-title {
-            font-size: 0.9rem !important;
+            font-size: 1.2rem !important;
+            margin-bottom: 5px;
           }
           .fc .fc-button {
-            padding: 0.4rem 0.6rem !important;
-            font-size: 0.7rem !important;
-            font-weight: 900 !important;
+            padding: 8px 12px !important;
+            font-size: 10px !important;
             text-transform: uppercase !important;
+            font-weight: 900 !important;
           }
           .fc-list-event-title {
             font-weight: 800 !important;
-            color: #0ea5e9 !important;
           }
-          .fc-list-day-side-text {
-            font-weight: 900 !important;
-            text-transform: uppercase !important;
-            font-size: 10px !important;
-          }
-        }
-        .fc .fc-button-primary:not(:disabled).fc-button-active, 
-        .fc .fc-button-primary:not(:disabled):active {
-          background-color: #0ea5e9 !important;
-          color: white !important;
         }
         .fc .fc-button-primary {
-          color: #64748b;
           border-radius: 12px !important;
-          transition: all 0.2s;
-        }
-        .dark .fc .fc-button-primary {
-          color: #94a3b8;
+          font-weight: 700;
         }
       `}} />
 
@@ -236,17 +232,6 @@ const ProfessionalCalendar = () => {
                       required
                     />
                   </div>
-                </div>
-
-                <div className="space-y-2">
-                  <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Motivo (Opcional)</label>
-                  <input 
-                    type="text" 
-                    value={newTurn.motivo}
-                    onChange={(e) => setNewTurn({ ...newTurn, motivo: e.target.value })}
-                    placeholder="Ej: Evaluación inicial" 
-                    className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary rounded-2xl p-4 text-sm font-bold dark:text-white outline-none transition-all" 
-                  />
                 </div>
 
                 <button type="submit" className="w-full py-5 kinetic-gradient text-white rounded-[24px] font-bold uppercase text-xs shadow-xl active:scale-95 transition-all mt-4">Confirmar Turno</button>
