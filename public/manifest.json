@@ -1,0 +1,17 @@
+{
+  "name": "MR Kinesiología",
+  "short_name": "MR Kined",
+  "description": "Sistema de gestión clínica y kinesiología",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#0ea5e9",
+  "icons": [
+    {
+      "src": "/icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
