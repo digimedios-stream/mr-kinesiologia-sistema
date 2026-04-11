@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Portal Clínico - Ficha Detallada del Paciente</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-primary": "#73ccd6",
+                        "on-background": "#2c3436",
+                        "surface-container-low": "#f0f4f6",
+                        "inverse-on-surface": "#9a9d9e",
+                        "error": "#a83836",
+                        "secondary": "#38647d",
+                        "on-primary-container": "#004147",
+                        "on-surface-variant": "#596063",
+                        "on-tertiary-fixed": "#153b57",
+                        "secondary-dim": "#2b5870",
+                        "secondary-fixed": "#c5e7ff",
+                        "on-primary-fixed": "#002a2e",
+                        "secondary-fixed-dim": "#aedaf7",
+                        "surface-variant": "#dce4e6",
+                        "error-container": "#fa746f",
+                        "on-error": "#fff7f6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#f6f9ff",
+                        "outline": "#747c7e",
+                        "surface-bright": "#f8fafb",
+                        "surface": "#f8fafb",
+                        "error-dim": "#67040d",
+                        "surface-tint": "#006972",
+                        "background": "#f8fafb",
+                        "surface-container-highest": "#dce4e6",
+                        "on-secondary-fixed": "#12445c",
+                        "primary": "#006972",
+                        "surface-dim": "#d4dbde",
+                        "secondary-container": "#c5e7ff",
+                        "tertiary-dim": "#335673",
+                        "on-secondary": "#f4f9ff",
+                        "on-tertiary-fixed-variant": "#355775",
+                        "on-tertiary-container": "#2b4e6b",
+                        "on-error-container": "#6e0a12",
+                        "outline-variant": "#acb3b6",
+                        "tertiary": "#406280",
+                        "tertiary-container": "#b8dbfe",
+                        "primary-dim": "#005c64",
+                        "primary-container": "#73ccd6",
+                        "on-primary": "#e9fdff",
+                        "surface-container": "#eaeff0",
+                        "primary-fixed-dim": "#65bec8",
+                        "tertiary-fixed-dim": "#aacdef",
+                        "tertiary-fixed": "#b8dbfe",
+                        "primary-fixed": "#73ccd6",
+                        "surface-container-high": "#e3e9eb",
+                        "on-surface": "#2c3436",
+                        "inverse-surface": "#0b0f10",
+                        "on-secondary-container": "#2a566f",
+                        "on-secondary-fixed-variant": "#346079",
+                        "on-primary-fixed-variant": "#004b52"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body { font-family: 'Inter', sans-serif; }
+        h1, h2, h3 { font-family: 'Manrope', sans-serif; }
+        .glass-sidebar {
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+    </style>
+</head>
+<body class="bg-surface text-on-surface">
+<!-- Sidebar Navigation -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl h-screen w-64 border-r-0 shadow-2xl shadow-slate-200/50 dark:shadow-none">
+<div class="px-6 py-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-primary-container flex items-center justify-center text-on-primary-container">
+<span class="material-symbols-outlined">exercise</span>
+</div>
+<div>
+<h2 class="text-teal-800 dark:text-teal-200 font-bold tracking-tighter text-lg leading-tight">MR Kinesiología</h2>
+<p class="text-[10px] uppercase tracking-widest text-secondary font-semibold">Precisión Clínica</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Panel Principal</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendario</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 bg-teal-100 dark:bg-teal-900/40 text-teal-900 dark:text-teal-100 rounded-lg mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Pacientes</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="exercise">exercise</span>
+<span>Sesiones</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="shield_person">shield_person</span>
+<span>Obras Sociales</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Reportes</span>
+</a>
+</nav>
+<div class="p-4 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span>Configuración</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 transition-all duration-300 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span>Soporte</span>
+</a>
+</div>
+</aside>
+<!-- Top AppBar -->
+<header class="sticky top-0 z-30 flex justify-between items-center w-full px-6 py-3 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md ml-0 md:pl-72">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant">search</span>
+<input class="w-full bg-surface-container border-0 rounded-full py-2 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary/20 transition-all outline-none" placeholder="Buscar pacientes o registros médicos..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 hover:text-teal-600 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<div class="w-px h-6 bg-outline-variant/30"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-bold text-on-surface">Dra. Elena Rodriguez</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-tighter">Fisiatra Jefa</p>
+</div>
+<img alt="Foto de Perfil del Profesional" class="w-9 h-9 rounded-full ring-2 ring-primary-container/30" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAFtjuMcIkizqa7tukQfOnUttXcE3ut1oPyuoiBAJcrG834AN76d6omSQwCqj6dmuOVxTGUuZ3xMOi-BEf6IwltX4ZSCjKlMGYov-qqCqaPiXqnEO5GzktR_CQwPndg9TEl_-ibOqFKLG3sF2VdlDDbd_sB36J_aoTFcDcOCjl6g1GAEGv6qyo-5tVV0ekwJ0TUCyWHnEuw16WPO68_EvedZrWGfVioB0pzJhC5DNo4gvm1I8jh0wBtKll-gj40k5K4eAlnqY6PX3M"/>
+</div>
+</div>
+</header>
+<main class="ml-0 md:ml-64 p-6 min-h-screen bg-surface">
+<!-- Patient Header Area -->
+<div class="mb-8 flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+<div class="flex items-start gap-6">
+<div class="relative">
+<img alt="Retrato del Paciente" class="w-24 h-24 rounded-2xl object-cover shadow-lg" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDnjXK6FKLG2GinuHmssMAhcWdwiGvW0G9Fu2NRl099gvxpcvwBM68zN-i9rxbPSQ0wQDQmFYas8fHJDofSSmLhXcL934yJ70oea4lKGXDLPUUqKMAPP5AZNbVm_WsZ_5QVYztm8q4fhuHe45osvJLi5S8J4FXEnpNpc-SbwthuuAZS5KRuFGiLUKGH6kn8rR4HVOqr89WtAmyFXQ-83ytKUjAopeI5VI0SmlZmAiBQhXDxzB0Uvm-EeScowzUD6Rj0b5AirQbHACw"/>
+<span class="absolute -bottom-2 -right-2 bg-secondary text-on-secondary text-[10px] font-bold px-3 py-1 rounded-full shadow-md">ID: #KS-9921</span>
+</div>
+<div class="space-y-1">
+<div class="flex items-center gap-3">
+<h1 class="text-3xl font-extrabold tracking-tight text-on-surface">Mateo Sebastian Valenzuela</h1>
+<span class="bg-secondary-container text-on-secondary-container text-xs font-bold px-3 py-1 rounded-full">En Tratamiento</span>
+</div>
+<div class="flex flex-wrap gap-x-6 gap-y-2 pt-1 text-sm text-on-surface-variant font-medium">
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">cake</span> 34 años</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">fingerprint</span> DNI: 28.441.209</span>
+<span class="flex items-center gap-1.5"><span class="material-symbols-outlined text-sm">bloodtype</span> A+ Positivo</span>
+</div>
+</div>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 bg-surface-container-highest px-4 py-2 rounded-lg text-sm font-semibold hover:bg-surface-variant transition-colors">
+<span class="material-symbols-outlined text-lg">print</span> Imprimir Ficha
+                </button>
+<button class="flex items-center gap-2 bg-gradient-to-br from-primary to-primary-dim text-on-primary px-5 py-2 rounded-lg text-sm font-bold shadow-lg shadow-primary/20 active:scale-95 transition-transform">
+<span class="material-symbols-outlined text-lg">edit_note</span> Nueva Entrada
+                </button>
+</div>
+</div>
+<!-- Navigation Tabs -->
+<div class="flex gap-8 border-b-0 mb-8 overflow-x-auto no-scrollbar">
+<button class="pb-3 text-sm font-bold border-b-2 border-primary text-primary transition-all whitespace-nowrap">Datos Personales</button>
+<button class="pb-3 text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap">Historial de Sesiones</button>
+<button class="pb-3 text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap">Diagnóstico y Evolución</button>
+<button class="pb-3 text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap">Observaciones Clínicas</button>
+<button class="pb-3 text-sm font-semibold text-on-surface-variant hover:text-on-surface transition-all whitespace-nowrap">Imágenes y Laboratorio</button>
+</div>
+<!-- Bento Grid Layout for Patient Data -->
+<div class="grid grid-cols-12 gap-6 mb-12">
+<!-- Column: Health Insurance & Vitals (4/12) -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<!-- Health Insurance Card -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+<p class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-4">OBRA SOCIAL / COBERTURA</p>
+<div class="relative h-44 w-full rounded-lg overflow-hidden bg-gradient-to-br from-secondary to-secondary-dim p-4 flex flex-col justify-between text-on-secondary">
+<div class="flex justify-between items-start">
+<span class="text-sm font-bold">OSDE 410 Premium</span>
+<span class="material-symbols-outlined text-3xl opacity-50">contactless</span>
+</div>
+<div class="space-y-1">
+<p class="text-xs opacity-70">Número de Afiliado</p>
+<p class="text-lg font-mono tracking-widest">**** **** **** 8842</p>
+</div>
+<div class="flex justify-between items-end">
+<p class="text-xs uppercase font-semibold">Valenzuela, Mateo S.</p>
+<img alt="Logotipo de Cobertura Médica" class="h-6 filter brightness-0 invert opacity-60 grayscale" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaoJDuubj9RkjuzXFh2-hC1n-c2-iWnPbpsWYMprEOhbyLpc7RW5J3RuzTuJJy6n0-jKosnzoexEgbmC2EK9lU6xob9KUMaO4v1o1PmMsWIWH_tx6cqhfUN2Ai-XJC2_udp2F6qz5V61reV7br9TX9TjkCFfAncJDpkUkNi4BJPNuVHzQWKbhN8i__mtyU-TujaUgS5eEoanfRVGGn4xT4g36DkLAMiBqsvJu1UkTZMjfevK2f_jO7SQljmR5DmNrTUcFuULhA-Zw"/>
+</div>
+</div>
+</div>
+<!-- Recovery Metrics -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<p class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">PROGRESO DE RECUPERACIÓN</p>
+<span class="text-primary font-bold text-sm">74%</span>
+</div>
+<div class="flex justify-center py-4">
+<div class="relative w-32 h-32">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-surface-container-high" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-width="8"></circle>
+<circle class="text-primary transition-all duration-500" cx="64" cy="64" fill="transparent" r="56" stroke="currentColor" stroke-dasharray="351.85" stroke-dashoffset="91.48" stroke-width="8"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-extrabold text-on-surface">12/16</span>
+<span class="text-[10px] text-on-surface-variant font-medium">SESIONES</span>
+</div>
+</div>
+</div>
+<div class="mt-4 p-3 bg-surface-container rounded-lg">
+<p class="text-xs font-semibold text-on-surface-variant mb-1">Objetivo de Etapa</p>
+<p class="text-sm font-bold text-secondary">Rango completo de movimiento - Lumbar L4-L5</p>
+</div>
+</div>
+<!-- Clinical Observations Sidebar -->
+<div class="bg-surface-container-lowest rounded-xl p-5 shadow-sm">
+<p class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase mb-4">NOTAS DEL TERAPEUTA</p>
+<div class="space-y-4">
+<div class="p-3 bg-tertiary-container/20 rounded-lg border-l-4 border-tertiary">
+<p class="text-xs text-on-tertiary-container font-medium mb-1 italic">12 de Mayo, 2024</p>
+<p class="text-sm text-on-tertiary-container leading-relaxed">El paciente reporta disminución del dolor lumbar tras estiramientos matutinos. Se recomienda agregar sentadillas con carga.</p>
+</div>
+<div class="p-3 bg-surface-container rounded-lg border-l-4 border-outline-variant">
+<p class="text-xs text-on-surface-variant font-medium mb-1 italic">05 de Mayo, 2024</p>
+<p class="text-sm text-on-surface-variant leading-relaxed">Mostró mejora significativa en la estabilidad postural durante la prueba de equilibrio unipodal.</p>
+</div>
+</div>
+<button class="w-full mt-4 py-2 text-primary font-bold text-xs uppercase tracking-wider flex items-center justify-center gap-2 hover:bg-primary/5 rounded-lg transition-colors">
+<span class="material-symbols-outlined text-sm">add_circle</span> Agregar Nota Rápida
+                    </button>
+</div>
+</div>
+<!-- Column: Diagnosis & History (8/12) -->
+<div class="col-span-12 lg:col-span-8 space-y-6">
+<!-- Diagnosis Area -->
+<div class="bg-surface-container-lowest rounded-xl p-6 shadow-sm">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-weight="fill">clinical_notes</span>
+<p class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">DIAGNÓSTICO E HISTORIA CLÍNICA</p>
+</div>
+<span class="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded">Última actualización: hace 48h</span>
+</div>
+<div class="space-y-4">
+<div class="group">
+<label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">Diagnóstico Principal</label>
+<div class="p-4 bg-surface-container rounded-lg border-0 group-focus-within:bg-white group-focus-within:ring-2 group-focus-within:ring-primary/20 transition-all">
+<p class="text-on-surface font-semibold text-lg leading-tight">Hernia de disco lumbar crónica (L4-L5) con compromiso secundario del nervio ciático.</p>
+</div>
+</div>
+<div class="group">
+<label class="block text-xs font-bold text-on-surface-variant mb-2 uppercase">Estado Clínico Actual</label>
+<textarea class="w-full bg-surface-container border-0 rounded-lg p-4 text-sm text-on-surface leading-relaxed focus:ring-2 focus:ring-primary/20 transition-all resize-none" placeholder="Describa el estado actual..." rows="4">El paciente se encuentra en fase de consolidación de la recuperación. La inflamación ha disminuido significativamente. El enfoque del tratamiento actual es la estabilización del core y la reeducación funcional para prevenir recaídas durante actividades atléticas. El paciente cumple adecuadamente con el programa de ejercicios en casa (PEC).</textarea>
+</div>
+</div>
+</div>
+<!-- Sessions History Table -->
+<div class="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
+<div class="px-6 py-4 border-b-0 flex items-center justify-between">
+<p class="text-[10px] font-bold text-on-surface-variant tracking-widest uppercase">HISTORIAL DE SESIONES</p>
+<div class="flex gap-2">
+<button class="p-1.5 hover:bg-surface-container rounded-md transition-colors"><span class="material-symbols-outlined text-lg">filter_list</span></button>
+<button class="p-1.5 hover:bg-surface-container rounded-md transition-colors"><span class="material-symbols-outlined text-lg">download</span></button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left text-sm">
+<thead>
+<tr class="bg-surface-container/50 text-on-surface-variant font-bold text-xs uppercase tracking-tighter">
+<th class="px-6 py-3">Fecha</th>
+<th class="px-6 py-3">Profesional</th>
+<th class="px-6 py-3">Tratamiento Realizado</th>
+<th class="px-6 py-3">Estado</th>
+<th class="px-6 py-3"></th>
+</tr>
+</thead>
+<tbody class="divide-y-0">
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="px-6 py-4 font-semibold text-on-surface">10 de Mayo, 2024</td>
+<td class="px-6 py-4 flex items-center gap-2">
+<img alt="Avatar del Kinesiólogo" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuClY1pOBPJux0PNv23OXMXMbZoNLuEAjCHTGysnhI2HxYWy4qDz3J5H9R8KRyRGke8dKWo2ScWv2yDhFasQ2sbMGTdNxfkx80qXUlCW54unddD1MgMPDdIXf4b4fW7eZPS2g7qTyTGXIUujfimtdoeJHUJrDFILJNgjSBXvd-t6Z3_eJClCREfQns-DAz21re-OwwbhPf58hdjo2jU-zj40vOchKV7t8f6HKRIrXQ_rdpdtBzVoqDYnq4375ON14o3qkOYDmVbDYcI"/>
+<span class="text-xs font-medium">Lic. Julian Fars</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-1 flex-wrap">
+<span class="px-2 py-0.5 bg-secondary-container/30 text-secondary text-[10px] rounded font-bold uppercase">Terapia Manual</span>
+<span class="px-2 py-0.5 bg-secondary-container/30 text-secondary text-[10px] rounded font-bold uppercase">Ultrasonido</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-teal-600 font-bold text-[11px] uppercase tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Completada
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="px-6 py-4 font-semibold text-on-surface">03 de Mayo, 2024</td>
+<td class="px-6 py-4 flex items-center gap-2">
+<img alt="Avatar del Kinesiólogo" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBSLvJYQaDWBLDAqYYXm7Oqab_fW_GWm6zjBrKntebwhFN24U9PxMcd_Omd8GGdCid-RglRTckkfk2wSu8P3VzzO_JJbyN8adzcOFP8gq62w-xo-qiYIXSXvUt3QX6gMgMc2hRo11OKuHeDBSBplX_n1CubucQlQck5o4n4I8s_3tzCK9lgOpr5UZPH4bzAihOJNu7GKkafWx21flq7zoFiDQIzU8Imjd-212tVZqaBBcV9Zsv44zN2c2Qy2jmY_-fJwUNuIxi_6LY"/>
+<span class="text-xs font-medium">Dra. Elena Rodriguez</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-1 flex-wrap">
+<span class="px-2 py-0.5 bg-secondary-container/30 text-secondary text-[10px] rounded font-bold uppercase">Electroestimulación</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-teal-600 font-bold text-[11px] uppercase tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> Completada
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/30 transition-colors">
+<td class="px-6 py-4 font-semibold text-on-surface">26 de Abril, 2024</td>
+<td class="px-6 py-4 flex items-center gap-2">
+<img alt="Avatar del Kinesiólogo" class="w-6 h-6 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuANmmXRWz_i7ouPsoMU-CL60xmXMy2TVwcxUG0f61K3FRcHnfDc0nmXuc1V2VEkUpNAeiOnPJhokurUTXWJYfglfdn3EwzRQozKCjJHzmAhhlNVn4tJUn6mzO86B2QLHnM3dXzZ7MBj9Lx775z-eK1bHUs8j0YbWca1Hp3S0sjvT4MmbKn8dXlomuQaPQtil-CvUdcn5CCmeopBZEAx4rHD3nq-w2nc0jft3nQVZxTw7ODrzEJuIh93bsxc4085Bti_c6MKvwSZ8Fw"/>
+<span class="text-xs font-medium">Lic. Julian Fars</span>
+</td>
+<td class="px-6 py-4">
+<div class="flex gap-1 flex-wrap">
+<span class="px-2 py-0.5 bg-secondary-container/30 text-secondary text-[10px] rounded font-bold uppercase">Terapia Manual</span>
+<span class="px-2 py-0.5 bg-secondary-container/30 text-secondary text-[10px] rounded font-bold uppercase">Magnetoterapia</span>
+</div>
+</td>
+<td class="px-6 py-4">
+<span class="flex items-center gap-1.5 text-error font-bold text-[11px] uppercase tracking-wide">
+<span class="w-1.5 h-1.5 rounded-full bg-error"></span> Ausente
+                                        </span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="text-on-surface-variant hover:text-primary transition-colors"><span class="material-symbols-outlined">visibility</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="p-4 bg-surface-container/20 text-center">
+<button class="text-xs font-bold text-primary uppercase tracking-widest hover:underline">Ver 12 entradas más</button>
+</div>
+</div>
+<!-- Upcoming Task/Treatment Plan -->
+<div class="bg-surface-container-highest/30 rounded-xl p-6 border-2 border-dashed border-outline-variant/30">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-white flex items-center justify-center text-primary shadow-sm">
+<span class="material-symbols-outlined text-2xl" data-weight="fill">track_changes</span>
+</div>
+<div class="flex-1">
+<h4 class="text-sm font-bold text-on-surface">Próximo Hito: Reintroducción de Impacto</h4>
+<p class="text-xs text-on-surface-variant">Programado para la Sesión #15 (aprox. 10 de Junio)</p>
+</div>
+<button class="px-4 py-2 bg-white text-on-surface text-xs font-bold rounded-lg border border-outline-variant/30 hover:shadow-md transition-shadow">Modificar Plan</button>
+</div>
+</div>
+</div>
+</div>
+<footer class="mt-auto py-6 text-center text-on-surface-variant opacity-60 text-xs">
+<p>DigimediosApps 2026</p>
+</footer>
+</main>
+</body></html>

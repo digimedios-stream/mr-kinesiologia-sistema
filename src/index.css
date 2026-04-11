@@ -1,0 +1,67 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
+
+@theme {
+  --color-primary: #006972;
+  --color-primary-dark: #005c64;
+  --color-primary-light: #73ccd6;
+  --color-primary-container: #e9fdff;
+  
+  --color-secondary: #38647d;
+  --color-secondary-container: #c5e7ff;
+  
+  --color-surface: #f8fafb;
+  --color-surface-dim: #d4dbde;
+  --color-surface-container: #f0f4f6;
+  --color-surface-lowest: #ffffff;
+
+  --font-manrope: "Manrope", sans-serif;
+  --font-inter: "Inter", sans-serif;
+}
+
+/* Explicitly tell Tailwind v4 to use the .dark class for dark mode */
+@variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  body {
+    background-color: #f8fafb;
+    color: #0f172a;
+    font-family: "Inter", sans-serif;
+    transition: background-color 0.3s ease;
+  }
+}
+
+/* Hardcoded Dark Mode Body override */
+.dark body {
+  background-color: #020617 !important;
+  color: #f8fafb !important;
+}
+
+/* Input Styles - NO !important inside @apply */
+input, select, textarea {
+  @apply border-2 border-slate-200 shadow-sm transition-all;
+  background-color: #ffffff !important;
+  color: #0f172a !important;
+  border-width: 2px !important;
+}
+
+.dark input, .dark select, .dark textarea {
+  @apply shadow-none;
+  background-color: #0f172a !important;
+  color: #ffffff !important;
+  border-color: #334155 !important;
+}
+
+/* Card overrides */
+.bg-white {
+  background-color: #ffffff;
+}
+
+.dark .bg-white {
+  background-color: #0f172a !important;
+  border-color: #1e293b !important;
+}
+
+.kinetic-gradient {
+  background: linear-gradient(135deg, #006972 0%, #005c64 100%);
+}

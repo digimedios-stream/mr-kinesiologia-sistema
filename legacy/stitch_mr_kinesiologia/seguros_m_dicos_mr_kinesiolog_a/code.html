@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "surface": "#f8fafb",
+              "inverse-primary": "#73ccd6",
+              "on-primary-fixed-variant": "#004b52",
+              "outline": "#747c7e",
+              "on-secondary": "#f4f9ff",
+              "on-error": "#fff7f6",
+              "on-secondary-fixed-variant": "#346079",
+              "secondary-fixed": "#c5e7ff",
+              "primary-fixed-dim": "#65bec8",
+              "outline-variant": "#acb3b6",
+              "secondary": "#38647d",
+              "on-background": "#2c3436",
+              "inverse-on-surface": "#9a9d9e",
+              "on-error-container": "#6e0a12",
+              "surface-container": "#eaeff0",
+              "on-secondary-container": "#2a566f",
+              "error-container": "#fa746f",
+              "on-surface-variant": "#596063",
+              "primary": "#006972",
+              "primary-container": "#73ccd6",
+              "surface-container-high": "#e3e9eb",
+              "on-tertiary": "#f6f9ff",
+              "tertiary-fixed": "#b8dbfe",
+              "primary-fixed": "#73ccd6",
+              "on-primary": "#e9fdff",
+              "surface-container-lowest": "#ffffff",
+              "tertiary-fixed-dim": "#aacdef",
+              "tertiary": "#406280",
+              "surface-variant": "#dce4e6",
+              "surface-dim": "#d4dbde",
+              "secondary-fixed-dim": "#aedaf7",
+              "on-primary-container": "#004147",
+              "on-surface": "#2c3436",
+              "surface-container-low": "#f0f4f6",
+              "on-secondary-fixed": "#12445c",
+              "error": "#a83836",
+              "surface-tint": "#006972",
+              "inverse-surface": "#0b0f10",
+              "surface-container-highest": "#dce4e6",
+              "background": "#f8fafb",
+              "surface-bright": "#f8fafb",
+              "secondary-dim": "#2b5870",
+              "on-tertiary-container": "#2b4e6b",
+              "primary-dim": "#005c64",
+              "error-dim": "#67040d",
+              "tertiary-container": "#b8dbfe",
+              "tertiary-dim": "#335673"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      }
+      body {
+        font-family: 'Inter', sans-serif;
+        background-color: #f8fafb;
+        color: #2c3436;
+      }
+      h1, h2, h3, .font-manrope {
+        font-family: 'Manrope', sans-serif;
+      }
+      .glass-card {
+        background: rgba(255, 255, 255, 0.8);
+        backdrop-filter: blur(20px);
+      }
+      .kinetic-gradient {
+        background: linear-gradient(135deg, #006972 0%, #005c64 100%);
+      }
+    </style>
+</head>
+<body class="flex min-h-screen">
+<!-- SideNavBar (The Anchor) -->
+<aside class="flex flex-col w-64 h-screen border-r border-slate-200/10 bg-slate-50 dark:bg-slate-900 left-0 sticky z-40">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-8">
+<div class="w-10 h-10 rounded-lg kinetic-gradient flex items-center justify-center text-white">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">medical_services</span>
+</div>
+<div>
+<h1 class="font-manrope font-bold text-[#0E7C86] dark:text-[#73ccd6] leading-tight text-lg">MR Kinesiología</h1>
+<p class="text-slate-500 text-[10px] uppercase tracking-wider font-semibold">Centro de Fisiatría</p>
+</div>
+</div>
+<nav class="space-y-1.5">
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out font-manrope text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out font-manrope text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+                    Calendario
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out font-manrope text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">groups</span>
+                    Pacientes
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out font-manrope text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">fitness_center</span>
+                    Sesiones
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 bg-[#73ccd6]/20 text-[#0E7C86] rounded-lg font-semibold transition-all duration-300 ease-in-out font-manrope text-sm tracking-tight" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+                    Seguros Médicos
+                </a>
+<a class="flex items-center gap-3 px-4 py-2.5 text-slate-500 dark:text-slate-400 hover:bg-slate-200/50 dark:hover:bg-slate-800 transition-all duration-300 ease-in-out font-manrope text-sm font-medium tracking-tight" href="#">
+<span class="material-symbols-outlined">assessment</span>
+                    Informes
+                </a>
+</nav>
+</div>
+<div class="mt-auto p-6 space-y-1.5 border-t border-slate-200/10">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-[#0E7C86] transition-colors font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined">settings</span>
+                Ajustes
+            </a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-500 hover:text-error transition-colors font-manrope text-sm font-medium" href="#">
+<span class="material-symbols-outlined">logout</span>
+                Cerrar Sesión
+            </a>
+</div>
+</aside>
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 py-3 w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl docked full-width top-0 sticky z-30 shadow-sm shadow-slate-200/50">
+<div class="flex items-center flex-1">
+<div class="relative w-96 group">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">search</span>
+<input class="w-full pl-10 pr-4 py-2 bg-surface-container border-none rounded-lg focus:ring-2 focus:ring-primary/20 focus:bg-white transition-all text-sm font-body" placeholder="Buscar seguros, planes o convenios..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 hover:bg-slate-100 rounded-full transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+<div class="h-8 w-[1px] bg-slate-200 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-sm font-semibold text-on-surface">Dr. Ricardo Martínez</p>
+<p class="text-[10px] text-slate-500 font-medium uppercase tracking-wider">Kinesiólogo Fisiatra</p>
+</div>
+<img alt="Avatar del Profesional" class="w-10 h-10 rounded-full object-cover ring-2 ring-primary-container/30" data-alt="professional medical portrait of a male doctor in his 40s with a kind expression and stethoscope" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2N0YcRMi0wTMY1LPSrL04lHlQi2qiOWusuyqpu-4vNvqbi57nVKb1BAHWjjenMHoUxNaSC5ZNE7kkmLi9pPMy5SrNw1SruNnSq-ENWF1lZK5HnDHRq8oToYQSpomD5xK6KndZTCwXT2q3ULkkNeNa0BvG-BrHou1ANmQ2ZqTBsglf_8S695ticVx74RYkUHILIMWLUU1qJ0ksKKIJuV22CVZSJWwRWyloAeHQPVu641BXjbMlDq3SxoNEQkOeOYTRDmhRjQq8psg"/>
+</div>
+</div>
+</header>
+<!-- Content Canvas -->
+<div class="p-8 space-y-8 animate-in fade-in duration-500">
+<!-- Header Section -->
+<div class="flex justify-between items-end">
+<div>
+<span class="text-[11px] font-bold text-primary uppercase tracking-[0.1em] mb-1 block">Gestión Administrativa</span>
+<h2 class="text-3xl font-manrope font-extrabold text-on-surface tracking-tight">Seguros Médicos y Obras Sociales</h2>
+</div>
+<button class="kinetic-gradient text-on-primary px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+<span class="material-symbols-outlined">add</span>
+                    Agregar Obra Social
+                </button>
+</div>
+<!-- Bento Grid Stats/Quick Actions -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="col-span-1 md:col-span-2 p-6 rounded-xl bg-surface-container-lowest shadow-sm flex flex-col justify-between border-l-4 border-primary">
+<div>
+<p class="text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-4">Autorizaciones Pendientes</p>
+<h3 class="text-4xl font-manrope font-bold text-on-surface mb-2">24</h3>
+<p class="text-sm text-slate-500">8 requieren acción inmediata por vencimiento próximo.</p>
+</div>
+<div class="mt-6 flex gap-2">
+<button class="text-primary text-sm font-semibold hover:underline">Ver todas</button>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-lowest shadow-sm border-l-4 border-secondary">
+<p class="text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-4">Convenios Activos</p>
+<h3 class="text-3xl font-manrope font-bold text-on-surface">12</h3>
+<div class="mt-4 flex -space-x-2">
+<div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-400">OS</div>
+<div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-400">SM</div>
+<div class="w-8 h-8 rounded-full bg-slate-100 border-2 border-white flex items-center justify-center text-[10px] font-bold text-slate-400">GL</div>
+<div class="w-8 h-8 rounded-full bg-primary-container border-2 border-white flex items-center justify-center text-[10px] font-bold text-on-primary-container">+9</div>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-lowest shadow-sm border-l-4 border-tertiary">
+<p class="text-label-sm font-semibold text-on-surface-variant uppercase tracking-wider mb-4">Actualización Nomenclador</p>
+<div class="flex items-center gap-2 text-emerald-600 mb-2">
+<span class="material-symbols-outlined text-sm">check_circle</span>
+<span class="text-xs font-bold uppercase">Al día</span>
+</div>
+<p class="text-xs text-slate-500 leading-relaxed">Última actualización: 15 Oct 2023. Siguiente revisión programada en 12 días.</p>
+</div>
+</div>
+<!-- Main Table Section (Using Tonal Layering) -->
+<div class="bg-surface-container-low rounded-2xl overflow-hidden shadow-sm">
+<div class="p-6 flex items-center justify-between bg-surface-container-high/50">
+<h4 class="font-manrope font-bold text-on-surface">Listado de Coberturas</h4>
+<div class="flex gap-2">
+<button class="px-4 py-1.5 rounded-lg bg-white text-xs font-bold text-slate-600 border border-slate-200">Exportar PDF</button>
+<button class="px-4 py-1.5 rounded-lg bg-white text-xs font-bold text-slate-600 border border-slate-200">Filtros</button>
+</div>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="text-[10px] font-bold text-on-surface-variant uppercase tracking-widest bg-surface-container">
+<th class="px-6 py-4">Obra Social / Logo</th>
+<th class="px-6 py-4">Plan Principal</th>
+<th class="px-6 py-4">Vencimiento Promedio</th>
+<th class="px-6 py-4">Nomenclador</th>
+<th class="px-6 py-4">Estado</th>
+<th class="px-6 py-4 text-right">Acciones</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100 bg-white">
+<!-- OSDE -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 font-bold text-primary tracking-tighter">OSDE</div>
+<div>
+<p class="font-bold text-on-surface">OSDE Binario</p>
+<p class="text-xs text-slate-400">Convenio Directo</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm font-medium text-slate-600 italic">Plan 210, 310, 410</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden w-16">
+<div class="bg-primary h-full" style="width: 75%;"></div>
+</div>
+<span class="text-xs font-bold text-slate-600">30 días</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-container rounded text-[10px] font-bold text-on-surface-variant">NOM-V14.2</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Activa</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Swiss Medical -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 font-bold text-error tracking-tighter">SWISS</div>
+<div>
+<p class="font-bold text-on-surface">Swiss Medical</p>
+<p class="text-xs text-slate-400">Convenio Círculo Kine</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm font-medium text-slate-600 italic">SMG20, SMG40</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden w-16">
+<div class="bg-error h-full" style="width: 25%;"></div>
+</div>
+<span class="text-xs font-bold text-error">15 días</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-container rounded text-[10px] font-bold text-on-surface-variant">NOM-V14.0</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-[10px] font-bold uppercase">Activa</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Galeno -->
+<tr class="hover:bg-slate-50 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-slate-50 flex items-center justify-center border border-slate-100 font-bold text-blue-800 tracking-tighter">GAL</div>
+<div>
+<p class="font-bold text-on-surface">Galeno</p>
+<p class="text-xs text-slate-400">Planes Oro/Plata</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5 text-sm font-medium text-slate-600 italic">Oro, Plata, Azul</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2">
+<div class="w-full bg-slate-100 h-1.5 rounded-full overflow-hidden w-16">
+<div class="bg-primary h-full" style="width: 90%;"></div>
+</div>
+<span class="text-xs font-bold text-slate-600">45 días</span>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-2 py-1 bg-surface-container rounded text-[10px] font-bold text-on-surface-variant">NOM-V14.2</span>
+</td>
+<td class="px-6 py-5">
+<span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-slate-200 text-slate-500 text-[10px] font-bold uppercase">Inactiva</span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<!-- Bottom Section: Dual Panels -->
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+<!-- Autorizaciones Pendientes -->
+<div class="space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-manrope font-bold text-xl text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">pending_actions</span>
+                            Gestión de Cobros
+                        </h3>
+<span class="px-2 py-1 rounded text-[10px] font-extrabold bg-error-container text-on-error-container">URGENTE</span>
+</div>
+<div class="space-y-3">
+<div class="p-4 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-between hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary">JM</div>
+<div>
+<p class="font-semibold text-sm">Martínez, Juan Pablo</p>
+<p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">OSDE 210 • 10 Sesiones</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-on-surface-variant">Vence en 2 días</p>
+<button class="text-[10px] font-extrabold text-primary uppercase mt-1">Refacturar</button>
+</div>
+</div>
+<div class="p-4 rounded-xl bg-white shadow-sm border border-slate-100 flex items-center justify-between hover:border-primary/30 transition-colors">
+<div class="flex items-center gap-4">
+<div class="w-10 h-10 rounded-full bg-surface-container flex items-center justify-center font-bold text-primary">LR</div>
+<div>
+<p class="font-semibold text-sm">Rodríguez, Lucía</p>
+<p class="text-[10px] text-slate-400 font-bold uppercase tracking-tight">Swiss Medical • 5 Sesiones</p>
+</div>
+</div>
+<div class="text-right">
+<p class="text-xs font-bold text-error">Vencida</p>
+<button class="text-[10px] font-extrabold text-primary uppercase mt-1">Gestionar</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Nomenclador Config -->
+<div class="bg-surface-container-high/40 p-6 rounded-2xl space-y-4">
+<h3 class="font-manrope font-bold text-xl text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">list_alt</span>
+                        Configuración de Nomenclador
+                    </h3>
+<p class="text-sm text-slate-500 leading-relaxed">Ajuste los valores de la unidad kine (UK) y códigos de prácticas según cada convenio activo.</p>
+<div class="grid grid-cols-2 gap-4 mt-6">
+<div class="bg-white p-4 rounded-xl border border-slate-200/50">
+<p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Valor UK (Base)</p>
+<p class="text-2xl font-manrope font-extrabold text-secondary">$1.450</p>
+</div>
+<div class="bg-white p-4 rounded-xl border border-slate-200/50">
+<p class="text-[10px] font-bold text-slate-400 uppercase mb-1">Cód. Sesión Kine</p>
+<p class="text-2xl font-manrope font-extrabold text-secondary">25.01.01</p>
+</div>
+</div>
+<button class="w-full py-3 rounded-xl border-2 border-secondary/20 text-secondary font-bold text-sm hover:bg-secondary/5 transition-colors mt-4">
+                        Actualizar Valores Masivamente
+                    </button>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="flex justify-between items-center px-8 py-4 w-full mt-auto bg-slate-50 border-t border-slate-100 opacity-80 hover:opacity-100 transition-opacity">
+<span class="font-inter text-xs uppercase tracking-widest text-slate-400">© DigimediosApps 2026</span>
+<div class="flex gap-6">
+<a class="font-inter text-xs uppercase tracking-widest text-slate-400 hover:text-[#0E7C86] transition-colors" href="#">Privacidad</a>
+<a class="font-inter text-xs uppercase tracking-widest text-slate-400 hover:text-[#0E7C86] transition-colors" href="#">Soporte</a>
+<a class="font-inter text-xs uppercase tracking-widest text-slate-400 hover:text-[#0E7C86] transition-colors" href="#">Términos</a>
+</div>
+</footer>
+</main>
+</body></html>

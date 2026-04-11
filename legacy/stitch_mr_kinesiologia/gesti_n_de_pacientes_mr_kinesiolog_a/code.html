@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestión de Pacientes - MR Kinesiología</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-primary": "#73ccd6",
+                        "on-background": "#2c3436",
+                        "surface-container-low": "#f0f4f6",
+                        "inverse-on-surface": "#9a9d9e",
+                        "error": "#a83836",
+                        "secondary": "#38647d",
+                        "on-primary-container": "#004147",
+                        "on-surface-variant": "#596063",
+                        "on-tertiary-fixed": "#153b57",
+                        "secondary-dim": "#2b5870",
+                        "secondary-fixed": "#c5e7ff",
+                        "on-primary-fixed": "#002a2e",
+                        "secondary-fixed-dim": "#aedaf7",
+                        "surface-variant": "#dce4e6",
+                        "error-container": "#fa746f",
+                        "on-error": "#fff7f6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#f6f9ff",
+                        "outline": "#747c7e",
+                        "surface-bright": "#f8fafb",
+                        "surface": "#f8fafb",
+                        "error-dim": "#67040d",
+                        "surface-tint": "#006972",
+                        "background": "#f8fafb",
+                        "surface-container-highest": "#dce4e6",
+                        "on-secondary-fixed": "#12445c",
+                        "primary": "#006972",
+                        "surface-dim": "#d4dbde",
+                        "secondary-container": "#c5e7ff",
+                        "tertiary-dim": "#335673",
+                        "on-secondary": "#f4f9ff",
+                        "on-tertiary-fixed-variant": "#355775",
+                        "on-tertiary-container": "#2b4e6b",
+                        "on-error-container": "#6e0a12",
+                        "outline-variant": "#acb3b6",
+                        "tertiary": "#406280",
+                        "tertiary-container": "#b8dbfe",
+                        "primary-dim": "#005c64",
+                        "primary-container": "#73ccd6",
+                        "on-primary": "#e9fdff",
+                        "surface-container": "#eaeff0",
+                        "primary-fixed-dim": "#65bec8",
+                        "tertiary-fixed-dim": "#aacdef",
+                        "tertiary-fixed": "#b8dbfe",
+                        "primary-fixed": "#73ccd6",
+                        "surface-container-high": "#e3e9eb",
+                        "on-surface": "#2c3436",
+                        "inverse-surface": "#0b0f10",
+                        "on-secondary-container": "#2a566f",
+                        "on-secondary-fixed-variant": "#346079",
+                        "on-primary-fixed-variant": "#004b52"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .bg-primary-gradient {
+            background: linear-gradient(135deg, #006972 0%, #005c64 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface">
+<!-- SideNavBar Shell -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl h-screen w-64 shadow-2xl shadow-slate-200/50 dark:shadow-none transition-all duration-300">
+<div class="px-6 py-8">
+<h1 class="text-teal-800 dark:text-teal-200 font-bold tracking-tighter text-xl font-headline flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="exercise">exercise</span>
+                MR Kinesiología
+            </h1>
+<p class="text-xs text-slate-500 font-medium tracking-widest mt-1 uppercase">Precisión Clínica</p>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300 rounded-lg scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                Panel de Control
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300 rounded-lg scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+                Calendario
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 bg-teal-100 dark:bg-teal-900/40 text-teal-900 dark:text-teal-100 rounded-lg mx-2 transition-all duration-300 scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+                Pacientes
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300 rounded-lg scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="exercise">exercise</span>
+                Sesiones
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300 rounded-lg scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="shield_person">shield_person</span>
+                Obra Social
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300 rounded-lg scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                Informes
+            </a>
+</nav>
+<div class="px-2 pb-6 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300 rounded-lg scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+                Configuración
+            </a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 hover:bg-slate-200/50 dark:hover:bg-slate-800/50 transition-all duration-300 rounded-lg scale-95 active:scale-90 font-['Manrope'] font-semibold tracking-tight" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+                Soporte
+            </a>
+<div class="px-4 py-2 mt-4 border-t border-slate-200 dark:border-slate-800">
+<p class="text-[10px] text-slate-400 font-medium">DigimediosApps 2026</p>
+</div>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar Shell -->
+<header class="sticky top-0 z-30 flex justify-between items-center w-full px-8 py-4 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md font-['Inter'] text-sm">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full group">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 material-symbols-outlined" data-icon="search">search</span>
+<input class="w-full bg-slate-50 dark:bg-slate-900 border-0 rounded-lg pl-10 pr-4 py-2 text-on-surface focus:ring-2 focus:ring-teal-500/20 transition-all" placeholder="Buscar pacientes por nombre, DNI o condición..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-slate-600 dark:text-slate-400">
+<button class="material-symbols-outlined hover:text-teal-500 transition-colors" data-icon="notifications">notifications</button>
+<button class="material-symbols-outlined hover:text-teal-500 transition-colors" data-icon="settings">settings</button>
+</div>
+<div class="h-8 w-px bg-slate-200 dark:bg-slate-800"></div>
+<div class="flex items-center gap-3">
+<div class="text-right">
+<p class="text-xs font-semibold text-on-surface">Dra. Elena Sterling</p>
+<p class="text-[10px] text-slate-500 uppercase tracking-wider">Fisiatra</p>
+</div>
+<img class="w-10 h-10 rounded-full object-cover border-2 border-primary-container" data-alt="Practitioner Profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgwkddzpJcbBtkZuZJ44rbc9hznbl1xH3nVNrF5tuVF2xiRC3xxGNhSGQ6dwnZJakIuTv1wJkLu7DRSYfBwRqmtNeoxAYHQ8wJ1OeoQ5fEg-htrjBnG21xil2euzuRjgjKGWm9tr-L_xWRCY8RrYotaR7cB7kMjs-RI5rzLdE0Hx0Hi5TaB44T-V2w8XdI48FFiffQAZmgKcuycoMs_MnQZA0Yn0mgRwwEDdPmqQXcprs1CziswWyxEJiHfrzV6CKT6WRKE0RaVP0"/>
+</div>
+</div>
+</header>
+<!-- Content Area -->
+<div class="p-8">
+<!-- Header Section -->
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Gestión de Pacientes</h2>
+<p class="text-slate-500 mt-1">Directorio de pacientes en tratamiento activo e histórico.</p>
+</div>
+<button class="bg-primary-gradient text-on-primary px-6 py-2.5 rounded-lg font-semibold flex items-center gap-2 shadow-lg shadow-primary/20 scale-95 active:scale-90 transition-transform">
+<span class="material-symbols-outlined text-xl" data-icon="person_add">person_add</span>
+                    Nuevo Paciente
+                </button>
+</div>
+<!-- Advanced Filters -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.05rem]">Obra Social</label>
+<select class="bg-transparent border-0 p-0 text-sm font-semibold focus:ring-0 text-secondary cursor-pointer">
+<option>Todas las Obras Sociales</option>
+<option>OSDE</option>
+<option>Swiss Medical</option>
+<option>Galeno</option>
+<option>Particular</option>
+</select>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.05rem]">Estado</label>
+<select class="bg-transparent border-0 p-0 text-sm font-semibold focus:ring-0 text-secondary cursor-pointer">
+<option>Pacientes Activos</option>
+<option>Inactivos</option>
+<option>Archivados</option>
+</select>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-1">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.05rem]">Fecha de Última Sesión</label>
+<div class="flex items-center justify-between text-sm font-semibold text-secondary">
+<span>Seleccionar rango</span>
+<span class="material-symbols-outlined text-lg" data-icon="calendar_today">calendar_today</span>
+</div>
+</div>
+<div class="flex items-center justify-center">
+<button class="text-primary font-semibold text-sm hover:underline flex items-center gap-2">
+<span class="material-symbols-outlined" data-icon="filter_list_off">filter_list_off</span>
+                        Limpiar filtros
+                    </button>
+</div>
+</div>
+<!-- Patient Table -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-separate border-spacing-0">
+<thead>
+<tr class="bg-surface-container-low text-slate-500">
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">Detalles del Paciente</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">Obra Social</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">DNI / ID</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">Próximo Turno</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">Estado</th>
+<th class="px-6 py-4 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100">
+<!-- Row 1 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Female patient portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDBOLaGWfmog9TxQCZLHo6Jy2gkH4DQpvLkVCki7Q6lEmG8iuWEvd2dQvGUdWyqKGqpK3co4mxQCoJy5AWpmWZe9GIZrahfoua44PiK-lWTpKoXgK74HxAff784dPjVhibJGt8jo_kYGa_AUmx366BCJbcdG0nGKBQxUlI6RX3xwxQ98i1CZpJvBk0bmbriuHqDCo8uqZZldv5cX4PmTWmM_zic3oZUWkB8IDRTVRx-qnql1FqOo2vRDuXt0uHceIyDE1VcO0mZ3ro"/>
+<div>
+<p class="font-bold text-on-surface font-headline">Lucía Méndez</p>
+<p class="text-xs text-slate-500">Rehab. post-quirúrgica (LCA)</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold">OSDE 410</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">32.441.902</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-sm font-semibold text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="event">event</span>
+                                        24 Oct, 2023 • 14:30
+                                    </div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 text-xs font-bold text-teal-600">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                                        ACTIVO
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Male patient portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCEp5Ntwia6CTrVFLWF3p5RuWCf72GUpk3pbmmMrEReIUxJNvMfWveGaB8YX3bh2WhYtk0-DaJa4kydPed1jSf2J72cPvXIWWvl3xccXoR4Lesn1JURGrquLilk9cKjX6BJhAT21Ija-94pArRHijXLhal5vdE6dAf1DGwhlG1PO1tkERRH8zBpf1z-Rd3aNgpOyean20cPYN2p8XTiVgz7gbpJ3ZAZq2V89wtkV0EopsAcPe49O3F7tCTZWWOHOqI4xKzYisCiXws"/>
+<div>
+<p class="font-bold text-on-surface font-headline">Julián Rossi</p>
+<p class="text-xs text-slate-500">Dolor lumbar crónico</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">Swiss Medical</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">28.119.330</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-sm font-semibold text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="event">event</span>
+                                        25 Oct, 2023 • 09:00
+                                    </div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 text-xs font-bold text-teal-600">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                                        ACTIVO
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<img class="w-12 h-12 rounded-full object-cover" data-alt="Female patient portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAIzYJskU0sQ24m8inCsc55zmCyyMTrmkRHjGmVu_20TiwPh6N_paqLZLuW3pm5QlcainRJ49ETPEDNmTJGVeGaUE93SHOrIER6gKviPN30EJx4SgCLWuIjWyGbMpwWRL8b-_Bsh8OJhyYh28Rg86IEfDDpwDBXYqCTEos9dJ1KeZLzMEnamJ1wwTFDVrbyCKndecwsDd-gntNnG07iWG-7rn5QDand8YwuPQUdgTPP99iShciOGgUBk5wYMBsgS-OOzxoxrngHkso"/>
+<div>
+<p class="font-bold text-on-surface font-headline">Martina Varela</p>
+<p class="text-xs text-slate-500">Pinzamiento de hombro</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-semibold">Particular</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">40.231.559</td>
+<td class="px-6 py-5">
+<span class="text-sm text-slate-400 font-medium">Sin turnos pendientes</span>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 text-xs font-bold text-slate-400">
+<span class="w-1.5 h-1.5 rounded-full bg-slate-400"></span>
+                                        INACTIVO
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+<!-- Row 4 -->
+<tr class="hover:bg-slate-50/80 transition-colors group">
+<td class="px-6 py-5">
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-tertiary-container flex items-center justify-center text-on-tertiary-container font-bold font-headline">
+                                            RL
+                                        </div>
+<div>
+<p class="font-bold text-on-surface font-headline">Roberto López</p>
+<p class="text-xs text-slate-500">Recuperación ACV</p>
+</div>
+</div>
+</td>
+<td class="px-6 py-5">
+<span class="px-3 py-1 rounded-full bg-secondary-container text-on-secondary-container text-xs font-semibold">Galeno Oro</span>
+</td>
+<td class="px-6 py-5 text-sm text-on-surface-variant font-medium">21.002.938</td>
+<td class="px-6 py-5">
+<div class="flex items-center gap-2 text-sm font-semibold text-on-surface">
+<span class="material-symbols-outlined text-primary text-lg" data-icon="event">event</span>
+                                        27 Oct, 2023 • 11:15
+                                    </div>
+</td>
+<td class="px-6 py-5">
+<span class="flex items-center gap-1.5 text-xs font-bold text-teal-600">
+<span class="w-1.5 h-1.5 rounded-full bg-teal-600"></span>
+                                        ACTIVO
+                                    </span>
+</td>
+<td class="px-6 py-5 text-right">
+<button class="p-2 hover:bg-slate-100 rounded-lg text-slate-400 group-hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="more_vert">more_vert</span>
+</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-slate-200 flex items-center justify-between text-sm">
+<p class="text-slate-500">Mostrando <span class="font-bold text-on-surface">4</span> de <span class="font-bold text-on-surface">128</span> pacientes</p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-30" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-bold">1</button>
+<button class="w-8 h-8 rounded-lg hover:bg-slate-200 transition-colors font-semibold">2</button>
+<button class="w-8 h-8 rounded-lg hover:bg-slate-200 transition-colors font-semibold">3</button>
+<span class="mx-1">...</span>
+<button class="w-8 h-8 rounded-lg hover:bg-slate-200 transition-colors font-semibold">12</button>
+</div>
+<button class="p-2 rounded-lg hover:bg-slate-200 transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Contextual FAB -->
+<button class="fixed right-8 bottom-8 w-14 h-14 rounded-2xl bg-primary text-on-primary shadow-xl shadow-primary/40 flex items-center justify-center hover:scale-105 transition-transform active:scale-90">
+<span class="material-symbols-outlined text-2xl" data-icon="chat">chat</span>
+</button>
+</body></html>

@@ -1,0 +1,316 @@
+<div class="p-4 sm:p-8 space-y-8 animate-[fadeIn_0.5s_ease-out]">
+<!-- Page Header & Filters -->
+<section class="flex flex-col gap-6">
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end gap-4">
+<div>
+<h2 class="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Centro de Reportes</h2>
+<p class="text-on-surface-variant font-body">Análisis detallado de rendimiento y facturación clínica.</p>
+</div>
+<div class="flex gap-3">
+<button class="flex items-center gap-2 px-4 py-2 bg-white text-secondary font-semibold rounded-lg border border-outline-variant/30 hover:bg-surface-container transition-colors shadow-sm font-body text-sm">
+<span class="material-symbols-outlined text-lg">description</span>
+                            Exportar PDF
+                        </button>
+<button class="flex items-center gap-2 px-4 py-2 bg-gradient-to-br from-primary to-primary-dim text-white font-semibold rounded-lg hover:opacity-90 transition-all shadow-md font-body text-sm">
+<span class="material-symbols-outlined text-lg">grid_on</span>
+                            Exportar Excel
+                        </button>
+</div>
+</div>
+<!-- Bento Filter Bar -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 bg-surface-container-low rounded-xl">
+<div class="flex flex-col gap-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label px-1">Rango de Fechas</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-sm">calendar_month</span>
+<select class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 text-sm focus:ring-2 focus:ring-primary/20 font-body py-2.5">
+<option>Últimos 30 días</option>
+<option>Este mes</option>
+<option>Trimestre actual</option>
+<option>Año 2026</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label px-1">Profesional</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-sm">medical_services</span>
+<select class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 text-sm focus:ring-2 focus:ring-primary/20 font-body py-2.5">
+<option>Todos los profesionales</option>
+<option>Lic. Ana Garcia</option>
+<option>Lic. Juan Perez</option>
+</select>
+</div>
+</div>
+<div class="flex flex-col gap-1.5">
+<label class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label px-1">Obra Social</label>
+<div class="relative">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-primary text-sm">domain</span>
+<select class="w-full bg-surface-container-lowest border-none rounded-lg pl-10 text-sm focus:ring-2 focus:ring-primary/20 font-body py-2.5">
+<option>Todas las coberturas</option>
+<option>OSDE</option>
+<option>Swiss Medical</option>
+<option>Galeno</option>
+</select>
+</div>
+</div>
+<div class="flex items-end">
+<button class="w-full h-[42px] bg-primary-container text-on-primary-container font-bold rounded-lg hover:brightness-95 transition-all text-sm font-body">
+                            Aplicar Filtros
+                        </button>
+</div>
+</div>
+</section>
+<!-- Summary Cards Bento Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary/10 rounded-lg">
+<span class="material-symbols-outlined text-primary">payments</span>
+</div>
+<span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">+12.5%</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant text-sm font-medium font-body">Ingresos Totales</p>
+<h3 class="text-2xl font-extrabold text-on-surface font-headline mt-1">$1.450.200</h3>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-secondary/10 rounded-lg">
+<span class="material-symbols-outlined text-secondary">fitness_center</span>
+</div>
+<span class="text-xs font-bold text-green-600 bg-green-50 px-2 py-1 rounded-full">+8.2%</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant text-sm font-medium font-body">Sesiones Realizadas</p>
+<h3 class="text-2xl font-extrabold text-on-surface font-headline mt-1">842</h3>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-tertiary/10 rounded-lg">
+<span class="material-symbols-outlined text-tertiary">person</span>
+</div>
+<span class="text-xs font-bold text-secondary bg-secondary-container px-2 py-1 rounded-full">Estable</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant text-sm font-medium font-body">Pacientes Atendidos</p>
+<h3 class="text-2xl font-extrabold text-on-surface font-headline mt-1">215</h3>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex flex-col justify-between">
+<div class="flex justify-between items-start">
+<div class="p-2 bg-primary-container/20 rounded-lg">
+<span class="material-symbols-outlined text-primary">analytics</span>
+</div>
+<span class="text-xs font-bold text-error bg-error-container/20 px-2 py-1 rounded-full">-2.1%</span>
+</div>
+<div class="mt-4">
+<p class="text-on-surface-variant text-sm font-medium font-body">Tasa de Ocupación</p>
+<h3 class="text-2xl font-extrabold text-on-surface font-headline mt-1">88.4%</h3>
+</div>
+</div>
+</section>
+<!-- Interactive Charts Row -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Line Chart: Ingresos Mensuales -->
+<div class="lg:col-span-2 bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-6">
+<h4 class="font-headline font-bold text-on-surface">Ingresos Mensuales</h4>
+<div class="flex gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<span class="text-xs text-on-surface-variant font-medium">Facturación Bruta</span>
+</div>
+</div>
+<div class="relative h-64 w-full flex items-end justify-between gap-4 pt-4 px-2">
+<!-- Mockup Line Chart visualization using SVG/DIVS -->
+<div class="absolute inset-0 flex flex-col justify-between pointer-events-none py-4">
+<div class="border-t border-surface-container-high w-full"></div>
+<div class="border-t border-surface-container-high w-full"></div>
+<div class="border-t border-surface-container-high w-full"></div>
+<div class="border-t border-surface-container-high w-full"></div>
+</div>
+<div class="z-10 flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[40%] transition-all group-hover:bg-primary/40 relative">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rounded-full ring-4 ring-white"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">Ene</span>
+</div>
+<div class="z-10 flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[55%] transition-all group-hover:bg-primary/40 relative">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rounded-full ring-4 ring-white"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">Feb</span>
+</div>
+<div class="z-10 flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[45%] transition-all group-hover:bg-primary/40 relative">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rounded-full ring-4 ring-white"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">Mar</span>
+</div>
+<div class="z-10 flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[70%] transition-all group-hover:bg-primary/40 relative">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rounded-full ring-4 ring-white"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">Abr</span>
+</div>
+<div class="z-10 flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[65%] transition-all group-hover:bg-primary/40 relative">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rounded-full ring-4 ring-white"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">May</span>
+</div>
+<div class="z-10 flex-1 flex flex-col items-center gap-2 group">
+<div class="w-full bg-primary/20 rounded-t-sm h-[85%] transition-all group-hover:bg-primary/40 relative">
+<div class="absolute -top-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-primary rounded-full ring-4 ring-white"></div>
+</div>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-tighter">Jun</span>
+</div>
+</div>
+</div>
+<!-- Circular Chart: Distribución por Obra Social -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10 flex flex-col">
+<h4 class="font-headline font-bold text-on-surface mb-6">Distribución de Pacientes</h4>
+<div class="flex-1 flex flex-col items-center justify-center relative">
+<!-- Kinetic Progress Ring visualization -->
+<div class="relative w-40 h-40 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="#eaeff0" stroke-width="12"></circle>
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="#006972" stroke-dasharray="440" stroke-dashoffset="150" stroke-width="12"></circle>
+<circle cx="80" cy="80" fill="transparent" r="70" stroke="#38647d" stroke-dasharray="440" stroke-dashoffset="350" stroke-width="12"></circle>
+</svg>
+<div class="absolute inset-0 flex flex-col items-center justify-center">
+<span class="text-2xl font-bold font-headline">215</span>
+<span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-widest">Total</span>
+</div>
+</div>
+<div class="mt-8 w-full space-y-2">
+<div class="flex justify-between items-center text-xs font-body">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-primary"></span> OSDE</div>
+<span class="font-bold text-on-surface">45%</span>
+</div>
+<div class="flex justify-between items-center text-xs font-body">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-secondary"></span> Swiss Medical</div>
+<span class="font-bold text-on-surface">30%</span>
+</div>
+<div class="flex justify-between items-center text-xs font-body">
+<div class="flex items-center gap-2"><span class="w-2 h-2 rounded-full bg-surface-container-highest"></span> Otros</div>
+<span class="font-bold text-on-surface">25%</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Bar Chart: Sesiones por Profesional -->
+<section class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<div class="flex justify-between items-center mb-8">
+<h4 class="font-headline font-bold text-on-surface">Sesiones por Profesional</h4>
+<button class="text-primary text-xs font-bold uppercase tracking-widest flex items-center gap-1 hover:underline">Ver todos <span class="material-symbols-outlined text-sm">arrow_forward</span></button>
+</div>
+<div class="space-y-6">
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="font-medium text-on-surface">Lic. Ana Garcia</span>
+<span class="font-bold text-primary">320 sesiones</span>
+</div>
+<div class="h-3 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-dim w-[85%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="font-medium text-on-surface">Lic. Juan Perez</span>
+<span class="font-bold text-primary">285 sesiones</span>
+</div>
+<div class="h-3 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-dim w-[72%] rounded-full"></div>
+</div>
+</div>
+<div class="space-y-2">
+<div class="flex justify-between text-sm font-body">
+<span class="font-medium text-on-surface">Lic. Maria Sosa</span>
+<span class="font-bold text-primary">162 sesiones</span>
+</div>
+<div class="h-3 w-full bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-gradient-to-r from-primary to-primary-dim w-[45%] rounded-full"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Table: Detalle Facturación -->
+<section class="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/10 overflow-hidden">
+<div class="px-6 py-5 flex justify-between items-center bg-surface-container-high/50 border-b border-outline-variant/10">
+<h4 class="font-headline font-bold text-on-surface">Detalle de Facturación por Obra Social</h4>
+<span class="text-[10px] font-bold uppercase tracking-widest text-on-surface-variant font-label px-2 py-1 bg-surface-container rounded hidden md:block">Periodo: Junio 2026</span>
+</div>
+<div class="overflow-x-auto">
+<table class="w-full text-left font-body text-sm">
+<thead class="bg-surface-container text-on-surface-variant font-semibold">
+<tr>
+<th class="px-6 py-3">Obra Social / Prepaga</th>
+<th class="px-6 py-3 hidden sm:table-cell">Cant. Sesiones</th>
+<th class="px-6 py-3 hidden md:table-cell">Valor Promedio</th>
+<th class="px-6 py-3">Total Bruto</th>
+<th class="px-6 py-3">Estado de Cobro</th>
+<th class="px-6 py-3"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="px-6 py-4 font-semibold text-on-surface">OSDE (210/310/410)</td>
+<td class="px-6 py-4 text-on-surface-variant hidden sm:table-cell">320</td>
+<td class="px-6 py-4 text-on-surface-variant hidden md:table-cell">$2.400</td>
+<td class="px-6 py-4 font-bold text-on-surface">$768.000</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 bg-secondary-container text-on-secondary-container rounded-full text-xs font-semibold">En Liquidación</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="px-6 py-4 font-semibold text-on-surface">Swiss Medical Group</td>
+<td class="px-6 py-4 text-on-surface-variant hidden sm:table-cell">195</td>
+<td class="px-6 py-4 text-on-surface-variant hidden md:table-cell">$2.250</td>
+<td class="px-6 py-4 font-bold text-on-surface">$438.750</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Cobrado</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="px-6 py-4 font-semibold text-on-surface">Galeno Argentina</td>
+<td class="px-6 py-4 text-on-surface-variant hidden sm:table-cell">112</td>
+<td class="px-6 py-4 text-on-surface-variant hidden md:table-cell">$2.100</td>
+<td class="px-6 py-4 font-bold text-on-surface">$235.200</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 bg-error-container/30 text-on-error-container rounded-full text-xs font-semibold">Pendiente</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+<tr class="hover:bg-surface-container/50 transition-colors">
+<td class="px-6 py-4 font-semibold text-on-surface">Medicus</td>
+<td class="px-6 py-4 text-on-surface-variant hidden sm:table-cell">48</td>
+<td class="px-6 py-4 text-on-surface-variant hidden md:table-cell">$2.300</td>
+<td class="px-6 py-4 font-bold text-on-surface">$110.400</td>
+<td class="px-6 py-4">
+<span class="px-2.5 py-1 bg-green-100 text-green-700 rounded-full text-xs font-semibold">Cobrado</span>
+</td>
+<td class="px-6 py-4 text-right">
+<button class="material-symbols-outlined text-outline-variant hover:text-primary transition-colors">more_vert</button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+</div>

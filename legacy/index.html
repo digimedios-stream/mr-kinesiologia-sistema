@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html class="light" lang="es">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>MR Kinesiología | Panel del Profesional</title>
+    <!-- Google Fonts: Manrope & Inter -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet"/>
+    <!-- Material Symbols -->
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+    <!-- FullCalendar v6 -->
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/locales-all.global.min.js'></script>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "inverse-primary": "#73ccd6",
+                        "on-background": "#2c3436",
+                        "surface-container-low": "#f0f4f6",
+                        "inverse-on-surface": "#9a9d9e",
+                        "error": "#a83836",
+                        "secondary": "#38647d",
+                        "on-primary-container": "#004147",
+                        "on-surface-variant": "#596063",
+                        "on-tertiary-fixed": "#153b57",
+                        "secondary-dim": "#2b5870",
+                        "secondary-fixed": "#c5e7ff",
+                        "on-primary-fixed": "#002a2e",
+                        "secondary-fixed-dim": "#aedaf7",
+                        "surface-variant": "#dce4e6",
+                        "error-container": "#fa746f",
+                        "on-error": "#fff7f6",
+                        "surface-container-lowest": "#ffffff",
+                        "on-tertiary": "#f6f9ff",
+                        "outline": "#747c7e",
+                        "surface-bright": "#f8fafb",
+                        "surface": "#f8fafb",
+                        "error-dim": "#67040d",
+                        "surface-tint": "#006972",
+                        "background": "#f8fafb",
+                        "surface-container-highest": "#dce4e6",
+                        "on-secondary-fixed": "#12445c",
+                        "primary": "#006972",
+                        "surface-dim": "#d4dbde",
+                        "secondary-container": "#c5e7ff",
+                        "tertiary-dim": "#335673",
+                        "on-secondary": "#f4f9ff",
+                        "on-tertiary-fixed-variant": "#355775",
+                        "on-tertiary-container": "#2b4e6b",
+                        "on-error-container": "#6e0a12",
+                        "outline-variant": "#acb3b6",
+                        "tertiary": "#406280",
+                        "tertiary-container": "#b8dbfe",
+                        "primary-dim": "#005c64",
+                        "primary-container": "#73ccd6",
+                        "on-primary": "#e9fdff",
+                        "surface-container": "#eaeff0",
+                        "primary-fixed-dim": "#65bec8",
+                        "tertiary-fixed-dim": "#aacdef",
+                        "tertiary-fixed": "#b8dbfe",
+                        "primary-fixed": "#73ccd6",
+                        "surface-container-high": "#e3e9eb",
+                        "on-surface": "#2c3436",
+                        "inverse-surface": "#0b0f10",
+                        "on-secondary-container": "#2a566f",
+                        "on-secondary-fixed-variant": "#346079",
+                        "on-primary-fixed-variant": "#004b52"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #006972 0%, #005c64 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+
+        /* FullCalendar Theme Overrides */
+        :root {
+            --fc-button-bg-color: #006972;
+            --fc-button-border-color: #006972;
+            --fc-button-hover-bg-color: #005c64;
+            --fc-button-hover-border-color: #005c64;
+            --fc-button-active-bg-color: #004b52;
+            --fc-button-active-border-color: #004b52;
+            --fc-today-bg-color: rgba(0, 105, 114, 0.05);
+            --fc-border-color: #eaeff0;
+            --fc-event-bg-color: #006972;
+            --fc-event-border-color: transparent;
+        }
+        .fc {
+            font-family: 'Inter', sans-serif !important;
+        }
+        .fc-toolbar-title {
+            font-family: 'Manrope', sans-serif !important;
+            font-weight: 800 !important;
+            color: #2c3436 !important;
+        }
+        .fc-col-header-cell {
+            padding: 12px 0 !important;
+            background-color: #f8fafb !important;
+        }
+        .fc-col-header-cell-cushion {
+            font-size: 0.75rem !important;
+            text-transform: uppercase !important;
+            letter-spacing: 0.05em !important;
+            font-weight: 700 !important;
+            color: #596063 !important;
+            text-decoration: none !important;
+        }
+        .fc .fc-button-primary:disabled {
+            background-color: #acb3b6;
+            border-color: #acb3b6;
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased overflow-x-hidden">
+    <!-- SideNavBar Integration -->
+    <aside id="sidebar" class="fixed left-0 top-0 h-full z-40 flex flex-col bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl h-screen w-64 border-r-0 shadow-2xl shadow-slate-200/50 dark:shadow-none font-['Manrope'] font-semibold tracking-tight transition-transform duration-300 -translate-x-full lg:translate-x-0">
+        <div class="px-6 py-8 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl kinetic-gradient flex items-center justify-center text-on-primary">
+                    <span class="material-symbols-outlined">health_metrics</span>
+                </div>
+                <div>
+                    <h1 class="text-teal-800 dark:text-teal-200 font-bold tracking-tighter text-lg leading-none">MR Kinesiología</h1>
+                    <p class="text-[10px] text-secondary-dim tracking-widest uppercase mt-1">Precisión Clínica</p>
+                </div>
+            </div>
+            <button class="lg:hidden text-slate-500 hover:text-teal-700" onclick="toggleSidebar()">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        <nav class="flex-1 px-2 space-y-1">
+            <a class="nav-item bg-teal-100 dark:bg-teal-900/40 text-teal-900 dark:text-teal-100 rounded-lg mx-2 flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="showView('dashboard')">
+                <span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+                <span>Panel de Control</span>
+            </a>
+            <a class="nav-item text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="showView('nuevo-paciente')">
+                <span class="material-symbols-outlined" data-icon="person_add">person_add</span>
+                <span>Nuevo Paciente</span>
+            </a>
+            <a class="nav-item text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="showView('sesiones')">
+                <span class="material-symbols-outlined" data-icon="exercise">exercise</span>
+                <span>Sesiones</span>
+            </a>
+            <a class="nav-item text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="showView('calendario')">
+                <span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+                <span>Calendario</span>
+            </a>
+            <a class="nav-item text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="showView('pacientes')">
+                <span class="material-symbols-outlined" data-icon="group">group</span>
+                <span>Pacientes</span>
+            </a>
+            <a class="nav-item text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="showView('obras-sociales')">
+                <span class="material-symbols-outlined" data-icon="shield_person">shield_person</span>
+                <span>Obra Social</span>
+            </a>
+            <a class="nav-item text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 cursor-pointer" onclick="showView('reportes')">
+                <span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+                <span>Informes</span>
+            </a>
+        </nav>
+        <div class="p-4 border-t border-slate-100 dark:border-slate-800/50 space-y-1">
+            <a class="text-slate-500 dark:text-slate-400 hover:text-red-700 dark:hover:text-red-300 mx-2 flex items-center gap-3 px-4 py-2 cursor-pointer" onclick="logout()">
+                <span class="material-symbols-outlined" data-icon="logout">logout</span>
+                <span class="text-sm">Cerrar Sesión</span>
+            </a>
+        </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <main class="lg:pl-64 min-h-screen flex flex-col">
+        <!-- TopNavBar Integration -->
+        <header class="sticky top-0 z-30 flex justify-between items-center w-full px-4 lg:px-8 py-4 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md no-border tonal-layering font-['Inter'] text-sm">
+            <div class="flex items-center gap-4">
+                <button class="lg:hidden w-10 h-10 flex items-center justify-center text-slate-600 hover:text-teal-500 transition-colors" onclick="toggleSidebar()">
+                    <span class="material-symbols-outlined">menu</span>
+                </button>
+                <h2 id="currentViewTitle" class="text-xl font-headline font-bold text-on-surface">Panel de Control</h2>
+            </div>
+            <div class="flex items-center gap-4">
+                <div class="hidden sm:flex items-center text-primary-dim px-3 py-1 bg-surface-container rounded-full">
+                    <span class="material-symbols-outlined text-[16px] mr-1">today</span>
+                    <span class="auto-date font-semibold"></span>
+                </div>
+                <div class="h-8 w-[1px] bg-outline-variant opacity-20 mx-2"></div>
+                <div class="flex items-center gap-3">
+                    <div class="text-right hidden sm:block">
+                        <p class="font-semibold text-on-surface" id="userName">Lic. Profesional</p>
+                        <p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Kinesióloga</p>
+                    </div>
+                    <div class="w-10 h-10 rounded-full kinetic-gradient text-on-primary flex items-center justify-center shadow-md">
+                        <span class="material-symbols-outlined opacity-90">medical_services</span>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- View Content Container -->
+        <div id="mainContent" class="flex-1">
+            <div id="loading" class="flex flex-col items-center justify-center py-20 text-teal-700">
+                <span class="material-symbols-outlined animate-spin text-5xl">sync</span>
+                <p class="mt-4 font-semibold">Cargando sistema médico...</p>
+            </div>
+        </div>
+        
+        <footer class="p-8 text-center text-on-surface-variant text-xs mt-auto">MR Kinesiología © 2026</footer>
+    </main>
+
+    <!-- Scripts -->
+    <!-- Supabase Client -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabaseClient.js"></script>
+
+    <script>
+        const API_URL = 'https://script.google.com/macros/s/AKfycbyz73EZMLxBxC1ZlMTqM0vBsgCO3kOcbOdkrJvs0kHz1HmSQazv91QXBiHGO5icZZA/exec';
+        
+        // Auth Check
+        (function() {
+            const token = localStorage.getItem('mrk_token');
+            if (!token) {
+                window.location.href = 'login.html';
+            }
+            
+            const user = JSON.parse(localStorage.getItem('mrk_user') || '{}');
+            document.addEventListener('DOMContentLoaded', () => {
+                document.getElementById('userName').textContent = user.name || 'Lic. Macarena Román';
+                
+                // Formatear fecha bonita
+                const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+                const today = new Date().toLocaleDateString('es-ES', options);
+                document.querySelectorAll('.auto-date').forEach(el => {
+                    el.textContent = today;
+                    if(el.tagName === 'INPUT') el.value = new Date().toISOString().split('T')[0];
+                });
+                
+                loadInitialView();
+            });
+        })();
+
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            sidebar.classList.toggle('-translate-x-full');
+            // Trigger resize after sidebar animation
+            setTimeout(() => {
+                window.dispatchEvent(new Event('resize'));
+            }, 300);
+        }
+
+        function logout() {
+            localStorage.removeItem('mrk_token');
+            localStorage.removeItem('mrk_user');
+            window.location.href = 'login.html';
+        }
+
+        async function loadView(viewName) {
+            const container = document.getElementById('mainContent');
+            const titleElement = document.getElementById('currentViewTitle');
+            
+            const titles = {
+                'dashboard': 'Panel de Control',
+                'nuevo-paciente': 'Registro de Paciente',
+                'sesiones': 'Gestión de Sesiones',
+                'calendario': 'Calendario',
+                'pacientes': 'Directorio de Pacientes',
+                'obras-sociales': 'Seguros Médicos',
+                'reportes': 'Reportes Generales'
+            };
+
+            const files = {
+                'dashboard': 'dashboard-principal.html',
+                'nuevo-paciente': 'nuevo-paciente-formulario.html',
+                'sesiones': 'control-sesiones.html',
+                'calendario': 'calendario.html',
+                'pacientes': 'gestion-pacientes.html',
+                'obras-sociales': 'obras-sociales.html',
+                'reportes': 'reportes.html'
+            };
+
+            titleElement.textContent = titles[viewName];
+            
+            try {
+                // Añadimos un timestamp para evitar cache del navegador
+                const response = await fetch(files[viewName] + '?t=' + new Date().getTime());
+                let html = await response.text();
+                container.innerHTML = html;
+                
+                // Set input dates if appropriate
+                const todayIso = new Date().toISOString().split('T')[0];
+                container.querySelectorAll('.auto-date-input').forEach(input => {
+                    input.value = todayIso;
+                });
+
+                // Active nav item
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('bg-teal-100', 'dark:bg-teal-900/40', 'text-teal-900', 'dark:text-teal-100');
+                    item.classList.add('text-slate-500', 'dark:text-slate-400');
+                    const viewToMatch = viewName.replace('-', ' ');
+                    if (item.querySelector('span:last-child').textContent.toLowerCase().includes(viewToMatch)) {
+                        item.classList.add('bg-teal-100', 'dark:bg-teal-900/40', 'text-teal-900', 'dark:text-teal-100');
+                        item.classList.remove('text-slate-500', 'dark:text-slate-400');
+                    }
+                });
+
+                // Re-initialize scripts
+                loadExternalScript('interactividad.js');
+                
+                // Trigger resize after a short delay for responsive components (like FullCalendar)
+                setTimeout(() => {
+                    window.dispatchEvent(new Event('resize'));
+                }, 200);
+
+            } catch (error) {
+                container.innerHTML = `<div class="p-8"><div class="bg-error-container text-on-error-container p-4 rounded-xl shadow-sm"><span class="material-symbols-outlined mr-2 align-middle">error</span> Error cargando vista: ${error.message}</div></div>`;
+            }
+        }
+
+        function loadExternalScript(src) {
+            const oldScript = document.getElementById('view-script');
+            if (oldScript) oldScript.remove();
+            
+            const script = document.createElement('script');
+            script.src = src + '?t=' + new Date().getTime();
+            script.id = 'view-script';
+            document.body.appendChild(script);
+        }
+
+        function showView(name, contextData = null) {
+            window.currentViewContext = contextData;
+            loadView(name);
+            if (window.innerWidth < 1024) {
+                toggleSidebar();
+            }
+        }
+
+        function loadInitialView() {
+            loadView('dashboard');
+        }
+    </script>
+</body>
+</html>

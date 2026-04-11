@@ -1,0 +1,245 @@
+<div class="p-4 lg:p-8 max-w-5xl mx-auto space-y-6 animate-[slideUp_0.4s_ease-out]">
+    
+    <!-- Contenedor Superior: Resumen del Paciente (Bento Style) -->
+    <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+        
+        <!-- Info Principal del Paciente -->
+        <div class="col-span-1 md:col-span-8 bg-surface-container-lowest p-6 rounded-2xl shadow-sm border-none flex flex-col sm:flex-row items-center sm:items-start gap-6">
+            <div class="w-20 h-20 rounded-full kinetic-gradient text-on-primary flex items-center justify-center shadow-md flex-shrink-0">
+                <span class="material-symbols-outlined text-4xl">personal_injury</span>
+            </div>
+            <div class="flex-grow text-center sm:text-left">
+                <h2 id="sp-patient-name" class="text-2xl font-headline font-extrabold text-on-surface mb-2">Carlos Rodríguez</h2>
+                <div class="flex flex-wrap justify-center sm:justify-start gap-3 text-sm text-on-surface-variant font-medium">
+                    <span class="bg-surface-container px-3 py-1 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">badge</span> DNI: <span id="sp-patient-dni">34.567.890</span></span>
+                    <span class="bg-surface-container px-3 py-1 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">call</span> <span id="sp-patient-phone">11 2345-6789</span></span>
+                    <span class="bg-surface-container px-3 py-1 rounded-full flex items-center gap-1"><span class="material-symbols-outlined text-[16px]">health_and_safety</span> <span id="sp-patient-os">OSDE 410</span></span>
+                </div>
+                
+                <!-- Métricas Rápidas del Tratamiento -->
+                <div class="grid grid-cols-4 gap-4 mt-6 pt-4 border-t border-surface-container">
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-outline-variant font-bold mb-1">Totales</p>
+                        <p class="text-xl font-headline font-bold text-on-surface">12</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-outline-variant font-bold mb-1">Completas</p>
+                        <p class="text-xl font-headline font-bold text-success">5</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-outline-variant font-bold mb-1">Restantes</p>
+                        <p class="text-xl font-headline font-bold text-warning">7</p>
+                    </div>
+                    <div>
+                        <p class="text-[10px] uppercase tracking-wider text-outline-variant font-bold mb-1">Avance</p>
+                        <p class="text-xl font-headline font-bold text-primary">42%</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Saldo Pendiente -->
+        <div class="col-span-1 md:col-span-4 bg-tertiary-container text-on-tertiary-container p-6 rounded-2xl shadow-sm border-none flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-2">
+                    <h3 class="text-sm font-label font-bold uppercase tracking-widest text-[#2b4e6b]">Saldo Pendiente</h3>
+                    <span class="material-symbols-outlined text-[#2b4e6b]">account_balance_wallet</span>
+                </div>
+                <p id="sp-saldo-card-value" class="text-4xl font-headline font-extrabold mt-2 tracking-tight">$0</p>
+                <div class="w-full bg-[#aedaf7] rounded-full h-1.5 mt-4 overflow-hidden">
+                    <div id="sp-saldo-card-progress" class="bg-[#2b4e6b] h-1.5 rounded-full" style="width: 0%"></div>
+                </div>
+                <p id="sp-saldo-card-text" class="text-xs mt-2 font-medium opacity-80">Avance de pagos: 0%</p>
+            </div>
+            <button class="w-full mt-6 bg-[#2b4e6b] text-white font-bold py-3 rounded-lg hover:opacity-90 transition-opacity flex justify-center items-center gap-2" onclick="if(typeof openSessionModal === 'function') openSessionModal('payment')">
+                <span class="material-symbols-outlined text-sm">add_card</span>
+                Registrar Pago
+            </button>
+        </div>
+    </div>
+    
+    <!-- Lista de Sesiones -->
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border-none overflow-hidden">
+        <div class="p-6 border-b border-surface-container flex flex-col sm:flex-row justify-between items-center gap-4">
+            <h3 class="text-lg font-headline font-bold text-on-surface flex items-center gap-2">
+                <span class="material-symbols-outlined text-primary">list_alt</span>
+                Control de Sesiones
+            </h3>
+            <button class="w-full sm:w-auto px-4 py-2 text-sm font-semibold text-primary bg-primary-container/20 rounded-lg hover:bg-primary-container/40 transition-colors flex items-center justify-center gap-2" onclick="if(typeof openSessionModal === 'function') openSessionModal('session')">
+                <span class="material-symbols-outlined text-sm">add</span>
+                Agregar Sesión Manual
+            </button>
+        </div>
+        
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" id="payment3" class="form-checkbox rounded text-success focus:ring-success w-5 h-5 border-outline-variant bg-surface-container">
+                            <span class="text-sm font-semibold text-on-surface group-hover:text-success transition-colors">Abonó $2,500</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="w-10 h-10 rounded-full flex items-center justify-center border border-primary/20 text-primary hover:bg-primary hover:text-white transition-colors" title="Reprogramar"><span class="material-symbols-outlined text-sm">edit_calendar</span></button>
+                    <button class="w-10 h-10 rounded-full flex items-center justify-center border border-primary/20 text-primary hover:bg-primary hover:text-white transition-colors" title="Notas"><span class="material-symbols-outlined text-sm">edit_note</span></button>
+                </div>
+            </div>
+            
+            <!-- Sesión 4: Próxima Programada -->
+            <div class="p-4 sm:p-6 flex flex-col md:flex-row items-center gap-4 hover:bg-surface-bright transition-colors">
+                <div class="w-10 h-10 rounded-full bg-surface-container text-on-surface-variant font-bold flex items-center justify-center flex-shrink-0 opacity-70">4</div>
+                <div class="flex-grow flex flex-col sm:flex-row sm:items-center gap-4 w-full opacity-80">
+                    <div class="w-40 text-sm font-semibold text-on-surface flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px] text-outline-variant">schedule</span> 25/03/2024
+                    </div>
+                    <div class="flex-1 flex flex-col justify-center">
+                        <span class="bg-surface-container-high text-on-surface-variant text-xs font-bold uppercase tracking-wider px-3 py-1 rounded border border-outline-variant w-fit flex items-center gap-1">Programada</span>
+                    </div>
+                </div>
+                <div class="flex gap-2">
+                    <button class="w-10 h-10 rounded-full flex items-center justify-center border border-surface-container text-on-surface-variant hover:bg-surface-container-high transition-colors" title="Reprogramar"><span class="material-symbols-outlined text-sm">edit_calendar</span></button>
+                    <button class="w-10 h-10 rounded-full flex items-center justify-center border border-surface-container text-error hover:bg-error-container hover:text-error transition-colors" title="Cancelar"><span class="material-symbols-outlined text-sm">close</span></button>
+                </div>
+            </div>
+
+            <!-- Sesión 5: Futura -->
+            <div class="p-4 sm:p-6 flex flex-col md:flex-row items-center gap-4 hover:bg-surface-bright transition-colors opacity-60">
+                <div class="w-10 h-10 rounded-full border border-dashed border-outline-variant text-outline-variant font-bold flex items-center justify-center flex-shrink-0">5</div>
+                <div class="flex-grow flex flex-col sm:flex-row sm:items-center gap-4 w-full">
+                    <div class="w-40 text-sm font-semibold text-outline-variant flex items-center gap-2">
+                        <span class="material-symbols-outlined text-[18px]">calendar_add_on</span> Futura
+                    </div>
+                    <div class="flex-1">
+                        <span class="text-outline-variant text-xs font-bold uppercase tracking-wider">A confirmar fecha</span>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+    
+    <!-- Resumen Financiero Completo -->
+    <div class="bg-surface-container-lowest rounded-2xl shadow-sm border-none p-6">
+        <h3 class="text-lg font-headline font-bold text-on-surface flex items-center gap-2 mb-6">
+            <span class="material-symbols-outlined text-secondary">bar_chart</span>
+            Desglose Financiero
+        </h3>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="border-l-4 border-outline-variant pl-4">
+                <p class="text-[0.6875rem] uppercase tracking-widest text-outline-variant font-bold mb-1">Total del Tratamiento</p>
+                <p id="sp-desglose-total" class="text-2xl font-headline font-bold text-on-surface">$0</p>
+            </div>
+            <div class="border-l-4 border-success pl-4">
+                <p class="text-[0.6875rem] uppercase tracking-widest text-outline-variant font-bold mb-1">Total Abonado</p>
+                <p id="sp-desglose-abonado" class="text-2xl font-headline font-bold text-success">$0</p>
+            </div>
+            <div class="border-l-4 border-warning pl-4">
+                <p class="text-[0.6875rem] uppercase tracking-widest text-outline-variant font-bold mb-1">Resto a Pagar</p>
+                <p id="sp-desglose-resto" class="text-2xl font-headline font-bold text-warning">$0</p>
+            </div>
+            <div class="border-l-4 border-primary pl-4">
+                <p class="text-[0.6875rem] uppercase tracking-widest text-outline-variant font-bold mb-1">Próximo Venc.</p>
+                <p id="sp-desglose-venc" class="text-2xl font-headline font-bold text-primary">-</p>
+                <p id="sp-desglose-prox-num" class="text-xs text-on-surface-variant font-medium mt-1">Sin turnos</p>
+            </div>
+        </div>
+    </div>
+    
+</div>
+
+<!-- Modal Registro Múltiple (Sesión / Pago) -->
+<div id="newSessionModal" class="fixed inset-0 z-[60] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center animate-[fadeIn_0.3s_ease-out] p-4 text-left">
+    <div class="bg-surface-container-lowest w-full max-w-xl rounded-2xl shadow-2xl flex flex-col max-h-[95vh] animate-[slideUp_0.4s_ease-out]">
+        
+        <!-- Modal Header -->
+        <div class="px-6 py-5 border-b border-surface-container flex justify-between items-center bg-surface-container-low/30 rounded-t-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-primary/10 text-primary flex items-center justify-center shadow-sm">
+                    <span class="material-symbols-outlined">post_add</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-headline font-extrabold text-on-surface">Registrar Avance</h2>
+                    <p class="text-xs text-on-surface-variant font-medium">Paciente: <span class="font-bold text-primary">Carlos Rodríguez</span></p>
+                </div>
+            </div>
+            <button class="text-slate-400 hover:text-error transition-colors p-2 rounded-full hover:bg-error-container/20" onclick="document.getElementById('newSessionModal').classList.add('hidden')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <div class="p-6 md:p-8 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+            
+            <!-- Tipo de Registro (Switch style view) -->
+            <div class="flex p-1 bg-surface-container rounded-lg gap-1 font-bold text-sm">
+                <button id="tab-mixed" class="flex-1 py-2 text-center rounded-md hover:bg-surface-container-high text-on-surface-variant transition-colors" onclick="openSessionModal('mixed')">Sesión + Pago</button>
+                <button id="tab-payment" class="flex-1 py-2 text-center rounded-md hover:bg-surface-container-high text-on-surface-variant transition-colors" onclick="openSessionModal('payment')">Solo Pago</button>
+                <button id="tab-session" class="flex-1 py-2 text-center rounded-md hover:bg-surface-container-high text-on-surface-variant transition-colors" onclick="openSessionModal('session')">Solo Sesión</button>
+            </div>
+
+            <!-- Datos de Sesión -->
+            <div id="clinica-container" class="space-y-4">
+                <h4 class="text-[11px] font-bold text-slate-400 uppercase tracking-widest border-b border-surface-container pb-1">Detalles Clínicos</h4>
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-bold text-on-surface-variant">Fecha de Atención</label>
+                        <input id="in-fecha-atencion" type="date" class="auto-date-input w-full bg-surface border border-outline-variant/30 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary/50 cursor-pointer">
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-bold text-on-surface-variant">N° de Sesión</label>
+                        <div class="flex items-center gap-2">
+                            <span class="text-slate-400 font-bold">#</span>
+                            <input id="in-num-sesion" type="number" value="1" class="w-full bg-surface border border-outline-variant/30 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary/50 text-center">
+                        </div>
+                    </div>
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-on-surface-variant">Evolución / Notas</label>
+                    <textarea id="ta-evolucion" rows="3" placeholder="Paciente reporta mejora en la movilidad..." class="w-full bg-surface border border-outline-variant/30 rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/50 resize-none"></textarea>
+                </div>
+            </div>
+
+            <!-- Datos Financieros -->
+            <div id="finanzas-container" class="space-y-4 bg-tertiary-container/10 p-4 rounded-xl border border-tertiary-container mt-2">
+                <div class="flex justify-between items-center border-b border-tertiary/20 pb-2">
+                    <h4 class="text-[11px] font-bold text-tertiary uppercase tracking-widest">Cobranza</h4>
+                    <span class="text-xs font-bold text-warning bg-warning/10 px-2 py-0.5 rounded-full">Saldo Total: $17,500</span>
+                </div>
+                
+                <div class="grid grid-cols-2 gap-4">
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-bold text-on-tertiary-container">Monto Abona</label>
+                        <div class="relative">
+                            <span class="absolute left-3 top-1/2 -translate-y-1/2 font-bold text-tertiary">$</span>
+                            <input id="in-monto" type="number" placeholder="2500" class="w-full bg-white border border-tertiary/30 rounded-lg p-2.5 pl-7 text-sm font-bold text-tertiary focus:ring-2 focus:ring-tertiary/50">
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <label class="text-[11px] font-bold text-on-tertiary-container">Medio de Pago</label>
+                        <select id="sel-medio-pago" class="w-full bg-white border border-tertiary/30 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-tertiary/50 appearance-none cursor-pointer">
+                            <option value="Efectivo">Efectivo</option>
+                            <option value="Transferencia">Transferencia</option>
+                            <option value="MercadoPago">MercadoPago</option>
+                            <option value="Débito/Crédito">Débito/Crédito</option>
+                            <option value="Bono Obra Social">Bono Obra Social</option>
+                        </select>
+                    </div>
+                </div>
+                <label class="flex items-center gap-2 cursor-pointer mt-2 text-sm text-tertiary font-medium">
+                    <input type="checkbox" class="rounded border-tertiary text-tertiary focus:ring-tertiary/20"> Enviar comprobante por WhatsApp
+                </label>
+            </div>
+            
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t border-surface-container bg-surface-container-low/30 rounded-b-2xl flex justify-end gap-3">
+            <button class="px-5 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition-colors rounded-lg" onclick="document.getElementById('newSessionModal').classList.add('hidden')">
+                Cancelar
+            </button>
+            <button id="btnSaveSessionRecord" class="px-6 py-2.5 text-sm font-bold bg-[#2b4e6b] text-white rounded-lg shadow-lg hover:opacity-90 active:scale-[0.98] transition-transform flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">save</span>
+                Guardar Registro
+            </button>
+        </div>
+        
+    </div>
+</div>

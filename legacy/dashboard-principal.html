@@ -1,0 +1,187 @@
+<div class="p-4 lg:p-8 space-y-8 animate-[slideUp_0.4s_ease-out]">
+    
+    <!-- Custom Animation Style for Fragments -->
+    <style>
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+
+    <!-- Metrics Bar -->
+    <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <!-- Metric Card 1: Pacientes Activos -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group hover:shadow-md transition-shadow">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-6xl text-primary">groups</span>
+            </div>
+            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Pacientes Activos</p>
+            <div class="flex items-baseline gap-2">
+                <h3 class="text-3xl font-headline font-extrabold text-on-surface">18</h3>
+                <span class="text-primary text-xs font-semibold">+3 este mes</span>
+            </div>
+        </div>
+        
+        <!-- Metric Card 2: Sesiones Hoy -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group hover:shadow-md transition-shadow">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-6xl text-secondary">event_available</span>
+            </div>
+            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Sesiones Hoy</p>
+            <div class="flex items-baseline gap-2">
+                <h3 class="text-3xl font-headline font-extrabold text-on-surface">6</h3>
+                <span class="text-secondary text-xs font-semibold">2 pendientes</span>
+            </div>
+        </div>
+        
+        <!-- Metric Card 3: Ingresos -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group hover:shadow-md transition-shadow">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-6xl text-tertiary">payments</span>
+            </div>
+            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Ingresos Estimados</p>
+            <div class="flex items-baseline gap-2">
+                <h3 class="text-3xl font-headline font-extrabold text-on-surface">$45,800</h3>
+                <span class="text-tertiary text-xs font-semibold">+12% vs mes anterior</span>
+            </div>
+        </div>
+        
+        <!-- Metric Card 4: Productividad -->
+        <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group hover:shadow-md transition-shadow">
+            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+                <span class="material-symbols-outlined text-6xl text-primary-dim">trending_up</span>
+            </div>
+            <p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Productividad</p>
+            <div class="flex items-baseline gap-2">
+                <h3 class="text-3xl font-headline font-extrabold text-on-surface">78%</h3>
+                <div class="w-24 h-2 bg-surface-container rounded-full ml-2 overflow-hidden">
+                    <div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Dashboard Grid (Bento Style) -->
+    <div class="grid grid-cols-12 gap-8">
+        
+        <!-- Agenda Section (Takes up more space now) -->
+        <div class="col-span-12 lg:col-span-8 space-y-6">
+            <div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+                <div class="flex justify-between items-center mb-6 border-b border-surface-container pb-4">
+                    <div>
+                        <h2 class="text-lg font-headline font-bold text-on-surface">Agenda de Hoy</h2>
+                        <p class="text-sm text-on-surface-variant">Seguimiento de citas para el día actual</p>
+                    </div>
+                    <button class="px-4 py-2 text-sm font-semibold text-primary bg-primary-container/20 rounded-lg hover:bg-primary-container/40 transition-colors flex items-center gap-2" onclick="showView('calendario')">
+                        <span class="material-symbols-outlined text-sm">add</span>
+                        Nueva Sesión / Turno
+                    </button>
+                </div>
+
+                <div class="space-y-4">
+                    <!-- Session 1 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl hover:bg-surface-bright transition-colors border border-surface-container">
+                        <div class="flex items-center gap-4 mb-4 sm:mb-0">
+                            <div class="w-16 text-center border-r border-surface-container pr-4">
+                                <span class="block text-xl font-headline font-extrabold text-primary">09:00</span>
+                            </div>
+                            <div>
+                                <p class="text-base font-bold text-on-surface mb-1">Carlos Rodríguez</p>
+                                <span class="bg-surface-container text-on-surface-variant text-xs px-2 py-1 rounded font-semibold">Sesión 5 de 12</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 self-end sm:self-auto">
+                            <span class="bg-primary-container/30 text-primary-dim text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-primary-container">Pagado</span>
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-surface-container text-primary hover:bg-primary hover:text-white transition-colors" title="Marcar/Ver">
+                                <span class="material-symbols-outlined">check</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Session 2 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl hover:bg-surface-bright transition-colors border border-surface-container">
+                        <div class="flex items-center gap-4 mb-4 sm:mb-0">
+                            <div class="w-16 text-center border-r border-surface-container pr-4">
+                                <span class="block text-xl font-headline font-extrabold text-error">10:30</span>
+                            </div>
+                            <div>
+                                <p class="text-base font-bold text-on-surface mb-1">Ana García</p>
+                                <span class="bg-surface-container text-on-surface-variant text-xs px-2 py-1 rounded font-semibold">Sesión 3 de 8</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 self-end sm:self-auto">
+                            <span class="bg-error-container text-on-error-container text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-error-container">Pendiente</span>
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-surface-container text-error hover:bg-error hover:text-white transition-colors" title="Iniciar">
+                                <span class="material-symbols-outlined">play_arrow</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Session 3 -->
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between p-4 rounded-xl hover:bg-surface-bright transition-colors border border-surface-container">
+                        <div class="flex items-center gap-4 mb-4 sm:mb-0">
+                            <div class="w-16 text-center border-r border-surface-container pr-4">
+                                <span class="block text-xl font-headline font-extrabold text-on-surface-variant">11:45</span>
+                            </div>
+                            <div>
+                                <p class="text-base font-bold text-on-surface mb-1">Roberto Sánchez</p>
+                                <span class="bg-surface-container text-on-surface-variant text-xs px-2 py-1 rounded font-semibold italic">Evaluación inicial</span>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3 self-end sm:self-auto">
+                            <span class="bg-surface-container-high text-on-surface-variant text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full border border-surface-container">Programado</span>
+                            <button class="w-10 h-10 rounded-full flex items-center justify-center border border-surface-container text-on-surface-variant hover:bg-on-surface hover:text-white transition-colors" title="Editar">
+                                <span class="material-symbols-outlined">edit</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Access -->
+        <div class="col-span-12 lg:col-span-4">
+            <h2 class="text-lg font-headline font-bold text-on-surface mb-4">Acciones Rápidas</h2>
+            <div class="grid grid-cols-1 gap-3">
+                <button class="kinetic-gradient text-on-primary p-4 rounded-xl flex items-center justify-between group shadow-md" onclick="showView('nuevo-paciente')">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-white/20 p-2 rounded-lg">
+                            <span class="material-symbols-outlined">person_add</span>
+                        </div>
+                        <span class="font-bold text-base">Nuevo Paciente</span>
+                    </div>
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+                </button>
+                
+                <button class="bg-surface-container-lowest text-on-surface p-4 rounded-xl flex items-center justify-between hover:bg-surface-bright transition-colors group shadow-sm border border-surface-container" onclick="showView('sesiones')">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-surface-container p-2 rounded-lg text-primary">
+                            <span class="material-symbols-outlined">edit_note</span>
+                        </div>
+                        <span class="font-bold text-base">Registrar Sesión</span>
+                    </div>
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform text-outline-variant">arrow_forward</span>
+                </button>
+                
+                <button class="bg-surface-container-lowest text-on-surface p-4 rounded-xl flex items-center justify-between hover:bg-surface-bright transition-colors group shadow-sm border border-surface-container">
+                    <div class="flex items-center gap-3">
+                        <div class="bg-surface-container p-2 rounded-lg text-secondary">
+                            <span class="material-symbols-outlined">schedule_send</span>
+                        </div>
+                        <span class="font-bold text-base">Programar Turno</span>
+                    </div>
+                    <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform text-outline-variant">arrow_forward</span>
+                </button>
+            </div>
+            
+            <div class="mt-6 bg-secondary-container/30 border border-secondary-container p-5 rounded-xl">
+                <div class="flex items-center gap-3 mb-2">
+                    <span class="material-symbols-outlined text-secondary">tips_and_updates</span>
+                    <h4 class="font-bold text-on-secondary-container">Tip del Día</h4>
+                </div>
+                <p class="text-sm text-on-surface-variant">Mantén actualizados los registros de sesiones para asegurar métricas precisas al final del mes.</p>
+            </div>
+        </div>
+
+    </div>
+</div>

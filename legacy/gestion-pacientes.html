@@ -1,0 +1,82 @@
+<div class="p-4 sm:p-8 animate-[fadeIn_0.5s_ease-out]">
+<!-- Header Section -->
+<div class="flex flex-col md:flex-row justify-between items-start md:items-end mb-8 gap-4">
+<div>
+<h2 class="text-3xl font-extrabold font-headline tracking-tight text-on-surface">Gestión de Pacientes</h2>
+<p class="text-slate-500 mt-1">Directorio de pacientes en tratamiento activo e histórico.</p>
+</div>
+<button class="kinetic-gradient text-on-primary px-6 py-2.5 rounded-lg font-bold flex items-center gap-2 shadow-lg shadow-primary/30 hover:scale-[1.02] active:scale-[0.98] transition-all" onclick="showView('nuevo-paciente')">
+    <span class="material-symbols-outlined text-xl">person_add</span>
+    Nuevo Paciente
+</button>
+</div>
+<!-- Advanced Filters -->
+<div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-1 shadow-sm">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.05rem]">Obra Social</label>
+<select class="bg-transparent border-0 p-0 text-sm font-semibold focus:ring-0 text-secondary cursor-pointer">
+<option>Todas las Obras Sociales</option>
+<option>OSDE</option>
+<option>Swiss Medical</option>
+<option>Galeno</option>
+<option>Particular</option>
+</select>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-1 shadow-sm">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.05rem]">Estado</label>
+<select class="bg-transparent border-0 p-0 text-sm font-semibold focus:ring-0 text-secondary cursor-pointer">
+<option>Pacientes Activos</option>
+<option>Inactivos</option>
+<option>Archivados</option>
+</select>
+</div>
+<div class="bg-surface-container-lowest p-4 rounded-xl flex flex-col gap-1 shadow-sm">
+<label class="text-[10px] font-bold text-slate-400 uppercase tracking-[0.05rem]">Fecha de Última Sesión</label>
+<div class="flex items-center justify-between text-sm font-semibold text-secondary cursor-pointer hover:text-primary transition-colors">
+<span>Seleccionar rango</span>
+<span class="material-symbols-outlined text-lg">calendar_today</span>
+</div>
+</div>
+<div class="flex items-center justify-center">
+<button class="text-primary font-semibold text-sm hover:underline flex items-center gap-2">
+<span class="material-symbols-outlined">filter_list_off</span>
+                        Limpiar filtros
+                    </button>
+</div>
+</div>
+<!-- Patient Table -->
+<div class="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-separate border-spacing-0">
+<thead>
+<tr class="bg-surface-container-low text-slate-500">
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">Detalles del Paciente</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">Obra Social</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider hidden md:table-cell">DNI / ID</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider">Próximo Turno</th>
+<th class="px-6 py-4 text-[11px] font-bold uppercase tracking-wider hidden sm:table-cell">Estado</th>
+<th class="px-6 py-4 text-right"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-slate-100" id="pacientesTableBody">
+<!-- Dynamic Patients Loaded Here -->
+</tbody>
+</table>
+</div>
+<!-- Pagination Footer -->
+<div class="px-6 py-4 bg-surface-container-low border-t border-surface-container flex flex-col sm:flex-row items-center justify-between text-sm gap-4">
+<p class="text-slate-500">Mostrando <span class="font-bold text-on-surface" id="totalPacientesCargados">0</span> pacientes en total</p>
+<div class="flex items-center gap-2">
+<button class="p-2 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-30" disabled>
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<div class="flex items-center gap-1">
+<button class="w-8 h-8 rounded-lg bg-primary text-on-primary font-bold">1</button>
+</div>
+<button class="p-2 rounded-lg hover:bg-slate-200 transition-colors disabled:opacity-30" disabled>
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</div>

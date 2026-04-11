@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html class="light" lang="es"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Gestión de Sesiones - MR Kinesiología</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&amp;family=Inter:wght@400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "surface": "#f8fafb",
+                        "inverse-primary": "#73ccd6",
+                        "on-primary-fixed-variant": "#004b52",
+                        "outline": "#747c7e",
+                        "on-secondary": "#f4f9ff",
+                        "on-error": "#fff7f6",
+                        "on-secondary-fixed-variant": "#346079",
+                        "secondary-fixed": "#c5e7ff",
+                        "primary-fixed-dim": "#65bec8",
+                        "outline-variant": "#acb3b6",
+                        "secondary": "#38647d",
+                        "on-background": "#2c3436",
+                        "inverse-on-surface": "#9a9d9e",
+                        "on-error-container": "#6e0a12",
+                        "surface-container": "#eaeff0",
+                        "on-secondary-container": "#2a566f",
+                        "error-container": "#fa746f",
+                        "on-surface-variant": "#596063",
+                        "primary": "#006972",
+                        "secondary-container": "#c5e7ff",
+                        "on-tertiary-fixed": "#153b57",
+                        "on-tertiary-fixed-variant": "#355775",
+                        "on-primary-fixed": "#002a2e",
+                        "primary-container": "#73ccd6",
+                        "surface-container-high": "#e3e9eb",
+                        "on-tertiary": "#f6f9ff",
+                        "tertiary-fixed": "#b8dbfe",
+                        "primary-fixed": "#73ccd6",
+                        "on-primary": "#e9fdff",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed-dim": "#aacdef",
+                        "tertiary": "#406280",
+                        "surface-variant": "#dce4e6",
+                        "surface-dim": "#d4dbde",
+                        "secondary-fixed-dim": "#aedaf7",
+                        "on-primary-container": "#004147",
+                        "on-surface": "#2c3436",
+                        "surface-container-low": "#f0f4f6",
+                        "on-secondary-fixed": "#12445c",
+                        "error": "#a83836",
+                        "surface-tint": "#006972",
+                        "inverse-surface": "#0b0f10",
+                        "surface-container-highest": "#dce4e6",
+                        "background": "#f8fafb",
+                        "surface-bright": "#f8fafb",
+                        "secondary-dim": "#2b5870",
+                        "on-tertiary-container": "#2b4e6b",
+                        "primary-dim": "#005c64",
+                        "error-dim": "#67040d",
+                        "tertiary-container": "#b8dbfe",
+                        "tertiary-dim": "#335673"
+                    },
+                    fontFamily: {
+                        "headline": ["Manrope"],
+                        "body": ["Inter"],
+                        "label": ["Inter"]
+                    },
+                    borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .active-pill {
+            background: rgba(115, 204, 214, 0.2);
+        }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface selection:bg-primary-container">
+<div class="flex min-h-screen">
+<!-- SideNavBar -->
+<aside class="flex flex-col w-64 h-full border-r border-slate-200/10 bg-slate-50 dark:bg-slate-900 docked h-screen left-0 sticky z-40">
+<div class="px-6 py-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-dim flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+</div>
+<div>
+<h1 class="font-manrope font-bold text-[#0E7C86] dark:text-[#73ccd6] leading-none">MR Kinesiología</h1>
+<p class="font-inter text-[10px] uppercase tracking-widest text-slate-400 mt-1">Centro de Fisiatría</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-4 space-y-1">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-manrope text-sm font-medium tracking-tight hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+                    Dashboard
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-manrope text-sm font-medium tracking-tight hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+                    Calendario
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-manrope text-sm font-medium tracking-tight hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">groups</span>
+                    Pacientes
+                </a>
+<!-- Active Tab: Sesiones -->
+<a class="flex items-center gap-3 px-3 py-2 bg-[#73ccd6]/20 text-[#0E7C86] rounded-lg font-semibold font-manrope text-sm tracking-tight transition-all" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">fitness_center</span>
+                    Sesiones
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-manrope text-sm font-medium tracking-tight hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">verified_user</span>
+                    Seguros Médicos
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-manrope text-sm font-medium tracking-tight hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">assessment</span>
+                    Informes
+                </a>
+</nav>
+<div class="p-4 mt-auto border-t border-slate-200/10">
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-manrope text-sm font-medium tracking-tight hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">settings</span>
+                    Ajustes
+                </a>
+<a class="flex items-center gap-3 px-3 py-2 text-slate-500 dark:text-slate-400 font-manrope text-sm font-medium tracking-tight hover:bg-slate-200/50 dark:hover:bg-slate-800 rounded-lg transition-all" href="#">
+<span class="material-symbols-outlined">logout</span>
+                    Cerrar Sesión
+                </a>
+</div>
+</aside>
+<!-- Main Content Canvas -->
+<main class="flex-1 flex flex-col min-w-0">
+<!-- TopNavBar -->
+<header class="flex justify-between items-center px-8 py-3 w-full bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl docked full-width top-0 sticky z-30 shadow-sm shadow-slate-200/50 dark:shadow-none">
+<div class="flex items-center gap-4 flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-sm">search</span>
+<input class="w-full bg-surface-container border-none rounded-lg pl-10 pr-4 py-2 text-sm focus:ring-2 focus:ring-primary focus:bg-surface-container-lowest transition-all" placeholder="Buscar pacientes o sesiones..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6 ml-6">
+<div class="flex items-center gap-2">
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-primary transition-colors">
+<span class="material-symbols-outlined">help_outline</span>
+</button>
+</div>
+<div class="flex items-center gap-3 pl-6 border-l border-slate-100">
+<div class="text-right hidden sm:block">
+<p class="text-xs font-semibold text-on-surface">Dr. Alejandro Rossi</p>
+<p class="text-[10px] text-outline">Kinesiólogo Jefe</p>
+</div>
+<img alt="Avatar del Profesional" class="w-9 h-9 rounded-full object-cover border-2 border-primary-container" data-alt="professional male doctor in medical white coat with a friendly smile, clean clinical background, high quality portrait" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqMvqKXJr_C29FOOFqlYszmAQq712cf8X_fdexn0VUBJngA3APQoBnEN9vNznxjmL3A5IfCN0DWuSgtHmYj9oQIsZ-y_UDlYoPo67ledGfsSHh0aJu6kcM2HFIqbHKcrB11oLzIw-uS3ZkMSVqTifqKMbnG5NxSerSGKjwShiI-MYE9CxpO3QMwxCByatrCVatj_GvSDcSZOsAfBR6gX4zptA_6neH-jXB8QcSmPB6Id9rwgJPBYj9PwKyRZWYRpP1GN8ByMNUK4g"/>
+</div>
+</div>
+</header>
+<!-- Page Content -->
+<div class="p-8 space-y-8">
+<!-- Header Actions -->
+<div class="flex flex-col md:flex-row md:items-end justify-between gap-6">
+<div>
+<h2 class="font-headline text-3xl font-extrabold text-on-surface tracking-tight">Gestión de Sesiones</h2>
+<p class="text-on-surface-variant mt-1 font-body">Supervisa el progreso clínico y las actividades de recuperación.</p>
+</div>
+<button class="flex items-center gap-2 px-5 py-2.5 bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-lg font-semibold shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-95 transition-all">
+<span class="material-symbols-outlined">add</span>
+                        Registrar Nueva Sesión
+                    </button>
+</div>
+<!-- Metrics Bento Style -->
+<div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-[10px] font-label font-bold uppercase tracking-widest text-outline mb-2">SESIONES HOY</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-on-surface">24</span>
+<span class="text-primary text-sm font-semibold flex items-center">+12% <span class="material-symbols-outlined text-xs">trending_up</span></span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-[10px] font-label font-bold uppercase tracking-widest text-outline mb-2">COMPLETADAS</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-on-surface">18</span>
+<div class="w-16 h-1.5 bg-surface-container rounded-full overflow-hidden">
+<div class="w-[75%] h-full bg-primary"></div>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-[10px] font-label font-bold uppercase tracking-widest text-outline mb-2">PACIENTES ACTIVOS</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-on-surface">142</span>
+<span class="text-secondary text-sm font-semibold flex items-center">Estable</span>
+</div>
+</div>
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border border-outline-variant/10">
+<p class="text-[10px] font-label font-bold uppercase tracking-widest text-outline mb-2">TASA DE ASISTENCIA</p>
+<div class="flex items-end justify-between">
+<span class="text-3xl font-headline font-bold text-on-surface">94%</span>
+<span class="text-primary-dim text-sm font-semibold">Excelente</span>
+</div>
+</div>
+</div>
+<!-- Filters and Table Container -->
+<div class="bg-surface-container-low rounded-2xl p-1">
+<div class="bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden">
+<!-- Filters -->
+<div class="px-6 py-5 border-b border-outline-variant/15 flex flex-wrap items-center justify-between gap-4">
+<div class="flex items-center gap-3">
+<span class="text-xs font-bold text-outline uppercase tracking-tight mr-2">Filtrar por:</span>
+<div class="flex p-1 bg-surface-container rounded-lg">
+<button class="px-4 py-1.5 text-xs font-semibold rounded-md bg-white shadow-sm text-primary">Todos</button>
+<button class="px-4 py-1.5 text-xs font-medium text-outline-variant hover:text-on-surface transition-colors">Pendiente</button>
+<button class="px-4 py-1.5 text-xs font-medium text-outline-variant hover:text-on-surface transition-colors">Completada</button>
+</div>
+<select class="bg-surface-container border-none text-xs font-medium rounded-lg px-4 py-2 focus:ring-1 focus:ring-primary">
+<option>Todos los Profesionales</option>
+<option>Dr. Alejandro Rossi</option>
+<option>Dra. Maria Luz</option>
+<option>Lic. Juan Pérez</option>
+</select>
+</div>
+<div class="flex items-center gap-2">
+<button class="p-2 text-outline-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">filter_list</span>
+</button>
+<button class="p-2 text-outline-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">download</span>
+</button>
+</div>
+</div>
+<!-- Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container/30">
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-widest">Fecha y Hora</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-widest">Paciente</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-widest">Profesional</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-widest">Tratamiento</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-widest">Estado</th>
+<th class="px-6 py-4 text-[10px] font-bold text-outline uppercase tracking-widest"></th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/10">
+<!-- Row 1 -->
+<tr class="hover:bg-surface-container/20 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<p class="text-sm font-semibold text-on-surface">Hoy, 09:30</p>
+<p class="text-[11px] text-outline">14 May 2024</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-secondary font-bold text-xs">RM</div>
+<span class="text-sm font-medium text-on-surface">Ricardo Martínez</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-medium">Dr. Alejandro Rossi</td>
+<td class="px-6 py-4">
+<span class="text-xs px-2.5 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-medium">Kinesioterapia</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-emerald-100 text-emerald-700">
+<span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+                                                Completada
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-outline-variant hover:text-primary">chevron_right</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-surface-container/20 transition-colors cursor-pointer bg-primary/5">
+<td class="px-6 py-4 border-l-4 border-primary">
+<p class="text-sm font-semibold text-on-surface">Hoy, 11:00</p>
+<p class="text-[11px] text-outline">14 May 2024</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-primary-container flex items-center justify-center text-primary font-bold text-xs">EF</div>
+<span class="text-sm font-medium text-on-surface">Elena Fernández</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-medium">Dra. Maria Luz</td>
+<td class="px-6 py-4">
+<span class="text-xs px-2.5 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-medium">Magnetoterapia</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-amber-100 text-amber-700">
+<span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span>
+                                                Pendiente
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-primary">visibility</span>
+</td>
+</tr>
+<!-- Row 3 -->
+<tr class="hover:bg-surface-container/20 transition-colors cursor-pointer">
+<td class="px-6 py-4">
+<p class="text-sm font-semibold text-on-surface">Ayer, 16:45</p>
+<p class="text-[11px] text-outline">13 May 2024</p>
+</td>
+<td class="px-6 py-4">
+<div class="flex items-center gap-3">
+<div class="w-8 h-8 rounded-full bg-tertiary-container flex items-center justify-center text-tertiary font-bold text-xs">JS</div>
+<span class="text-sm font-medium text-on-surface">Jorge Sánchez</span>
+</div>
+</td>
+<td class="px-6 py-4 text-sm text-on-surface-variant font-medium">Lic. Juan Pérez</td>
+<td class="px-6 py-4">
+<span class="text-xs px-2.5 py-1 bg-surface-container-high text-on-surface-variant rounded-full font-medium">Rehab. Post-Op</span>
+</td>
+<td class="px-6 py-4">
+<span class="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-bold bg-rose-100 text-rose-700">
+<span class="w-1.5 h-1.5 rounded-full bg-rose-500"></span>
+                                                Ausente
+                                            </span>
+</td>
+<td class="px-6 py-4 text-right">
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Pagination -->
+<div class="px-6 py-4 bg-surface-container/10 flex items-center justify-between border-t border-outline-variant/10">
+<span class="text-xs text-outline font-medium">Mostrando 10 de 156 sesiones</span>
+<div class="flex items-center gap-1">
+<button class="p-1 rounded hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-sm">chevron_left</span></button>
+<button class="w-7 h-7 flex items-center justify-center text-xs font-bold bg-primary text-on-primary rounded">1</button>
+<button class="w-7 h-7 flex items-center justify-center text-xs font-medium text-outline-variant hover:text-on-surface rounded transition-colors">2</button>
+<button class="w-7 h-7 flex items-center justify-center text-xs font-medium text-outline-variant hover:text-on-surface rounded transition-colors">3</button>
+<button class="p-1 rounded hover:bg-surface-container transition-colors"><span class="material-symbols-outlined text-sm">chevron_right</span></button>
+</div>
+</div>
+</div>
+</div>
+<!-- Session Detail View (Bento Side Panel) -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<!-- Notes & Evolution Card -->
+<div class="lg:col-span-2 space-y-6">
+<div class="bg-surface-container-lowest p-8 rounded-2xl shadow-sm border border-outline-variant/10">
+<div class="flex items-center justify-between mb-6">
+<div class="flex items-center gap-3">
+<div class="p-2 bg-primary/10 text-primary rounded-lg">
+<span class="material-symbols-outlined">description</span>
+</div>
+<h3 class="font-headline text-xl font-bold">Detalle de Sesión: Elena Fernández</h3>
+</div>
+<button class="text-primary text-sm font-semibold hover:underline">Editar Notas</button>
+</div>
+<div class="space-y-6">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="p-5 bg-surface-container-low rounded-xl">
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest mb-3">Notas del Terapeuta</p>
+<p class="text-sm text-on-surface leading-relaxed">
+                                            Paciente presenta mejora notable en el rango de movilidad de la articulación gleno-humeral (+15°). Refiere menos dolor post-ejercicio (EVA 3/10). Se procedió con magnetoterapia de baja frecuencia por 20min.
+                                        </p>
+</div>
+<div class="p-5 bg-surface-container-low rounded-xl">
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest mb-3">Evolución del Paciente</p>
+<div class="flex items-center gap-4 mb-4">
+<div class="flex-1">
+<div class="flex justify-between text-xs font-medium mb-1">
+<span>Progreso Plan (12/20)</span>
+<span>60%</span>
+</div>
+<div class="h-2 bg-surface-container rounded-full overflow-hidden">
+<div class="w-[60%] h-full bg-primary-dim"></div>
+</div>
+</div>
+</div>
+<ul class="text-[11px] space-y-2 text-on-surface-variant">
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Fuerza muscular incrementada</li>
+<li class="flex items-center gap-2"><span class="w-1.5 h-1.5 rounded-full bg-primary"></span> Reducción de inflamación local</li>
+</ul>
+</div>
+</div>
+<div class="pt-4 flex gap-4">
+<button class="flex-1 py-3 px-4 border border-outline-variant text-sm font-bold rounded-xl hover:bg-surface-container transition-colors">Agendar Próxima</button>
+<button class="flex-1 py-3 px-4 bg-primary text-on-primary text-sm font-bold rounded-xl hover:shadow-lg hover:shadow-primary/20 transition-all">Finalizar Tratamiento</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Side Info: Patient Vitals -->
+<div class="bg-surface-container-high/40 p-6 rounded-2xl border border-outline-variant/10 flex flex-col gap-6">
+<div class="flex flex-col items-center text-center">
+<img alt="Elena Fernández Profile" class="w-24 h-24 rounded-full object-cover border-4 border-white shadow-md mb-4" data-alt="portrait of a middle aged woman, smiling gently, natural lighting, high professional medical profile photography" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGjCnON5p_8hcW6Zk_u9NG8ZbX7WUaS0XbwrrTexwKshghApRyohfMIFesZ_v6mlRPhck7auzm-PHI_yq07sw9wQ3JlS9A7QsQaVgAIGz5YwgOyB9tqFK943K3sqBfZ05dkgR1PaFXt0yAmTROBMPEVh81vLSLOSnrle-EsIXgHonHdyMTBLsXqZ1aiY6PvrDAv8CO3INPCqncvsFeipmPx_Gvv-_mWgJbTwd3jqR5y1YuTscZqAE-h0i1jBSwgTdCKOZLYe10UHo"/>
+<h4 class="font-headline font-bold text-lg">Elena Fernández</h4>
+<p class="text-xs text-outline font-medium">ID: #PT-9042 | 45 Años</p>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center p-3 bg-white rounded-lg">
+<span class="text-xs font-medium text-on-surface-variant">Diagnóstico</span>
+<span class="text-xs font-bold text-primary">Tendinitis Manguito Rotador</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-white rounded-lg">
+<span class="text-xs font-medium text-on-surface-variant">Última Visita</span>
+<span class="text-xs font-bold text-on-surface">Ayer, 10:20 AM</span>
+</div>
+<div class="flex justify-between items-center p-3 bg-white rounded-lg">
+<span class="text-xs font-medium text-on-surface-variant">Seguro</span>
+<span class="text-xs font-bold text-on-surface">OSDE 410</span>
+</div>
+</div>
+<div class="mt-auto">
+<p class="text-[10px] font-bold text-outline uppercase tracking-widest mb-3">Adjuntos Recientes</p>
+<div class="space-y-2">
+<div class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded border border-outline-variant/10 text-xs cursor-pointer hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary text-sm">picture_as_pdf</span>
+<span class="truncate font-medium">Resonancia_Hombro_May.pdf</span>
+</div>
+<div class="flex items-center gap-2 p-2 bg-surface-container-lowest rounded border border-outline-variant/10 text-xs cursor-pointer hover:bg-primary/5 transition-colors">
+<span class="material-symbols-outlined text-primary text-sm">image</span>
+<span class="truncate font-medium">Ecografia_Referencia.jpg</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Footer -->
+<footer class="flex justify-between items-center px-8 py-4 w-full mt-auto bg-slate-50 dark:bg-slate-950 border-t border-slate-100 dark:border-slate-800">
+<p class="font-inter text-xs uppercase tracking-widest text-slate-400">© DigimediosApps 2026</p>
+<div class="flex gap-6">
+<a class="font-inter text-xs uppercase tracking-widest text-slate-400 hover:text-[#0E7C86] transition-opacity opacity-80 hover:opacity-100" href="#">Privacidad</a>
+<a class="font-inter text-xs uppercase tracking-widest text-slate-400 hover:text-[#0E7C86] transition-opacity opacity-80 hover:opacity-100" href="#">Soporte</a>
+<a class="font-inter text-xs uppercase tracking-widest text-slate-400 hover:text-[#0E7C86] transition-opacity opacity-80 hover:opacity-100" href="#">Términos</a>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MR Kinesiología | Panel del Profesional</title>
+<!-- Google Fonts: Manrope & Inter -->
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "inverse-primary": "#73ccd6",
+              "on-background": "#2c3436",
+              "surface-container-low": "#f0f4f6",
+              "inverse-on-surface": "#9a9d9e",
+              "error": "#a83836",
+              "secondary": "#38647d",
+              "on-primary-container": "#004147",
+              "on-surface-variant": "#596063",
+              "on-tertiary-fixed": "#153b57",
+              "secondary-dim": "#2b5870",
+              "secondary-fixed": "#c5e7ff",
+              "on-primary-fixed": "#002a2e",
+              "secondary-fixed-dim": "#aedaf7",
+              "surface-variant": "#dce4e6",
+              "error-container": "#fa746f",
+              "on-error": "#fff7f6",
+              "surface-container-lowest": "#ffffff",
+              "on-tertiary": "#f6f9ff",
+              "outline": "#747c7e",
+              "surface-bright": "#f8fafb",
+              "surface": "#f8fafb",
+              "error-dim": "#67040d",
+              "surface-tint": "#006972",
+              "background": "#f8fafb",
+              "surface-container-highest": "#dce4e6",
+              "on-secondary-fixed": "#12445c",
+              "primary": "#006972",
+              "surface-dim": "#d4dbde",
+              "secondary-container": "#c5e7ff",
+              "tertiary-dim": "#335673",
+              "on-secondary": "#f4f9ff",
+              "on-tertiary-fixed-variant": "#355775",
+              "on-tertiary-container": "#2b4e6b",
+              "on-error-container": "#6e0a12",
+              "outline-variant": "#acb3b6",
+              "tertiary": "#406280",
+              "tertiary-container": "#b8dbfe",
+              "primary-dim": "#005c64",
+              "primary-container": "#73ccd6",
+              "on-primary": "#e9fdff",
+              "surface-container": "#eaeff0",
+              "primary-fixed-dim": "#65bec8",
+              "tertiary-fixed-dim": "#aacdef",
+              "tertiary-fixed": "#b8dbfe",
+              "primary-fixed": "#73ccd6",
+              "surface-container-high": "#e3e9eb",
+              "on-surface": "#2c3436",
+              "inverse-surface": "#0b0f10",
+              "on-secondary-container": "#2a566f",
+              "on-secondary-fixed-variant": "#346079",
+              "on-primary-fixed-variant": "#004b52"
+            },
+            fontFamily: {
+              "headline": ["Manrope"],
+              "body": ["Inter"],
+              "label": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        .kinetic-gradient {
+            background: linear-gradient(135deg, #006972 0%, #005c64 100%);
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-surface font-body text-on-surface antialiased">
+<!-- SideNavBar Integration -->
+<aside class="fixed left-0 top-0 h-full z-40 flex flex-col bg-slate-50/80 dark:bg-slate-900/80 backdrop-blur-xl h-screen w-64 border-r-0 shadow-2xl shadow-slate-200/50 dark:shadow-none font-['Manrope'] font-semibold tracking-tight">
+<div class="px-6 py-8">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-xl kinetic-gradient flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined">health_metrics</span>
+</div>
+<div>
+<h1 class="text-teal-800 dark:text-teal-200 font-bold tracking-tighter text-lg leading-none">MR Kinesiología</h1>
+<p class="text-[10px] text-secondary-dim tracking-widest uppercase mt-1">Precisión Clínica</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 px-2 space-y-1">
+<!-- Active Tab: Dashboard -->
+<a class="bg-teal-100 dark:bg-teal-900/40 text-teal-900 dark:text-teal-100 rounded-lg mx-2 flex items-center gap-3 px-4 py-3 transition-all duration-300 scale-95 active:scale-90" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span>Panel de Control</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 transition-all duration-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="calendar_month">calendar_month</span>
+<span>Calendario</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 transition-all duration-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="group">group</span>
+<span>Pacientes</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 transition-all duration-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="exercise">exercise</span>
+<span>Sesiones</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 transition-all duration-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="shield_person">shield_person</span>
+<span>Seguros Médicos</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-3 transition-all duration-300 hover:bg-slate-200/50 dark:hover:bg-slate-800/50" href="#">
+<span class="material-symbols-outlined" data-icon="analytics">analytics</span>
+<span>Informes</span>
+</a>
+</nav>
+<div class="p-4 border-t border-slate-100 dark:border-slate-800/50 space-y-1">
+<a class="text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="text-sm">Configuración</span>
+</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-teal-700 dark:hover:text-teal-300 mx-2 flex items-center gap-3 px-4 py-2 transition-all duration-300" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="text-sm">Soporte</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="pl-64 min-h-screen">
+<!-- TopNavBar Integration -->
+<header class="sticky top-0 z-30 flex justify-between items-center w-full px-8 py-4 bg-white/70 dark:bg-slate-950/70 backdrop-blur-md no-border tonal-layering font-['Inter'] text-sm">
+<div class="flex items-center gap-6 flex-1">
+<div class="relative w-full max-w-md">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-outline-variant text-lg">search</span>
+<input class="w-full bg-surface-container border-none rounded-xl pl-10 pr-4 py-2 focus:ring-2 focus:ring-teal-500/20 transition-all text-on-surface-variant" placeholder="Buscar pacientes, sesiones o registros..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-teal-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="notifications">notifications</span>
+</button>
+<button class="w-10 h-10 flex items-center justify-center text-slate-600 dark:text-slate-400 hover:text-teal-500 transition-colors">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+</button>
+<div class="h-8 w-[1px] bg-outline-variant opacity-20 mx-2"></div>
+<div class="flex items-center gap-3">
+<div class="text-right hidden sm:block">
+<p class="font-semibold text-on-surface">Dr. Aris Thorne</p>
+<p class="text-[10px] text-on-surface-variant uppercase tracking-wider">Fisiatra Jefe</p>
+</div>
+<img alt="Practitioner Profile" class="w-10 h-10 rounded-full object-cover ring-2 ring-primary/10" data-alt="Portrait of a medical professional practitioner" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBruOT6HXNOWIsjNITlvYvyQx1HwdjQGSl9efP_2-tg0hM5D8K5BsU5tF1cQ766xOAY7yXHB7aoLeZjhiQ7jLY_Rl8Tb4vw5cXeH2jwAhkODGm4J6X7aCMYgguyYyktc8rfaMpfvmPX_DKZ9ruri70NNsFY5q0wGAZUiRsQZVVJXQDj50scc_JnFCr38ChE1WDxLufJLiDD_GWkjvRFa8dQ3SZkRhOQCkINCrU8wGAa8ZyUubDhgcvnCfLQvDCv9AAgdgaAPY0keQk"/>
+</div>
+</div>
+</header>
+<div class="p-8 space-y-8">
+<!-- Metrics Bar -->
+<section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Metric Card 1 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl text-primary">+4 vs ayer</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Citas Hoy</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-headline font-extrabold text-on-surface">24</h3>
+<span class="text-primary text-xs font-semibold">+4 vs ayer</span>
+</div>
+</div>
+<!-- Metric Card 2 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl text-secondary">Capacidad: 85%</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Pacientes Activos</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-headline font-extrabold text-on-surface">150</h3>
+<span class="text-secondary text-xs font-semibold">Capacidad: 85%</span>
+</div>
+</div>
+<!-- Metric Card 3 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl text-tertiary">6 restantes</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Sesiones Completadas</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-headline font-extrabold text-on-surface">18</h3>
+<span class="text-tertiary text-xs font-semibold">6 restantes</span>
+</div>
+</div>
+<!-- Metric Card 4 -->
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm border-none relative overflow-hidden group">
+<div class="absolute right-0 top-0 p-4 opacity-10 group-hover:scale-110 transition-transform">
+<span class="material-symbols-outlined text-6xl text-primary-dim">Crecimiento MTD +12%</span>
+</div>
+<p class="text-xs font-bold text-on-surface-variant uppercase tracking-widest mb-1">Ingresos Estimados</p>
+<div class="flex items-baseline gap-2">
+<h3 class="text-3xl font-headline font-extrabold text-on-surface">$45,000</h3>
+<span class="text-primary-dim text-xs font-semibold">Crecimiento MTD +12%</span>
+</div>
+</div>
+</section>
+<!-- Main Dashboard Grid (Bento Style) -->
+<div class="grid grid-cols-12 gap-8">
+<!-- Revenue Chart (Line) -->
+<div class="col-span-12 lg:col-span-8 bg-surface-container-low p-8 rounded-xl border-none">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h2 class="text-xl font-headline font-bold text-on-surface">Rendimiento de Ingresos</h2>
+<p class="text-sm text-on-surface-variant">Trayectoria financiera últimos 30 días</p>
+</div>
+<div class="flex gap-2">
+<button class="px-3 py-1 text-xs font-semibold rounded-full bg-surface-container-lowest shadow-sm text-primary">Diario</button>
+<button class="px-3 py-1 text-xs font-semibold rounded-full text-on-surface-variant hover:bg-white/50 transition-colors">Semanal</button>
+</div>
+</div>
+<!-- Mock Chart Visualization -->
+<div class="h-64 flex items-end gap-1 px-2 relative">
+<!-- Chart Grid Lines -->
+<div class="absolute inset-0 flex flex-col justify-between opacity-10 pointer-events-none">
+<div class="border-t border-on-surface"></div>
+<div class="border-t border-on-surface"></div>
+<div class="border-t border-on-surface"></div>
+<div class="border-t border-on-surface"></div>
+</div>
+<!-- SVG Path for Line Chart -->
+<svg class="absolute inset-0 w-full h-full" preserveaspectratio="none" viewbox="0 0 800 200">
+<path d="M0,180 Q100,160 200,170 T400,120 T600,80 T800,40" fill="none" stroke="url(#lineGradient)" stroke-linecap="round" stroke-width="4"></path>
+<defs>
+<lineargradient id="lineGradient" x1="0%" x2="100%" y1="0%" y2="0%">
+<stop offset="0%" stop-color="#73ccd6"></stop>
+<stop offset="100%" stop-color="#006972"></stop>
+</lineargradient>
+</defs>
+</svg>
+<div class="w-full flex justify-between absolute -bottom-6 text-[10px] text-on-surface-variant font-bold uppercase tracking-wider">
+<span>May 01</span>
+<span>May 10</span>
+<span>May 20</span>
+<span>May 30</span>
+</div>
+</div>
+</div>
+<!-- Recent Activity -->
+<div class="col-span-12 lg:col-span-4 space-y-6">
+<div class="bg-surface-container-lowest p-6 rounded-xl shadow-sm">
+<h2 class="text-lg font-headline font-bold text-on-surface mb-6">Actividad Reciente</h2>
+<div class="space-y-6">
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-secondary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-secondary-container" style="font-variation-settings: 'FILL' 1;">person_add</span>
+</div>
+<div>
+<p class="text-sm text-on-surface"><span class="font-bold">Juan Pérez</span> confirmó su sesión</p>
+<p class="text-xs text-on-surface-variant mt-1">Hace 2 minutos • Fisioterapia</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-primary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-primary-container" style="font-variation-settings: 'FILL' 1;">assignment_ind</span>
+</div>
+<div>
+<p class="text-sm text-on-surface">Nuevo paciente registrado: <span class="font-bold">Elena Miró</span></p>
+<p class="text-xs text-on-surface-variant mt-1">Hace 1 hora • Formulario de Ingreso</p>
+</div>
+</div>
+<div class="flex gap-4">
+<div class="w-10 h-10 rounded-full bg-tertiary-container flex items-center justify-center flex-shrink-0">
+<span class="material-symbols-outlined text-on-tertiary-container" style="font-variation-settings: 'FILL' 1;">done_all</span>
+</div>
+<div>
+<p class="text-sm text-on-surface">Sesión completada por el <span class="font-bold">Dr. Smith</span></p>
+<p class="text-xs text-on-surface-variant mt-1">Hace 3 horas • Rehabilitación Post-operatoria</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 text-sm font-semibold text-primary border border-primary/10 rounded-lg hover:bg-primary/5 transition-colors">Ver Todas las Actividades</button>
+</div>
+<!-- Quick Access -->
+<div class="grid grid-cols-1 gap-3">
+<button class="kinetic-gradient text-on-primary p-4 rounded-xl flex items-center justify-between group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">person_add</span>
+<span class="font-bold">Nuevo Paciente</span>
+</div>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high text-on-surface p-4 rounded-xl flex items-center justify-between hover:bg-surface-variant transition-colors group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">edit_note</span>
+<span class="font-bold">Registrar Sesión</span>
+</div>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+<button class="bg-surface-container-high text-on-surface p-4 rounded-xl flex items-center justify-between hover:bg-surface-variant transition-colors group">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined">schedule_send</span>
+<span class="font-bold">Programar Turno</span>
+</div>
+<span class="material-symbols-outlined group-hover:translate-x-1 transition-transform">arrow_forward</span>
+</button>
+</div>
+</div>
+<!-- Sessions per Professional (Bar Chart) -->
+<div class="col-span-12 bg-surface-container-lowest p-8 rounded-xl shadow-sm border-none">
+<div class="flex justify-between items-center mb-10">
+<div>
+<h2 class="text-xl font-headline font-bold text-on-surface">Sesiones por Profesional</h2>
+<p class="text-sm text-on-surface-variant">Distribución de carga de trabajo para la semana actual</p>
+</div>
+<select class="bg-surface-container border-none rounded-lg text-sm font-semibold py-2 pl-4 pr-10 focus:ring-primary/20">
+<option>Esta Semana</option>
+<option>Semana Pasada</option>
+</select>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-5 gap-8">
+<!-- Bar 1 -->
+<div class="space-y-4">
+<div class="h-48 bg-surface-container-low rounded-xl flex flex-col justify-end overflow-hidden">
+<div class="w-full bg-primary/40 h-[75%] rounded-t-lg relative group transition-all hover:bg-primary">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">42 Sessions</div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold text-on-surface">Distribución de carga de trabajo para la semana actual</p>
+<p class="text-[10px] uppercase text-on-surface-variant tracking-wider">Senior Physiatrist</p>
+</div>
+</div>
+<!-- Bar 2 -->
+<div class="space-y-4">
+<div class="h-48 bg-surface-container-low rounded-xl flex flex-col justify-end overflow-hidden">
+<div class="w-full bg-secondary/40 h-[90%] rounded-t-lg relative group transition-all hover:bg-secondary">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">54 Sessions</div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold text-on-surface">Distribución de carga de trabajo para la semana actual</p>
+<p class="text-[10px] uppercase text-on-surface-variant tracking-wider">Kinesiologist</p>
+</div>
+</div>
+<!-- Bar 3 -->
+<div class="space-y-4">
+<div class="h-48 bg-surface-container-low rounded-xl flex flex-col justify-end overflow-hidden">
+<div class="w-full bg-tertiary/40 h-[50%] rounded-t-lg relative group transition-all hover:bg-tertiary">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">28 Sessions</div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold text-on-surface">Distribución de carga de trabajo para la semana actual</p>
+<p class="text-[10px] uppercase text-on-surface-variant tracking-wider">Rehab Specialist</p>
+</div>
+</div>
+<!-- Bar 4 -->
+<div class="space-y-4">
+<div class="h-48 bg-surface-container-low rounded-xl flex flex-col justify-end overflow-hidden">
+<div class="w-full bg-primary-dim/40 h-[65%] rounded-t-lg relative group transition-all hover:bg-primary-dim">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">36 Sessions</div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold text-on-surface">Distribución de carga de trabajo para la semana actual</p>
+<p class="text-[10px] uppercase text-on-surface-variant tracking-wider">Pediatric Physiatrist</p>
+</div>
+</div>
+<!-- Bar 5 -->
+<div class="space-y-4">
+<div class="h-48 bg-surface-container-low rounded-xl flex flex-col justify-end overflow-hidden">
+<div class="w-full bg-outline-variant/40 h-[40%] rounded-t-lg relative group transition-all hover:bg-outline">
+<div class="absolute -top-8 left-1/2 -translate-x-1/2 bg-on-surface text-surface text-[10px] font-bold px-2 py-1 rounded opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">22 Sessions</div>
+</div>
+</div>
+<div class="text-center">
+<p class="text-sm font-bold text-on-surface">Distribución de carga de trabajo para la semana actual</p>
+<p class="text-[10px] uppercase text-on-surface-variant tracking-wider">Sports Specialist</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div><footer class="p-8 text-center text-on-surface-variant text-xs">DigimediosApps 2026</footer>
+</main>
+<!-- Contextual FAB (Hidden on Mobile) -->
+<button class="fixed bottom-8 right-8 w-16 h-16 rounded-full kinetic-gradient text-on-primary shadow-xl flex items-center justify-center scale-100 hover:scale-110 active:scale-90 transition-transform md:flex hidden">
+<span class="material-symbols-outlined text-3xl" data-weight="fill">add</span>
+</button>
+</body></html>

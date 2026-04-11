@@ -1,0 +1,173 @@
+<div class="flex-1 overflow-hidden flex flex-col md:flex-row bg-surface-container-low min-h-[600px] animate-[fadeIn_0.5s_ease-out]">
+<!-- Sidebar Filter Area -->
+<aside class="w-full md:w-72 bg-surface p-6 border-r border-outline-variant/15 overflow-y-auto no-scrollbar hidden xl:block">
+<div class="flex flex-col gap-8">
+<div>
+<h3 class="font-headline font-bold text-lg mb-4 text-on-surface">Filtro de Horario</h3>
+<button class="w-full py-2.5 px-4 bg-gradient-to-br from-primary to-primary-dim text-on-primary font-semibold rounded-lg shadow-lg shadow-primary/20 flex items-center justify-center gap-2 mb-6 hover:scale-[1.02] active:scale-[0.98] transition-transform" onclick="document.getElementById('newAppointmentModal').classList.remove('hidden')"><span class="material-symbols-outlined text-sm">add</span> Nueva Cita</button>
+</div>
+<!-- Date Mini Picker -->
+<div class="bg-surface-container-lowest rounded-xl p-4 shadow-sm border border-outline-variant/10">
+    <div class="flex justify-between items-center mb-4">
+        <span id="mini-month-name" class="font-semibold text-sm">Octubre 2026</span>
+        <div class="flex gap-2 text-outline">
+            <span id="mini-prev" class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors">chevron_left</span>
+            <span id="mini-next" class="material-symbols-outlined text-sm cursor-pointer hover:text-primary transition-colors">chevron_right</span>
+        </div>
+    </div>
+    <div class="grid grid-cols-7 gap-1 text-center text-[10px] font-bold text-on-surface-variant uppercase tracking-tighter mb-2">
+        <span>Do</span><span>Lu</span><span>Ma</span><span>Mi</span><span>Ju</span><span>Vi</span><span>Sa</span>
+    </div>
+    <div id="mini-days-grid" class="grid grid-cols-7 gap-1 text-center text-xs">
+        <!-- Generado dinámicamente -->
+    </div>
+</div>
+
+<!-- Status Filter -->
+<div>
+<label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Estado</label>
+<div class="space-y-2">
+<label class="flex items-center gap-2 text-sm cursor-pointer">
+<div class="w-2 h-2 rounded-full bg-emerald-500"></div>
+<span>Confirmado</span>
+</label>
+<label class="flex items-center gap-2 text-sm cursor-pointer">
+<div class="w-2 h-2 rounded-full bg-amber-400"></div>
+<span>Pendiente</span>
+</label>
+<label class="flex items-center gap-2 text-sm cursor-pointer">
+<div class="w-2 h-2 rounded-full bg-error"></div>
+<span>Cancelado</span>
+</label>
+</div>
+</div>
+<!-- Room Filter -->
+<div>
+<label class="text-[11px] font-bold text-on-surface-variant uppercase tracking-widest mb-3 block">Sala / Box</label>
+<select class="w-full bg-surface-container border-0 rounded-lg text-sm focus:ring-2 focus:ring-primary/20 p-2 cursor-pointer">
+<option>Todas las salas</option>
+<option>Box de Rehabilitación A</option>
+<option>Consultorio 3</option>
+<option>Gimnasio</option>
+</select>
+</div>
+</div>
+</aside>
+<!-- Calendar Content -->
+<section class="flex-1 flex flex-col min-w-0 bg-white">
+    <div id="calendar" class="flex-1 p-4 sm:p-6 no-scrollbar overflow-y-auto"></div>
+</section>
+</div>
+<!-- Floating Action Button for Mobile Context -->
+<button class="xl:hidden fixed bottom-6 right-6 w-14 h-14 rounded-full bg-gradient-to-br from-primary to-primary-dim text-on-primary shadow-xl flex items-center justify-center hover:scale-110 transition-transform active:scale-90 z-50 focus:outline-none focus:ring-4 focus:ring-primary/30" onclick="document.getElementById('newAppointmentModal').classList.remove('hidden')">
+<span class="material-symbols-outlined text-3xl">add</span>
+</button>
+
+<!-- Modal Nuevo Turno -->
+<div id="newAppointmentModal" class="fixed inset-0 z-[60] hidden bg-slate-900/40 backdrop-blur-sm flex items-center justify-center animate-[fadeIn_0.3s_ease-out] p-4 text-left">
+    <div class="bg-surface-container-lowest w-full max-w-lg rounded-2xl shadow-2xl flex flex-col max-h-[95vh] animate-[slideUp_0.4s_ease-out]">
+        
+        <!-- Modal Header -->
+        <div class="px-6 py-5 border-b border-surface-container flex justify-between items-center bg-surface-container-low/30 rounded-t-2xl">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full kinetic-gradient flex items-center justify-center text-on-primary shadow-sm">
+                    <span class="material-symbols-outlined">calendar_add_on</span>
+                </div>
+                <div>
+                    <h2 class="text-xl font-headline font-extrabold text-on-surface">Agendar Turno</h2>
+                    <p class="text-xs text-on-surface-variant font-medium">Programa una nueva sesión</p>
+                </div>
+            </div>
+            <button class="text-slate-400 hover:text-error transition-colors p-2 rounded-full hover:bg-error-container/20" onclick="document.getElementById('newAppointmentModal').classList.add('hidden')">
+                <span class="material-symbols-outlined">close</span>
+            </button>
+        </div>
+        
+        <!-- Modal Body (Formulario) -->
+        <div class="p-6 md:p-8 overflow-y-auto space-y-6 flex-1 custom-scrollbar">
+            
+            <!-- Paciente -->
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">person</span> Paciente
+                </label>
+                <div class="relative">
+                    <select id="sel-turno-paciente" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-3 text-sm font-semibold focus:ring-2 focus:ring-primary/50 focus:border-primary appearance-none cursor-pointer">
+                        <option value="" disabled selected>Cargando pacientes...</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none">expand_content</span>
+                </div>
+                <p class="text-[10px] text-primary text-right font-medium">¿Nuevo? <a href="#" onclick="showView('nuevo-paciente')" class="underline hover:brightness-110">Registrar paciente primero</a></p>
+            </div>
+
+            <!-- Fecha y Hora -->
+            <div class="grid grid-cols-2 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">event</span> Fecha
+                    </label>
+                    <input id="in-turno-fecha" type="date" class="auto-date-input w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary/50 focus:border-primary cursor-pointer">
+                </div>
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">schedule</span> Horario
+                    </label>
+                    <input id="in-turno-hora" type="time" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary/50 focus:border-primary cursor-pointer">
+                </div>
+            </div>
+
+            <!-- Sala -->
+            <div class="grid grid-cols-1 gap-4">
+                <div class="space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                        <span class="material-symbols-outlined text-sm">sensor_door</span> Sala / Box
+                    </label>
+                    <div class="relative">
+                        <select id="sel-turno-sala" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary/50 focus:border-primary appearance-none cursor-pointer">
+                            <option>Box de Rehabilitación A</option>
+                            <option>Box B</option>
+                            <option>Gimnasio</option>
+                        </select>
+                        <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm">arrow_drop_down</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tipo de Sesión -->
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                    <span class="material-symbols-outlined text-sm">healing</span> Motivo / Tipo de Sesión
+                </label>
+                <div class="relative">
+                    <select id="sel-turno-motivo" class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-2.5 text-sm font-semibold focus:ring-2 focus:ring-primary/50 focus:border-primary appearance-none cursor-pointer">
+                        <option>Fisioterapia General</option>
+                        <option>Evaluación Inicial</option>
+                        <option>Magnetoterapia</option>
+                        <option>Drenaje Linfático</option>
+                        <option>Kinesiología Deportiva</option>
+                    </select>
+                    <span class="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 pointer-events-none text-sm">arrow_drop_down</span>
+                </div>
+            </div>
+
+            <!-- Notas -->
+            <div class="space-y-1.5">
+                <label class="text-[11px] font-bold text-slate-400 uppercase tracking-widest">Observaciones</label>
+                <textarea id="ta-turno-notas" rows="2" placeholder="Información relevante para esta sesión..." class="w-full bg-surface-container-lowest border border-outline-variant/30 rounded-lg p-3 text-sm focus:ring-2 focus:ring-primary/50 focus:border-primary resize-none"></textarea>
+            </div>
+            
+        </div>
+        
+        <!-- Modal Footer -->
+        <div class="px-6 py-4 border-t border-surface-container bg-surface-container-low/30 rounded-b-2xl flex justify-end gap-3">
+            <button class="px-5 py-2.5 text-sm font-bold text-slate-500 hover:text-slate-800 hover:bg-slate-200 transition-colors rounded-lg" onclick="document.getElementById('newAppointmentModal').classList.add('hidden')">
+                Cancelar
+            </button>
+            <button id="btnConfirmAppointment" class="px-6 py-2.5 text-sm font-bold bg-gradient-to-br from-primary to-primary-dim text-on-primary rounded-lg shadow-lg shadow-primary/20 hover:scale-[1.02] active:scale-[0.98] transition-transform flex items-center gap-2">
+                <span class="material-symbols-outlined text-sm">check_circle</span>
+                Confirmar Turno
+            </button>
+        </div>
+        
+    </div>
+</div>
