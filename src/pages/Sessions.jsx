@@ -37,7 +37,8 @@ const Sessions = () => {
   
   const [qty, setQty] = useState('1');
   const [unitCost, setUnitCost] = useState('');
-  const [discount, setDiscount] = useState('');
+  const [plusMonto, setPlusMonto] = useState('');
+  const [hasOrder, setHasOrder] = useState(false);
   const [paid, setPaid] = useState('');
   const [billingCode, setBillingCode] = useState('');
   const [billingDesc, setBillingDesc] = useState('');
@@ -45,9 +46,9 @@ const Sessions = () => {
   const total = useMemo(() => {
     const q = parseFloat(qty) || 0;
     const u = parseFloat(unitCost) || 0;
-    const d = parseFloat(discount) || 0;
-    return (q * u) * (1 - (d / 100));
-  }, [qty, unitCost, discount]);
+    const p = parseFloat(plusMonto) || 0;
+    return q * (u + p);
+  }, [qty, unitCost, plusMonto]);
 
   const pending = useMemo(() => total - (parseFloat(paid) || 0), [total, paid]);
 
@@ -74,7 +75,7 @@ const Sessions = () => {
   };
 
   const fetchPatients = async () => {
-    const { data } = await supabase.from('pacientes').select('*, obras_sociales(nombre)').order('apellido');
+    const { data } = await supabase.from('pacientes').select('*, obras_sociales(nombre, plus_cost)').order('apellido');
     if (data) setPatients(data);
   };
 
@@ -84,8 +85,10 @@ const Sessions = () => {
     setSelectedPatientData(p || null);
     if (p && p.obras_sociales) {
       setBillingDesc(`Cobertura por ${p.obras_sociales.nombre}`);
+      setPlusMonto(p.obras_sociales.plus_cost || 0);
     } else {
       setBillingDesc('');
+      setPlusMonto(0);
     }
   };
 
@@ -99,7 +102,8 @@ const Sessions = () => {
         evolucion: evolution,
         cantidad_sesiones: parseInt(qty) || 1,
         costo_unitario: parseFloat(unitCost) || 0,
-        descuento_porcentaje: parseFloat(discount) || 0,
+        plus_monto: parseFloat(plusMonto) || 0,
+        entrego_orden: hasOrder,
         total_estimado: total,
         monto_abonado: parseFloat(paid) || 0,
         saldo_pendiente: pending,
@@ -135,7 +139,8 @@ const Sessions = () => {
     setEvolution('');
     setQty('1');
     setUnitCost('');
-    setDiscount('');
+    setPlusMonto('');
+    setHasOrder(false);
     setPaid('');
     setBillingCode('');
     setBillingDesc('');
@@ -181,8 +186,17 @@ const Sessions = () => {
                 {filteredSessions.map((session) => (
                   <tr key={session.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
                     <td className="px-8 py-6">
-                      <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{session.pacientes?.nombre} {session.pacientes?.apellido}</p>
-                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{session.pacientes?.obras_sociales?.nombre || 'Particular'}</span>
+                      <div className="flex flex-col">
+                        <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{session.pacientes?.nombre} {session.pacientes?.apellido}</p>
+                        <div className="flex items-center gap-2 mt-1">
+                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{session.pacientes?.obras_sociales?.nombre || 'Particular'}</span>
+                          {session.entrego_orden ? (
+                            <span className="px-1.5 py-0.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[8px] font-black uppercase rounded">Orden OK</span>
+                          ) : (
+                            <span className="px-1.5 py-0.5 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[8px] font-black uppercase rounded">Falta Orden</span>
+                          )}
+                        </div>
+                      </div>
                     </td>
                     <td className="px-8 py-6 max-w-xs text-xs text-slate-600 dark:text-slate-400 italic">
                       {session.evolucion}
@@ -287,8 +301,15 @@ const Sessions = () => {
                       <input type="number" value={unitCost} onChange={(e) => setUnitCost(e.target.value)} placeholder="0" className="w-32 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-primary rounded-xl p-3 text-right dark:text-white font-black transition-all" />
                     </div>
                     <div className="flex justify-between items-center">
-                      <span className="text-xs font-bold text-slate-500">Descuento O.S %</span>
-                      <input type="number" value={discount} onChange={(e) => setDiscount(e.target.value)} placeholder="0" className="w-20 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-primary rounded-xl p-2 text-center text-primary font-black transition-all" />
+                      <span className="text-xs font-bold text-slate-500">Cobro Plus ($)</span>
+                      <input type="number" value={plusMonto} onChange={(e) => setPlusMonto(e.target.value)} placeholder="0" className="w-20 bg-white dark:bg-slate-800 border-2 border-transparent focus:border-primary rounded-xl p-2 text-center text-primary font-black transition-all" />
+                    </div>
+                    <div className="flex justify-between items-center py-2 border-t dark:border-slate-800">
+                      <span className="text-xs font-bold text-slate-500">¿Entregó Orden?</span>
+                      <label className="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" checked={hasOrder} onChange={(e) => setHasOrder(e.target.checked)} className="sr-only peer" />
+                        <div className="w-9 h-5 bg-slate-200 peer-focus:outline-none rounded-full peer dark:bg-slate-700 peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+                      </label>
                     </div>
                     <div className="pt-4 border-t dark:border-slate-800 flex justify-between items-center">
                       <span className="text-xs font-black uppercase text-slate-900 dark:text-white">Monto Total</span>

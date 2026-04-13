@@ -12,6 +12,7 @@ import Sessions from './pages/Sessions';
 import Insurances from './pages/Insurances';
 import Reports from './pages/Reports';
 import PatientDetails from './pages/PatientDetails';
+import MissingOrders from './pages/MissingOrders';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -93,6 +94,12 @@ const App = () => {
             <Route path="/reportes" element={
               <ProtectedRoute>
                 <Reports />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/pacientes-sin-orden" element={
+              <ProtectedRoute>
+                <MissingOrders />
               </ProtectedRoute>
             } />
 

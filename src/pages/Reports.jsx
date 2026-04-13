@@ -16,6 +16,7 @@ const Reports = () => {
     totalPatients: 0,
     totalSessions: 0,
     totalIncome: 0,
+    monthlyIncome: 0,
     pendingPayments: 0
   });
 
@@ -33,14 +34,19 @@ const Reports = () => {
     
     if (sData) {
       const income = sData.reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
-      // Pending is harder to calculate without a 'monto_total' column, 
-      // but we'll show sessions with 0 as pending markers for now.
+      
+      const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
+      const monthlyIncome = sData
+        .filter(s => new Date(s.fecha_sesion).getTime() >= firstDayOfMonth)
+        .reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
+
       const pendingCount = sData.filter(s => (s.monto_abonado || 0) <= 0).length;
       
       setStats({
         totalPatients: pCount || 0,
         totalSessions: sData.length,
         totalIncome: income,
+        monthlyIncome: monthlyIncome,
         pendingPayments: pendingCount
       });
     }
@@ -70,9 +76,9 @@ const Reports = () => {
 
       {/* Highlights Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <MetricCard icon={DollarSign} label="Ingresos Totales" value={`$${stats.totalIncome.toLocaleString()}`} color="kinetic-gradient" />
+        <MetricCard icon={TrendingUp} label="Ingresos del Mes" value={`$${stats.monthlyIncome.toLocaleString()}`} color="kinetic-gradient" />
+        <MetricCard icon={DollarSign} label="Ingresos Totales" value={`$${stats.totalIncome.toLocaleString()}`} color="bg-slate-900" />
         <MetricCard icon={Activity} label="Sesiones Realizadas" value={stats.totalSessions} color="bg-secondary" />
-        <MetricCard icon={Users} label="Pacientes Registrados" value={stats.totalPatients} color="bg-amber-500" />
         <MetricCard icon={PieChart} label="Sesiones Sin Pago" value={stats.pendingPayments} color="bg-rose-500" />
       </div>
 

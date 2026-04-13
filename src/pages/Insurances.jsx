@@ -31,6 +31,7 @@ const Insurances = () => {
     nombre: '',
     telefono: '',
     descripcion_nomenclador: '',
+    plus_cost: 0,
     planes: []
   });
 
@@ -69,7 +70,8 @@ const Insurances = () => {
           .update({
             nombre: formData.nombre,
             telefono: formData.telefono,
-            descripcion_nomenclador: formData.descripcion_nomenclador
+            descripcion_nomenclador: formData.descripcion_nomenclador,
+            plus_cost: parseFloat(formData.plus_cost) || 0
           })
           .eq('id', entityId);
         if (error) throw error;
@@ -79,7 +81,8 @@ const Insurances = () => {
           .insert([{
             nombre: formData.nombre,
             telefono: formData.telefono,
-            descripcion_nomenclador: formData.descripcion_nomenclador
+            descripcion_nomenclador: formData.descripcion_nomenclador,
+            plus_cost: parseFloat(formData.plus_cost) || 0
           }])
           .select()
           .single();
@@ -110,7 +113,7 @@ const Insurances = () => {
   };
 
   const resetForm = () => {
-    setFormData({ nombre: '', telefono: '', descripcion_nomenclador: '', planes: [] });
+    setFormData({ nombre: '', telefono: '', descripcion_nomenclador: '', plus_cost: 0, planes: [] });
     setEditingEntity(null);
   };
 
@@ -187,6 +190,9 @@ const Insurances = () => {
               <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
                 <Phone size={14} className="text-primary" /> {os.telefono || 'Sin teléfono'}
               </div>
+              <div className="flex items-center gap-2 text-xs font-bold text-emerald-600">
+                <DollarSign size={14} /> Plus: ${os.plus_cost || 0}
+              </div>
             </div>
 
             <div className="flex flex-wrap gap-2">
@@ -247,6 +253,14 @@ const Insurances = () => {
                       value={formData.descripcion_nomenclador} onChange={(e) => setFormData({ ...formData, descripcion_nomenclador: e.target.value })}
                       placeholder="Detalles sobre normativas de facturación..."
                       rows="4" className="w-full bg-slate-50 dark:bg-slate-900 border-2 rounded-2xl px-5 py-4 text-sm font-semibold dark:text-white outline-none focus:border-primary transition-all resize-none"
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-emerald-500 uppercase tracking-widest ml-1">Costo Plus Adicional ($)</label>
+                    <input 
+                      type="number" value={formData.plus_cost} onChange={(e) => setFormData({ ...formData, plus_cost: e.target.value })}
+                      placeholder="0" className="w-full bg-slate-50 dark:bg-slate-900 border-2 rounded-2xl px-5 py-4 text-sm font-semibold dark:text-white outline-none focus:border-emerald-500 transition-all"
                     />
                   </div>
                 </div>

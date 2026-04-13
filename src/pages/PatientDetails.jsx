@@ -211,7 +211,14 @@ const PatientDetails = () => {
               <div key={s.id} className="p-6 rounded-3xl bg-slate-50/50 dark:bg-slate-800/10 border border-transparent hover:border-slate-100 dark:hover:border-slate-800 transition-all">
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                   <div>
-                    <span className="text-[10px] font-black text-primary uppercase tracking-widest">{new Date(s.fecha_sesion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</span>
+                    <div className="flex items-center gap-2">
+                       <span className="text-[10px] font-black text-primary uppercase tracking-widest">{new Date(s.fecha_sesion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</span>
+                       {s.entrego_orden ? (
+                         <span className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 text-[8px] font-black uppercase rounded">Orden Recibida</span>
+                       ) : (
+                         <span className="px-1.5 py-0.5 bg-rose-500/10 text-rose-500 text-[8px] font-black uppercase rounded">Falta Orden</span>
+                       )}
+                    </div>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">Plan de {s.cantidad_sesiones} sesiones</p>
                   </div>
                   

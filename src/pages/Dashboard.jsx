@@ -9,7 +9,8 @@ import {
   ChevronRight,
   PlusCircle,
   FileEdit,
-  CalendarDays
+  CalendarDays,
+  ClipboardList
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 
@@ -18,7 +19,7 @@ const Dashboard = () => {
   const [stats, setStats] = useState({
     activePatients: 0,
     sessionsToday: 0,
-    estimatedIncome: 0,
+    missingOrdersCount: 0,
     productivity: 78
   });
   const [appointments, setAppointments] = useState([]);
@@ -44,20 +45,19 @@ const Dashboard = () => {
         .eq('fecha', today)
         .order('hora', { ascending: true });
 
-      // Fetch Monthly Income
-      const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).toISOString();
-      const { data: incomeData } = await supabase
+      // Fetch Missing Orders Count (Patients who have at least one session with entrego_orden = false)
+      const { data: missingData } = await supabase
         .from('sesiones_pagos')
-        .select('monto_abonado')
-        .gte('fecha_sesion', firstDayOfMonth);
-
-      const monthlyIncome = incomeData?.reduce((acc, curr) => acc + (curr.monto_abonado || 0), 0) || 0;
+        .select('paciente_id')
+        .eq('entrego_orden', false);
+      
+      const uniqueMissing = new Set(missingData?.map(s => s.paciente_id) || []);
 
       setStats(prev => ({
         ...prev,
         activePatients: patientsCount || 0,
         sessionsToday: turnsToday?.length || 0,
-        estimatedIncome: monthlyIncome
+        missingOrdersCount: uniqueMissing.size
       }));
       setAppointments(turnsToday || []);
     } catch (error) {
@@ -67,8 +67,11 @@ const Dashboard = () => {
     }
   };
 
-  const StatCard = ({ icon: Icon, label, value, trend }) => (
-    <div className="bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-50 dark:border-slate-800 relative overflow-hidden group hover:shadow-md transition-all duration-300">
+  const StatCard = ({ icon: Icon, label, value, trend, onClick }) => (
+    <div 
+      onClick={onClick}
+      className={`bg-white dark:bg-slate-900 p-6 rounded-2xl shadow-sm border border-slate-50 dark:border-slate-800 relative overflow-hidden group hover:shadow-md transition-all duration-300 ${onClick ? 'cursor-pointer active:scale-95' : ''}`}
+    >
       <div className={`absolute right-0 top-0 p-4 opacity-5 group-hover:opacity-10 transition-opacity dark:text-white`}>
         <Icon size={80} />
       </div>
@@ -104,7 +107,13 @@ const Dashboard = () => {
       <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatCard icon={Users} label="Pacientes Activos" value={stats.activePatients} trend="+3 este mes" />
         <StatCard icon={CalendarCheck} label="Sesiones Hoy" value={stats.sessionsToday} trend="Turnos Prog." />
-        <StatCard icon={DollarSign} label="Ingresos Mes" value={`$${stats.estimatedIncome.toLocaleString()}`} trend="Cobrado real" />
+        <StatCard 
+          icon={ClipboardList} 
+          label="Faltan Órdenes" 
+          value={stats.missingOrdersCount} 
+          trend="Pacientes" 
+          onClick={() => navigate('/pacientes-sin-orden')}
+        />
         <StatCard icon={TrendingUp} label="Productividad" value={`${stats.productivity}%`} />
       </section>
 

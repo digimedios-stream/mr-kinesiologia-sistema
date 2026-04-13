@@ -14,7 +14,8 @@ import {
   X,
   Stethoscope,
   Sun,
-  Moon
+  Moon,
+  ClipboardList
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { clsx } from 'clsx';
@@ -36,6 +37,7 @@ const Sidebar = () => {
     { icon: Calendar, label: 'Calendario', path: '/calendario' },
     { icon: Users, label: 'Pacientes', path: '/pacientes' },
     { icon: ShieldCheck, label: 'Obras Sociales', path: '/obras-sociales' },
+    { icon: ClipboardList, label: 'Faltan Órdenes', path: '/pacientes-sin-orden' },
     { icon: BarChart3, label: 'Informes', path: '/reportes' },
   ];
 
