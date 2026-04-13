@@ -13,7 +13,8 @@ import {
   Hash,
   FileText,
   Clock,
-  Loader2
+  Loader2,
+  DollarSign
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
