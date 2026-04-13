@@ -30,7 +30,7 @@ const Reports = () => {
     // Fetch sessions from correct table
     const { data: sData } = await supabase
       .from('sesiones_pagos')
-      .select('monto_abonado');
+      .select('monto_abonado, fecha_sesion');
     
     if (sData) {
       const income = sData.reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
@@ -53,13 +53,13 @@ const Reports = () => {
   };
 
   const MetricCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-white p-8 rounded-[32px] border border-slate-50 shadow-sm space-y-4">
+    <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg ${color}`}>
         <Icon size={24} />
       </div>
       <div>
-        <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">{label}</p>
-        <h3 className="text-3xl font-manrope font-extrabold text-slate-900 mt-1">{value}</h3>
+        <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{label}</p>
+        <h3 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white mt-1">{value}</h3>
       </div>
     </div>
   );
@@ -69,8 +69,8 @@ const Reports = () => {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-manrope font-extrabold text-slate-900 leading-tight">Informes y Métricas</h1>
-          <p className="text-sm text-slate-500 font-medium">Análisis de rendimiento y finanzas clínicas</p>
+          <h1 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white leading-tight">Informes y Métricas</h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Análisis de rendimiento y finanzas clínicas</p>
         </div>
       </div>
 
@@ -84,9 +84,9 @@ const Reports = () => {
 
       {/* Visual Charts */}
       <div className="grid grid-cols-12 gap-8">
-        <div className="col-span-12 lg:col-span-8 bg-white p-10 rounded-[40px] border border-slate-50 shadow-sm">
+        <div className="col-span-12 lg:col-span-8 bg-white dark:bg-slate-900 p-10 rounded-[40px] border border-slate-50 dark:border-slate-800 shadow-sm transition-colors">
           <div className="flex items-center justify-between mb-8">
-            <h3 className="text-xl font-manrope font-extrabold text-slate-900">Evolución de Sesiones</h3>
+            <h3 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white">Evolución de Sesiones</h3>
           </div>
           
           <div className="h-64 flex items-end justify-between gap-4 px-4">
