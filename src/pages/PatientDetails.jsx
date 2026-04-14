@@ -14,8 +14,6 @@ import {
   AlertCircle,
   TrendingUp,
   History,
-  CheckCircle2,
-  ChevronRight,
   Plus,
   Minus,
   CalendarDays,
