@@ -161,6 +161,13 @@ const PatientDetails = () => {
     }
   };
 
+  const formatLocalDate = (dateStr) => {
+    if (!dateStr) return '';
+    const [year, month, day] = dateStr.split('-');
+    const date = new Date(year, month - 1, day);
+    return date.toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' });
+  };
+
   const stats = sessions.reduce((acc, curr) => {
     acc.totalQty += (curr.cantidad_sesiones || 0);
     acc.totalAssisted += (curr.sesiones_asistidas || 0);
@@ -265,7 +272,7 @@ const PatientDetails = () => {
                     </div>
                     <div>
                       <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">
-                        {new Date(a.fecha).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}
+                        {formatLocalDate(a.fecha)}
                       </p>
                       <p className="text-sm font-bold text-slate-500">{a.hora?.substring(0, 5)} hs</p>
                     </div>

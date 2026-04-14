@@ -37,8 +37,10 @@ const Dashboard = () => {
         .from('pacientes')
         .select('*', { count: 'exact', head: true });
 
-      // Fetch Today's Sessions (Turnos)
-      const today = new Date().toISOString().split('T')[0];
+      // Fetch Today's Sessions (Turnos) using local date
+      const now = new Date();
+      const today = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      
       const { data: turnsToday } = await supabase
         .from('turnos')
         .select('*, pacientes(nombre, apellido)')
