@@ -7,9 +7,12 @@ import {
   Users,
   Activity,
   Calendar,
-  ChevronDown
+  ChevronDown,
+  Download,
+  FileText
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { jsPDF } from 'jspdf';
 
 const Reports = () => {
   const [stats, setStats] = useState({
@@ -52,6 +55,75 @@ const Reports = () => {
     }
   };
 
+  const generatePDF = () => {
+    const doc = new jsPDF();
+    const today = new Date().toLocaleDateString('es-AR');
+    
+    // Add Branding
+    doc.setFontSize(22);
+    doc.setTextColor(0, 105, 114); // Primary color
+    doc.text('MR Kinesiologia', 20, 20);
+    
+    doc.setFontSize(10);
+    doc.setTextColor(100);
+    doc.text(`Informe generado el: ${today}`, 20, 28);
+    
+    doc.setDrawColor(230);
+    doc.line(20, 32, 190, 32);
+    
+    // Header
+    doc.setFontSize(16);
+    doc.setTextColor(33, 37, 41);
+    doc.text('Métricas y Resultados Clínicos', 20, 45);
+    
+    // Grid-like layout for metrics
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+    
+    const startY = 60;
+    const col1 = 20;
+    const col2 = 110;
+    
+    // Metric 1
+    doc.setFont(undefined, 'bold');
+    doc.text('Ingresos del Mes:', col1, startY);
+    doc.setFont(undefined, 'normal');
+    doc.text(`$${stats.monthlyIncome.toLocaleString()}`, col1 + 45, startY);
+    
+    // Metric 2
+    doc.setFont(undefined, 'bold');
+    doc.text('Ingresos Totales:', col2, startY);
+    doc.setFont(undefined, 'normal');
+    doc.text(`$${stats.totalIncome.toLocaleString()}`, col2 + 45, startY);
+    
+    // Metric 3
+    doc.setFont(undefined, 'bold');
+    doc.text('Sesiones Realizadas:', col1, startY + 15);
+    doc.setFont(undefined, 'normal');
+    doc.text(`${stats.totalSessions}`, col1 + 45, startY + 15);
+    
+    // Metric 4
+    doc.setFont(undefined, 'bold');
+    doc.text('Pacientes Registrados:', col2, startY + 15);
+    doc.setFont(undefined, 'normal');
+    doc.text(`${stats.totalPatients}`, col2 + 45, startY + 15);
+    
+    doc.setDrawColor(240);
+    doc.line(20, startY + 25, 190, startY + 25);
+    
+    // Status
+    doc.setFontSize(12);
+    doc.setTextColor(220, 53, 69); // Rose color
+    doc.text(`Pacientes con sesiones pendientes de pago: ${stats.pendingPayments}`, 20, startY + 40);
+    
+    // Footer
+    doc.setFontSize(8);
+    doc.setTextColor(150);
+    doc.text('Este documento es un resumen financiero automático para uso administrativo.', 20, 280);
+    
+    doc.save(`Informe_Clinico_MR_${today.replace(/\//g, '-')}.pdf`);
+  };
+
   const MetricCard = ({ icon: Icon, label, value, color }) => (
     <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
       <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg ${color}`}>
@@ -72,6 +144,13 @@ const Reports = () => {
           <h1 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white leading-tight">Informes y Métricas</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Análisis de rendimiento y finanzas clínicas</p>
         </div>
+        <button 
+          onClick={generatePDF}
+          className="flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-slate-900/10"
+        >
+          <Download size={16} />
+          Exportar PDF
+        </button>
       </div>
 
       {/* Highlights Grid */}
