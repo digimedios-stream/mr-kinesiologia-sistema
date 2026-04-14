@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import { esLocale } from '@fullcalendar/core/locales/es';
+import esLocale from '@fullcalendar/core/locales/es';
 import { Plus, Loader2, Calendar as CalendarIcon, X, User, Clock, Info, Trash2, Edit2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';

@@ -127,6 +127,8 @@ const PatientDetails = () => {
     } catch (err) {
       toast.error('Error al actualizar pago');
     }
+  };
+
   const handleDeleteTurno = async (turnoId) => {
     if (!window.confirm('¿Deseas eliminar este turno?')) return;
     try {
