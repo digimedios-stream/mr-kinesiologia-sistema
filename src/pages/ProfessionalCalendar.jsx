@@ -211,8 +211,27 @@ const ProfessionalCalendar = () => {
           --fc-button-text-color: #f1f5f9;
           color: white;
         }
+        .dark .fc-col-header {
+          background-color: #0f172a !important;
+        }
+        .dark .fc-col-header-cell {
+          background-color: #0f172a !important;
+          border-color: #1e293b !important;
+        }
         .dark .fc-col-header-cell-cushion {
-          color: white !important;
+          color: #f1f5f9 !important;
+          font-weight: 800;
+        }
+        .dark .fc-timegrid-slot {
+          background-color: #020617 !important;
+          border-color: #1e293b !important;
+        }
+        .dark .fc-timegrid-axis {
+          background-color: #0f172a !important;
+          color: #94a3b8 !important;
+        }
+        .dark .fc-list-day-cushion {
+          background-color: #1e293b !important;
         }
         .fc .fc-toolbar-title {
           font-size: 1rem !important;
