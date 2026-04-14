@@ -4,8 +4,8 @@ import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import listPlugin from '@fullcalendar/list';
-import esLocale from '@fullcalendar/core/locales/es';
-import { Plus, Loader2, Calendar as CalendarIcon, X, User, Clock, Info } from 'lucide-react';
+import { esLocale } from '@fullcalendar/core/locales/es';
+import { Plus, Loader2, Calendar as CalendarIcon, X, User, Clock, Info, Trash2, Edit2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -16,12 +16,15 @@ const ProfessionalCalendar = () => {
   const [showModal, setShowModal] = useState(false);
   const [patients, setPatients] = useState([]);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+  const [selectedEvent, setSelectedEvent] = useState(null);
+  const [isEditMode, setIsEditMode] = useState(false);
   
   const [newTurn, setNewTurn] = useState({
     paciente_id: '',
     fecha: '',
     hora: '',
-    motivo: ''
+    motivo: '',
+    id: null
   });
 
   useEffect(() => {
@@ -44,7 +47,10 @@ const ProfessionalCalendar = () => {
         id: turn.id,
         title: `${turn.pacientes?.nombre} ${turn.pacientes?.apellido}`,
         start: `${turn.fecha}T${turn.hora}`,
-        extendedProps: { motivo: turn.motivo },
+        extendedProps: { 
+          motivo: turn.motivo,
+          paciente_id: turn.paciente_id
+        },
         backgroundColor: '#0ea5e9',
         borderColor: '#0ea5e9',
       }));
@@ -65,20 +71,76 @@ const ProfessionalCalendar = () => {
   const handleDateSelect = (selectInfo) => {
     const date = selectInfo.startStr.split('T')[0];
     const time = selectInfo.startStr.split('T')[1]?.substring(0, 5) || '10:00';
-    setNewTurn({ ...newTurn, fecha: date, hora: time });
+    setIsEditMode(false);
+    setSelectedEvent(null);
+    setNewTurn({ paciente_id: '', fecha: date, hora: time, motivo: '', id: null });
     setShowModal(true);
   };
 
-  const handleCreateTurn = async (e) => {
+  const handleEventClick = (clickInfo) => {
+    const event = clickInfo.event;
+    console.log("Event properties:", event.extendedProps);
+    setIsEditMode(true);
+    setSelectedEvent(event);
+    setNewTurn({
+      id: event.id,
+      paciente_id: event.extendedProps.paciente_id,
+      fecha: event.startStr.split('T')[0],
+      hora: event.startStr.split('T')[1]?.substring(0, 5),
+      motivo: event.extendedProps.motivo || ''
+    });
+    setShowModal(true);
+  };
+
+  const handleSaveTurn = async (e) => {
     e.preventDefault();
     try {
-      const { error } = await supabase.from('turnos').insert([newTurn]);
-      if (error) throw error;
-      toast.success('Turno agendado');
+      if (isEditMode) {
+        const { error } = await supabase
+          .from('turnos')
+          .update({
+            paciente_id: newTurn.paciente_id,
+            fecha: newTurn.fecha,
+            hora: newTurn.hora,
+            motivo: newTurn.motivo
+          })
+          .eq('id', newTurn.id);
+        if (error) throw error;
+        toast.success('Turno actualizado');
+      } else {
+        const { error } = await supabase.from('turnos').insert([
+          {
+            paciente_id: newTurn.paciente_id,
+            fecha: newTurn.fecha,
+            hora: newTurn.hora,
+            motivo: newTurn.motivo
+          }
+        ]);
+        if (error) throw error;
+        toast.success('Turno agendado');
+      }
       setShowModal(false);
       fetchEvents();
     } catch (err) {
-      toast.error('Error al agendar');
+      toast.error(isEditMode ? 'Error al actualizar' : 'Error al agendar');
+    }
+  };
+
+  const handleDeleteTurn = async () => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar este turno?')) return;
+    
+    try {
+      const { error } = await supabase
+        .from('turnos')
+        .delete()
+        .eq('id', newTurn.id);
+      
+      if (error) throw error;
+      toast.success('Turno eliminado');
+      setShowModal(false);
+      fetchEvents();
+    } catch (err) {
+      toast.error('Error al eliminar el turno');
     }
   };
 
@@ -119,11 +181,12 @@ const ProfessionalCalendar = () => {
               events={events}
               selectable={true}
               select={handleDateSelect}
+              eventClick={handleEventClick}
               height="auto"
               slotMinTime="07:00:00"
               slotMaxTime="21:00:00"
               allDaySlot={false}
-              eventClassNames="rounded-lg shadow-sm border-none font-bold text-[10px] md:text-xs p-1"
+              eventClassNames="rounded-lg shadow-sm border-none font-bold text-[10px] md:text-xs p-1 cursor-pointer"
               nowIndicator={true}
             />
           </div>
@@ -147,6 +210,9 @@ const ProfessionalCalendar = () => {
           --fc-button-hover-bg-color: #334155;
           --fc-button-text-color: #f1f5f9;
           color: white;
+        }
+        .dark .fc-col-header-cell-cushion {
+          color: white !important;
         }
         .fc .fc-toolbar-title {
           font-size: 1rem !important;
@@ -197,11 +263,25 @@ const ProfessionalCalendar = () => {
               className="relative bg-white dark:bg-slate-950 w-full max-w-md rounded-[40px] shadow-2xl p-8"
             >
               <div className="flex items-center justify-between mb-8">
-                <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">Agendar Turno</h2>
-                <button onClick={() => setShowModal(false)} className="text-slate-400 p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl"><X /></button>
+                <h2 className="text-xl font-extrabold text-slate-900 dark:text-white">
+                  {isEditMode ? 'Gestionar Turno' : 'Agendar Turno'}
+                </h2>
+                <div className="flex gap-2">
+                  {isEditMode && (
+                    <button 
+                      type="button"
+                      onClick={handleDeleteTurn}
+                      className="text-rose-500 p-2 hover:bg-rose-50 dark:hover:bg-rose-500/10 rounded-xl transition-colors"
+                      title="Eliminar Turno"
+                    >
+                      <Trash2 size={20} />
+                    </button>
+                  )}
+                  <button onClick={() => setShowModal(false)} className="text-slate-400 p-2 hover:bg-slate-50 dark:hover:bg-slate-800 rounded-xl"><X /></button>
+                </div>
               </div>
 
-              <form onSubmit={handleCreateTurn} className="space-y-6">
+              <form onSubmit={handleSaveTurn} className="space-y-6">
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Paciente</label>
                   <select 
@@ -238,7 +318,9 @@ const ProfessionalCalendar = () => {
                   </div>
                 </div>
 
-                <button type="submit" className="w-full py-5 kinetic-gradient text-white rounded-[24px] font-bold uppercase text-xs shadow-xl active:scale-95 transition-all mt-4">Confirmar Turno</button>
+                <button type="submit" className="w-full py-5 kinetic-gradient text-white rounded-[24px] font-bold uppercase text-xs shadow-xl active:scale-95 transition-all mt-4">
+                  {isEditMode ? 'Guardar Cambios' : 'Confirmar Turno'}
+                </button>
               </form>
             </motion.div>
           </div>

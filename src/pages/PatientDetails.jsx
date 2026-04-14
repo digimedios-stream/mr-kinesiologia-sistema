@@ -20,7 +20,8 @@ import {
   Minus,
   CalendarDays,
   Wallet,
-  X
+  X,
+  Trash2
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
@@ -31,12 +32,18 @@ const PatientDetails = () => {
   const navigate = useNavigate();
   const [patient, setPatient] = useState(null);
   const [sessions, setSessions] = useState([]);
+  const [appointments, setAppointments] = useState([]);
   const [loading, setLoading] = useState(true);
   
   // Payment Modal States
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [sessionToPay, setSessionToPay] = useState(null);
   const [newPaymentAmount, setNewPaymentAmount] = useState('');
+
+  // Turno Modal States
+  const [showTurnoModal, setShowTurnoModal] = useState(false);
+  const [selectedTurno, setSelectedTurno] = useState(null);
+  const [turnoForm, setTurnoForm] = useState({ fecha: '', hora: '', motivo: '' });
 
   useEffect(() => {
     fetchData();
@@ -60,6 +67,14 @@ const PatientDetails = () => {
         .order('fecha_sesion', { ascending: false });
       
       setSessions(sData || []);
+
+      const { data: tData } = await supabase
+        .from('turnos')
+        .select('*')
+        .eq('paciente_id', id)
+        .order('fecha', { ascending: false });
+      
+      setAppointments(tData || []);
     } catch (error) {
       console.error('Error fetching patient details:', error);
     } finally {
@@ -111,6 +126,38 @@ const PatientDetails = () => {
       fetchData();
     } catch (err) {
       toast.error('Error al actualizar pago');
+    }
+  const handleDeleteTurno = async (turnoId) => {
+    if (!window.confirm('¿Deseas eliminar este turno?')) return;
+    try {
+      const { error } = await supabase.from('turnos').delete().eq('id', turnoId);
+      if (error) throw error;
+      toast.success('Turno eliminado');
+      fetchData();
+    } catch (err) {
+      toast.error('Error al eliminar');
+    }
+  };
+
+  const handleOpenEditTurno = (turno) => {
+    setSelectedTurno(turno);
+    setTurnoForm({ fecha: turno.fecha, hora: turno.hora?.substring(0, 5), motivo: turno.motivo });
+    setShowTurnoModal(true);
+  };
+
+  const handleUpdateTurno = async (e) => {
+    e.preventDefault();
+    try {
+      const { error } = await supabase
+        .from('turnos')
+        .update(turnoForm)
+        .eq('id', selectedTurno.id);
+      if (error) throw error;
+      toast.success('Turno actualizado');
+      setShowTurnoModal(false);
+      fetchData();
+    } catch (err) {
+      toast.error('Error al actualizar');
     }
   };
 
@@ -201,8 +248,42 @@ const PatientDetails = () => {
           </div>
         </div>
 
-        {/* Treatment Area */}
+        {/* Treatment & Appointments Area */}
         <div className="col-span-12 lg:col-span-8 bg-white dark:bg-slate-900 rounded-[40px] p-10 border border-slate-50 dark:border-slate-800">
+          
+          {/* Turnos Section */}
+          <div className="mb-12">
+            <h3 className="text-xl font-manrope font-black text-slate-900 dark:text-white mb-8 flex items-center gap-2">
+              <CalendarDays size={24} className="text-primary" /> Próximos Turnos
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {appointments.filter(a => new Date(a.fecha) >= new Date(new Date().setHours(0,0,0,0))).map(a => (
+                <div key={a.id} className="p-5 rounded-3xl bg-slate-50 dark:bg-slate-800/20 border border-transparent hover:border-slate-100 dark:hover:border-slate-800 transition-all flex items-center justify-between group">
+                  <div className="flex items-center gap-4">
+                    <div className="w-12 h-12 rounded-2xl bg-primary text-white flex items-center justify-center shadow-lg shadow-primary/20">
+                      <Clock size={20} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-black text-slate-900 dark:text-white uppercase tracking-tight">
+                        {new Date(a.fecha).toLocaleDateString('es-ES', { weekday: 'short', day: 'numeric', month: 'short' })}
+                      </p>
+                      <p className="text-sm font-bold text-slate-500">{a.hora?.substring(0, 5)} hs</p>
+                    </div>
+                  </div>
+                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <button onClick={() => handleOpenEditTurno(a)} className="p-2 text-slate-400 hover:text-primary transition-colors"><Calendar size={16} /></button>
+                    <button onClick={() => handleDeleteTurno(a.id)} className="p-2 text-slate-400 hover:text-rose-500 transition-colors"><X size={16} /></button>
+                  </div>
+                </div>
+              ))}
+              {appointments.filter(a => new Date(a.fecha) >= new Date(new Date().setHours(0,0,0,0))).length === 0 && (
+                <div className="col-span-full py-10 text-center border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[32px]">
+                  <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">No hay turnos agendados</p>
+                </div>
+              )}
+            </div>
+          </div>
+
           <h3 className="text-xl font-manrope font-black text-slate-900 dark:text-white mb-8 flex items-center gap-2">
             <History size={24} className="text-primary" /> Historial de Tratamientos
           </h3>
@@ -223,18 +304,18 @@ const PatientDetails = () => {
                   </div>
                   
                   {/* Attendance Tracker */}
-                  <div className="bg-white dark:bg-slate-900 rounded-2xl p-2 border flex items-center gap-4 shadow-sm">
-                    <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'sub')} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><Minus size={14} /></button>
+                  <div className="bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-100 dark:border-slate-800 flex items-center gap-4 shadow-sm">
+                    <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'sub')} className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><Minus size={14} /></button>
                     <div className="text-center px-2">
                       <p className="text-xs font-black text-slate-900 dark:text-white leading-none">{s.sesiones_asistidas || 0}</p>
                       <span className="text-[8px] font-bold text-slate-400 uppercase">Usadas</span>
                     </div>
-                    <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'add')} className="w-8 h-8 rounded-lg bg-slate-50 flex items-center justify-center text-slate-400 hover:text-emerald-500 transition-colors"><Plus size={14} /></button>
+                    <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'add')} className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-emerald-500 transition-colors"><Plus size={14} /></button>
                   </div>
                 </div>
 
                 <div className="flex justify-between items-end border-t dark:border-slate-800 pt-4 mt-2">
-                  <p className="text-xs text-slate-500 dark:text-slate-400 italic flex-1 mr-4 line-clamp-2">"{s.evolucion}"</p>
+                  <p className="text-xs text-slate-500 dark:text-slate-400 italic flex-1 mr-4 line-clamp-2">"{s.evolucion || 'Sin evolución registrada'}"</p>
                   <div className="text-right shrink-0 flex items-center gap-3">
                     <div>
                       <p className="text-[10px] font-black text-slate-900 dark:text-white">${s.total_estimado}</p>
@@ -258,7 +339,7 @@ const PatientDetails = () => {
         </div>
       </div>
 
-      {/* Re-usable Payment Modal in Ficha */}
+      {/* Payment Modal */}
       <AnimatePresence>
         {showPaymentModal && (
           <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
@@ -270,13 +351,41 @@ const PatientDetails = () => {
               <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6">Registrar Pago del Paciente</h2>
               <form onSubmit={handleApplyPayment} className="space-y-6">
                 <div className="bg-slate-50 dark:bg-slate-900 p-6 rounded-3xl mb-4 text-xs font-bold text-slate-500 space-y-2">
-                  <div className="flex justify-between"><span>Deuda de este plan:</span><span className="text-rose-500">${sessionToPay?.saldo_pendiente}</span></div>
+                  <div className="flex justify-between text-slate-400"><span>Deuda de este plan:</span><span className="text-rose-500 font-black">${sessionToPay?.saldo_pendiente}</span></div>
                 </div>
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Monto a abonar ahora</label>
-                  <input type="number" value={newPaymentAmount} onChange={(e) => setNewPaymentAmount(e.target.value)} autoFocus className="w-full bg-slate-50 dark:bg-slate-900 border-2 rounded-2xl p-5 text-2xl font-black text-slate-900 dark:text-white outline-none focus:border-emerald-500" placeholder="0" />
+                  <input type="number" value={newPaymentAmount} onChange={(e) => setNewPaymentAmount(e.target.value)} autoFocus className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-emerald-500 rounded-2xl p-5 text-2xl font-black text-slate-900 dark:text-white outline-none" placeholder="0" />
                 </div>
                 <button type="submit" className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-bold uppercase text-xs shadow-xl active:scale-95 transition-all">Confirmar Abono</button>
+              </form>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Reschedule Turno Modal */}
+      <AnimatePresence>
+        {showTurnoModal && (
+          <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+            <div className="absolute inset-0 bg-slate-900/80 backdrop-blur-md" onClick={() => setShowTurnoModal(false)} />
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.9 }} animate={{ opacity: 1, scale: 1 }}
+              className="relative bg-white dark:bg-slate-950 w-full max-w-md rounded-[40px] shadow-2xl p-10"
+            >
+              <h2 className="text-xl font-black text-slate-900 dark:text-white mb-6">Reprogramar Turno</h2>
+              <form onSubmit={handleUpdateTurno} className="space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Fecha</label>
+                    <input type="date" value={turnoForm.fecha} onChange={(e) => setTurnoForm({...turnoForm, fecha: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary rounded-2xl p-4 text-sm font-bold dark:text-white outline-none" />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Hora</label>
+                    <input type="time" value={turnoForm.hora} onChange={(e) => setTurnoForm({...turnoForm, hora: e.target.value})} className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary rounded-2xl p-4 text-sm font-bold dark:text-white outline-none" />
+                  </div>
+                </div>
+                <button type="submit" className="w-full py-5 kinetic-gradient text-white rounded-2xl font-bold uppercase text-xs shadow-xl active:scale-95 transition-all">Guardar Cambios</button>
               </form>
             </motion.div>
           </div>
