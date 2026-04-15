@@ -200,6 +200,18 @@ const PatientDetails = () => {
     }
   };
 
+  const handleDeleteSession = async (sessionId) => {
+    if (!window.confirm('¿Estás seguro de que deseas eliminar este plan de sesiones? Esta acción no se puede deshacer.')) return;
+    try {
+      const { error } = await supabase.from('sesiones_pagos').delete().eq('id', sessionId);
+      if (error) throw error;
+      toast.success('Sesión eliminada correctamente');
+      fetchData();
+    } catch (err) {
+      toast.error('Error al eliminar la sesión');
+    }
+  };
+
   // Treatment History CRUD
   const handleAddTreatment = async () => {
     if (!newTreatmentText.trim()) return toast.error('Escribí una descripción');
@@ -404,14 +416,25 @@ const PatientDetails = () => {
                     <p className="text-sm font-bold text-slate-900 dark:text-white">Plan de {s.cantidad_sesiones} sesiones</p>
                   </div>
                   
-                  {/* Attendance Tracker */}
-                  <div className="bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-100 dark:border-slate-800 flex items-center gap-4 shadow-sm">
-                    <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'sub')} className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><Minus size={14} /></button>
-                    <div className="text-center px-2">
-                      <p className="text-xs font-black text-slate-900 dark:text-white leading-none">{s.sesiones_asistidas || 0}</p>
-                      <span className="text-[8px] font-bold text-slate-400 uppercase">Usadas</span>
+                  <div className="flex items-center gap-4">
+                    {/* Attendance Tracker */}
+                    <div className="bg-white dark:bg-slate-900 rounded-2xl p-2 border border-slate-100 dark:border-slate-800 flex items-center gap-4 shadow-sm">
+                      <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'sub')} className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-rose-500 transition-colors"><Minus size={14} /></button>
+                      <div className="text-center px-2">
+                        <p className="text-xs font-black text-slate-900 dark:text-white leading-none">{s.sesiones_asistidas || 0}</p>
+                        <span className="text-[8px] font-bold text-slate-400 uppercase">Usadas</span>
+                      </div>
+                      <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'add')} className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-emerald-500 transition-colors"><Plus size={14} /></button>
                     </div>
-                    <button onClick={() => handleUpdateAttendance(s.id, s.sesiones_asistidas || 0, s.cantidad_sesiones, 'add')} className="w-8 h-8 rounded-lg bg-slate-50 dark:bg-slate-800 flex items-center justify-center text-slate-400 hover:text-emerald-500 transition-colors"><Plus size={14} /></button>
+
+                    {/* Delete Session Button */}
+                    <button 
+                      onClick={() => handleDeleteSession(s.id)}
+                      className="p-2.5 rounded-xl text-slate-300 hover:text-rose-500 hover:bg-rose-50 dark:hover:bg-rose-500/10 transition-all"
+                      title="Eliminar sesión"
+                    >
+                      <Trash2 size={18} />
+                    </button>
                   </div>
                 </div>
 
