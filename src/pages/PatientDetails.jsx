@@ -19,7 +19,11 @@ import {
   CalendarDays,
   Wallet,
   X,
-  Trash2
+  Trash2,
+  Edit2,
+  FileText,
+  Save,
+  PlusCircle
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
@@ -42,6 +46,12 @@ const PatientDetails = () => {
   const [showTurnoModal, setShowTurnoModal] = useState(false);
   const [selectedTurno, setSelectedTurno] = useState(null);
   const [turnoForm, setTurnoForm] = useState({ fecha: '', hora: '', motivo: '' });
+
+  // Treatment History States
+  const [treatmentHistory, setTreatmentHistory] = useState([]);
+  const [newTreatmentText, setNewTreatmentText] = useState('');
+  const [editingTreatmentId, setEditingTreatmentId] = useState(null);
+  const [editingTreatmentText, setEditingTreatmentText] = useState('');
 
   useEffect(() => {
     fetchData();
@@ -73,6 +83,14 @@ const PatientDetails = () => {
         .order('fecha', { ascending: false });
       
       setAppointments(tData || []);
+
+      const { data: hData } = await supabase
+        .from('historial_tratamientos')
+        .select('*')
+        .eq('paciente_id', id)
+        .order('fecha', { ascending: false });
+      
+      setTreatmentHistory(hData || []);
     } catch (error) {
       console.error('Error fetching patient details:', error);
     } finally {
@@ -158,6 +176,52 @@ const PatientDetails = () => {
       fetchData();
     } catch (err) {
       toast.error('Error al actualizar');
+    }
+  };
+
+  // Treatment History CRUD
+  const handleAddTreatment = async () => {
+    if (!newTreatmentText.trim()) return toast.error('Escribí una descripción');
+    try {
+      const { error } = await supabase.from('historial_tratamientos').insert([{
+        paciente_id: id,
+        descripcion: newTreatmentText.trim()
+      }]);
+      if (error) throw error;
+      toast.success('Registro agregado al historial');
+      setNewTreatmentText('');
+      fetchData();
+    } catch (err) {
+      toast.error('Error al agregar: ' + err.message);
+    }
+  };
+
+  const handleUpdateTreatment = async (treatmentId) => {
+    if (!editingTreatmentText.trim()) return;
+    try {
+      const { error } = await supabase
+        .from('historial_tratamientos')
+        .update({ descripcion: editingTreatmentText.trim() })
+        .eq('id', treatmentId);
+      if (error) throw error;
+      toast.success('Registro actualizado');
+      setEditingTreatmentId(null);
+      setEditingTreatmentText('');
+      fetchData();
+    } catch (err) {
+      toast.error('Error al actualizar');
+    }
+  };
+
+  const handleDeleteTreatment = async (treatmentId) => {
+    if (!window.confirm('¿Eliminar este registro del historial?')) return;
+    try {
+      const { error } = await supabase.from('historial_tratamientos').delete().eq('id', treatmentId);
+      if (error) throw error;
+      toast.success('Registro eliminado');
+      fetchData();
+    } catch (err) {
+      toast.error('Error al eliminar');
     }
   };
 
@@ -342,6 +406,78 @@ const PatientDetails = () => {
                 </div>
               </div>
             ))}
+          </div>
+
+          {/* Editable Treatment History Section */}
+          <div className="mt-12 pt-8 border-t dark:border-slate-800">
+            <h3 className="text-xl font-manrope font-black text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+              <FileText size={24} className="text-primary" /> Notas del Historial Clínico
+            </h3>
+
+            {/* Add New Entry */}
+            <div className="flex gap-3 mb-8">
+              <textarea
+                value={newTreatmentText}
+                onChange={(e) => setNewTreatmentText(e.target.value)}
+                placeholder="Agregar nueva nota al historial (ej: diagnóstico, evolución, cambio de tratamiento...)"
+                rows="2"
+                className="flex-1 bg-slate-50 dark:bg-slate-800/50 border-2 border-slate-200 dark:border-slate-700 rounded-2xl px-5 py-3 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 focus:border-primary outline-none transition-all resize-none"
+              />
+              <button
+                onClick={handleAddTreatment}
+                className="px-5 self-end py-3 kinetic-gradient text-white rounded-2xl font-bold text-xs flex items-center gap-2 shadow-lg shadow-primary/20 hover:opacity-95 active:scale-95 transition-all shrink-0"
+              >
+                <PlusCircle size={16} /> Agregar
+              </button>
+            </div>
+
+            {/* History Timeline */}
+            <div className="space-y-4">
+              {treatmentHistory.length === 0 && (
+                <div className="py-10 text-center border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[32px]">
+                  <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Sin notas en el historial clínico</p>
+                </div>
+              )}
+              {treatmentHistory.map((entry) => (
+                <div key={entry.id} className="group p-5 rounded-3xl bg-slate-50/50 dark:bg-slate-800/10 border border-transparent hover:border-slate-100 dark:hover:border-slate-800 transition-all">
+                  <div className="flex items-start justify-between gap-4 mb-2">
+                    <span className="text-[10px] font-black text-primary uppercase tracking-widest shrink-0">
+                      {new Date(entry.fecha).toLocaleDateString('es-ES', { day: 'numeric', month: 'long', year: 'numeric' })}
+                      {' · '}
+                      {new Date(entry.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                    </span>
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0">
+                      <button
+                        onClick={() => { setEditingTreatmentId(entry.id); setEditingTreatmentText(entry.descripcion); }}
+                        className="p-1.5 text-slate-400 hover:text-primary transition-colors"
+                      ><Edit2 size={14} /></button>
+                      <button
+                        onClick={() => handleDeleteTreatment(entry.id)}
+                        className="p-1.5 text-slate-400 hover:text-rose-500 transition-colors"
+                      ><Trash2 size={14} /></button>
+                    </div>
+                  </div>
+
+                  {editingTreatmentId === entry.id ? (
+                    <div className="flex gap-2 mt-2">
+                      <textarea
+                        value={editingTreatmentText}
+                        onChange={(e) => setEditingTreatmentText(e.target.value)}
+                        rows="2"
+                        autoFocus
+                        className="flex-1 bg-white dark:bg-slate-900 border-2 border-primary rounded-xl px-4 py-2 text-sm font-semibold text-slate-900 dark:text-white outline-none resize-none"
+                      />
+                      <div className="flex flex-col gap-1 self-end">
+                        <button onClick={() => handleUpdateTreatment(entry.id)} className="p-2 bg-primary text-white rounded-lg hover:opacity-90 transition-all"><Save size={14} /></button>
+                        <button onClick={() => setEditingTreatmentId(null)} className="p-2 text-slate-400 hover:text-slate-600 transition-colors"><X size={14} /></button>
+                      </div>
+                    </div>
+                  ) : (
+                    <p className="text-sm text-slate-600 dark:text-slate-400 leading-relaxed whitespace-pre-wrap">{entry.descripcion}</p>
+                  )}
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </div>

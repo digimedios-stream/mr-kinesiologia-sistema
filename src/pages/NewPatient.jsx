@@ -183,7 +183,7 @@ const NewPatient = () => {
               <div>
                 <h3 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white">Ayuda al registro</h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                  Asegúrate de ingresar el DNI correctamente para evitar duplicados en el sistema médico. 
+                  Solo <strong>Nombre</strong> y <strong>Apellido</strong> son obligatorios. DNI y teléfono son opcionales.
                 </p>
               </div>
             </div>
