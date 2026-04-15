@@ -298,9 +298,18 @@ const PatientDetails = () => {
             <div className="w-24 h-24 rounded-3xl kinetic-gradient shadow-xl flex items-center justify-center text-white text-4xl font-black mb-4">
               {patient?.nombre?.[0]}{patient?.apellido?.[0]}
             </div>
-            <h2 className="text-2xl font-manrope font-black text-slate-900 dark:text-white leading-tight">
-              {patient?.nombre} {patient?.apellido}
-            </h2>
+            <div className="flex items-center gap-2">
+              <h2 className="text-2xl font-manrope font-black text-slate-900 dark:text-white leading-tight">
+                {patient?.nombre} {patient?.apellido}
+              </h2>
+              <button 
+                onClick={() => navigate(`/pacientes/${id}/editar`)}
+                className="p-2 text-slate-300 hover:text-primary transition-colors"
+                title="Editar Paciente"
+              >
+                <Edit2 size={18} />
+              </button>
+            </div>
           </div>
 
           <div className="space-y-6">

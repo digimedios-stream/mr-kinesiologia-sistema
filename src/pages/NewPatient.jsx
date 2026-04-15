@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { 
   UserPlus, 
   ArrowLeft, 
@@ -50,8 +50,10 @@ const InputGroup = ({ icon: Icon, label, name, value, onChange, type = "text", p
 );
 
 const NewPatient = () => {
+  const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [fetching, setFetching] = useState(false);
   const [insurances, setInsurances] = useState([]);
   
   const [formData, setFormData] = useState({
@@ -66,11 +68,43 @@ const NewPatient = () => {
 
   useEffect(() => {
     fetchInsurances();
-  }, []);
+    if (id) {
+      fetchPatient();
+    }
+  }, [id]);
 
   const fetchInsurances = async () => {
     const { data } = await supabase.from('obras_sociales').select('id, nombre').order('nombre');
     if (data) setInsurances(data);
+  };
+
+  const fetchPatient = async () => {
+    try {
+      setFetching(true);
+      const { data, error } = await supabase
+        .from('pacientes')
+        .select('*')
+        .eq('id', id)
+        .single();
+      
+      if (error) throw error;
+      if (data) {
+        setFormData({
+          nombre: data.nombre || '',
+          apellido: data.apellido || '',
+          dni: data.dni || '',
+          telefono: data.telefono || '',
+          obra_social_id: data.obra_social_id || '',
+          plan_obra_social: data.plan_obra_social || '',
+          indicaciones: data.indicaciones || ''
+        });
+      }
+    } catch (err) {
+      toast.error('Error al cargar datos del paciente');
+      navigate('/pacientes');
+    } finally {
+      setFetching(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -86,10 +120,25 @@ const NewPatient = () => {
 
     setLoading(true);
     try {
-      const { error } = await supabase.from('pacientes').insert([formData]);
-      if (error) throw error;
+      // Clean data: convert empty strings to null for optional fields
+      const cleanedData = { ...formData };
+      ['dni', 'telefono', 'obra_social_id', 'plan_obra_social', 'indicaciones'].forEach(field => {
+        if (cleanedData[field] === '') cleanedData[field] = null;
+      });
+
+      if (id) {
+        const { error } = await supabase
+          .from('pacientes')
+          .update(cleanedData)
+          .eq('id', id);
+        if (error) throw error;
+        toast.success('¡Paciente actualizado con éxito!');
+      } else {
+        const { error } = await supabase.from('pacientes').insert([cleanedData]);
+        if (error) throw error;
+        toast.success('¡Paciente registrado con éxito!');
+      }
       
-      toast.success('¡Paciente registrado con éxito!');
       setTimeout(() => navigate('/pacientes'), 1500);
     } catch (err) {
       toast.error('Error al guardar: ' + err.message);
@@ -97,6 +146,15 @@ const NewPatient = () => {
       setLoading(false);
     }
   };
+
+  if (fetching) {
+    return (
+      <div className="py-20 flex flex-col items-center justify-center text-slate-300 gap-4">
+        <Loader2 size={40} className="animate-spin text-primary/30" />
+        <p className="text-sm font-bold uppercase tracking-widest text-slate-400">Cargando datos...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -111,8 +169,12 @@ const NewPatient = () => {
             <ArrowLeft size={14} strokeWidth={3} />
             Regresar
           </button>
-          <h1 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white leading-tight">Registro de Paciente</h1>
-          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Completa la ficha técnica para iniciar el tratamiento</p>
+          <h1 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white leading-tight">
+            {id ? 'Editar Paciente' : 'Registro de Paciente'}
+          </h1>
+          <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">
+            {id ? 'Actualiza la información del paciente' : 'Completa la ficha técnica para iniciar el tratamiento'}
+          </p>
         </div>
       </div>
 
@@ -164,7 +226,7 @@ const NewPatient = () => {
                   className="kinetic-gradient px-8 py-4 rounded-2xl text-white font-bold text-sm flex items-center gap-3 shadow-xl shadow-primary/20 hover:opacity-95 active:scale-95 transition-all disabled:opacity-50"
                 >
                   {loading ? <Loader2 size={18} className="animate-spin" /> : <Save size={18} />}
-                  <span>Guardar Paciente</span>
+                  <span>{id ? 'Guardar Cambios' : 'Guardar Paciente'}</span>
                 </button>
               </div>
             </form>
@@ -181,9 +243,13 @@ const NewPatient = () => {
                 <ClipboardList size={24} />
               </div>
               <div>
-                <h3 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white">Ayuda al registro</h3>
+                <h3 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white">
+                  {id ? 'Actualización de datos' : 'Ayuda al registro'}
+                </h3>
                 <p className="text-sm text-slate-600 dark:text-slate-400 mt-2 leading-relaxed">
-                  Solo <strong>Nombre</strong> y <strong>Apellido</strong> son obligatorios. DNI y teléfono son opcionales.
+                  {id 
+                    ? 'Modifica los campos necesarios y guarda los cambios para actualizar la ficha.' 
+                    : 'Solo Nombre y Apellido son obligatorios. DNI y teléfono son opcionales.'}
                 </p>
               </div>
             </div>

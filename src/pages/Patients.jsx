@@ -151,7 +151,10 @@ const Patients = () => {
                           Ficha
                           <ArrowRight size={12} strokeWidth={3} />
                         </button>
-                        <button className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 transition-colors">
+                        <button 
+                          onClick={() => navigate(`/pacientes/${p.id}/editar`)}
+                          className="p-2.5 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-400 hover:text-slate-600 transition-colors"
+                        >
                           <Edit3 size={18} />
                         </button>
                         <button 
