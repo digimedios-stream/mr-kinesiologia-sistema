@@ -32,6 +32,8 @@ const Sessions = () => {
   const [showModal, setShowModal] = useState(false);
   
   const [patients, setPatients] = useState([]);
+  const [patientSearch, setPatientSearch] = useState('');
+  const [showPatientResults, setShowPatientResults] = useState(false);
   const [selectedPatientData, setSelectedPatientData] = useState(null);
   const [evolution, setEvolution] = useState('');
   
@@ -79,10 +81,19 @@ const Sessions = () => {
     if (data) setPatients(data);
   };
 
-  const handlePatientChange = (e) => {
-    const id = e.target.value;
-    const p = patients.find(item => item.id === id);
-    setSelectedPatientData(p || null);
+  const filteredPatientsForSelect = useMemo(() => {
+    if (!patientSearch) return [];
+    return patients.filter(p => 
+      `${p.nombre} ${p.apellido}`.toLowerCase().includes(patientSearch.toLowerCase()) || 
+      p.dni?.includes(patientSearch)
+    );
+  }, [patients, patientSearch]);
+
+  const handleSelectPatient = (p) => {
+    setSelectedPatientData(p);
+    setPatientSearch(`${p.apellido}, ${p.nombre}`);
+    setShowPatientResults(false);
+    
     if (p && p.obras_sociales) {
       setBillingDesc(`Cobertura por ${p.obras_sociales.nombre}`);
       setPlusMonto(p.obras_sociales.plus_cost || 0);
@@ -136,6 +147,8 @@ const Sessions = () => {
 
   const resetForm = () => {
     setSelectedPatientData(null);
+    setPatientSearch('');
+    setShowPatientResults(false);
     setEvolution('');
     setQty('1');
     setUnitCost('');
@@ -249,19 +262,47 @@ const Sessions = () => {
 
               <form onSubmit={handleCreateSession} className="flex-1 overflow-y-auto p-10 grid grid-cols-1 md:grid-cols-12 gap-10">
                 <div className="md:col-span-7 space-y-8">
-                  <div className="space-y-2">
-                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Elegir Paciente</label>
-                    <div className="relative">
-                      <select 
-                        onChange={handlePatientChange}
-                        className="w-full bg-slate-50 dark:bg-slate-900 border-2 rounded-2xl px-5 py-4 text-sm font-semibold dark:text-white outline-none focus:border-primary appearance-none transition-all"
-                      >
-                        <option value="">Buscar paciente...</option>
-                        {patients.map(p => <option key={p.id} value={p.id}>{p.apellido}, {p.nombre}</option>)}
-                      </select>
-                      <div className="absolute right-5 top-1/2 -translate-y-1/2 pointer-events-none text-slate-400">
-                        <ChevronRight size={18} className="rotate-90" />
+                  <div className="space-y-2 relative">
+                    <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Buscar y Elegir Paciente</label>
+                    <div className="relative group">
+                      <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">
+                        <User size={18} />
                       </div>
+                      <input 
+                        type="text" 
+                        value={patientSearch}
+                        onChange={(e) => {
+                          setPatientSearch(e.target.value);
+                          setShowPatientResults(true);
+                          if (selectedPatientData) setSelectedPatientData(null);
+                        }}
+                        onFocus={() => setShowPatientResults(true)}
+                        placeholder="Escribe nombre o apellido..."
+                        className="w-full bg-slate-50 dark:bg-slate-900 border-2 rounded-2xl pl-12 pr-5 py-4 text-sm font-semibold dark:text-white outline-none focus:border-primary transition-all"
+                      />
+                      
+                      {showPatientResults && (
+                        <div className="fixed inset-0 z-40" onClick={() => setShowPatientResults(false)} />
+                      )}
+                      
+                      {showPatientResults && filteredPatientsForSelect.length > 0 && (
+                        <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-3xl shadow-2xl z-50 max-h-60 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                          {filteredPatientsForSelect.map(p => (
+                            <button
+                              key={p.id}
+                              type="button"
+                              onClick={() => handleSelectPatient(p)}
+                              className="w-full text-left px-5 py-4 hover:bg-primary/5 border-b last:border-0 border-slate-50 dark:border-slate-800 transition-colors flex items-center justify-between group"
+                            >
+                              <div className="flex flex-col">
+                                <span className="text-sm font-bold text-slate-900 dark:text-white">{p.apellido}, {p.nombre}</span>
+                                <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">{p.obras_sociales?.nombre || 'Particular'}</span>
+                              </div>
+                              <ChevronRight size={14} className="text-slate-300 group-hover:translate-x-1 group-hover:text-primary transition-all" />
+                            </button>
+                          ))}
+                        </div>
+                      )}
                     </div>
                     {selectedPatientData && (
                       <div className="flex items-center gap-2 mt-2 px-1">
