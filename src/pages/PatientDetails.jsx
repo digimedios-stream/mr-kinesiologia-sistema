@@ -212,6 +212,20 @@ const PatientDetails = () => {
     }
   };
 
+  const handleToggleOrder = async (sessionId, currentStatus) => {
+    try {
+      const { error } = await supabase
+        .from('sesiones_pagos')
+        .update({ entrego_orden: !currentStatus })
+        .eq('id', sessionId);
+      if (error) throw error;
+      toast.success('Estado de la orden actualizado');
+      fetchData();
+    } catch (err) {
+      toast.error('Error al actualizar estado de la orden');
+    }
+  };
+
   // Treatment History CRUD
   const handleAddTreatment = async () => {
     if (!newTreatmentText.trim()) return toast.error('Escribí una descripción');
@@ -407,11 +421,17 @@ const PatientDetails = () => {
                   <div>
                     <div className="flex items-center gap-2">
                        <span className="text-[10px] font-black text-primary uppercase tracking-widest">{new Date(s.fecha_sesion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</span>
-                       {s.entrego_orden ? (
-                         <span className="px-1.5 py-0.5 bg-emerald-500/10 text-emerald-500 text-[8px] font-black uppercase rounded">Orden Recibida</span>
-                       ) : (
-                         <span className="px-1.5 py-0.5 bg-rose-500/10 text-rose-500 text-[8px] font-black uppercase rounded">Falta Orden</span>
-                       )}
+                       <button 
+                          onClick={() => handleToggleOrder(s.id, s.entrego_orden)}
+                          className={`px-1.5 py-0.5 text-[8px] font-black uppercase rounded transition-all hover:scale-105 active:scale-95 ${
+                            s.entrego_orden 
+                              ? 'bg-emerald-500/10 text-emerald-500 hover:bg-emerald-500/20' 
+                              : 'bg-rose-500/10 text-rose-500 hover:bg-rose-500/20'
+                          }`}
+                          title={s.entrego_orden ? 'Marcar como pendiente de orden' : 'Marcar como orden entregada'}
+                        >
+                          {s.entrego_orden ? 'Orden Recibida' : 'Falta Orden'}
+                        </button>
                     </div>
                     <p className="text-sm font-bold text-slate-900 dark:text-white">Plan de {s.cantidad_sesiones} sesiones</p>
                   </div>
