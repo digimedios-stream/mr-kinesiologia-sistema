@@ -49,6 +49,7 @@ const PatientDetails = () => {
 
   // Treatment History States
   const [treatmentHistory, setTreatmentHistory] = useState([]);
+  const [payments, setPayments] = useState([]);
   const [newTreatmentText, setNewTreatmentText] = useState('');
   const [editingTreatmentId, setEditingTreatmentId] = useState(null);
   const [editingTreatmentText, setEditingTreatmentText] = useState('');
@@ -91,6 +92,14 @@ const PatientDetails = () => {
         .order('fecha', { ascending: false });
       
       setTreatmentHistory(hData || []);
+
+      const { data: payData } = await supabase
+        .from('pagos')
+        .select('*')
+        .eq('paciente_id', id)
+        .order('fecha', { ascending: false });
+      
+      setPayments(payData || []);
     } catch (error) {
       console.error('Error fetching patient details:', error);
     } finally {
@@ -136,6 +145,18 @@ const PatientDetails = () => {
         .eq('id', sessionToPay.id);
       
       if (error) throw error;
+
+      // Register payment in history
+      const { error: pError } = await supabase
+        .from('pagos')
+        .insert([{
+          sesion_id: sessionToPay.id,
+          paciente_id: id,
+          monto: amount
+        }]);
+      
+      if (pError) console.error('Error saving payment record:', pError);
+
       toast.success('Pago registrado correctamente');
       setShowPaymentModal(false);
       setNewPaymentAmount('');
@@ -395,7 +416,32 @@ const PatientDetails = () => {
                 </div>
 
                 <div className="flex justify-between items-end border-t dark:border-slate-800 pt-4 mt-2">
-                  <p className="text-xs text-slate-500 dark:text-slate-400 italic flex-1 mr-4 line-clamp-2">"{s.evolucion || 'Sin evolución registrada'}"</p>
+                  <div className="flex-1 mr-4">
+                    <p className="text-xs text-slate-500 dark:text-slate-400 italic mb-3">"{s.evolucion || 'Sin evolución registrada'}"</p>
+                    
+                    {/* Payments Mini-History */}
+                    {payments.filter(p => p.sesion_id === s.id).length > 0 && (
+                      <div className="space-y-1.5 mt-2">
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                          <History size={10} /> Entregas / Abonos
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {payments.filter(p => p.sesion_id === s.id).map(p => (
+                            <div key={p.id} className="px-2.5 py-1 bg-white dark:bg-slate-900 border border-slate-100 dark:border-slate-800 rounded-lg flex items-center gap-2 shadow-sm animate-in fade-in zoom-in-95 duration-300">
+                              <span className="text-[10px] font-black text-emerald-500">${p.monto.toLocaleString()}</span>
+                              <div className="w-[1px] h-3 bg-slate-100 dark:bg-slate-800" />
+                              <span className="text-[9px] font-bold text-slate-400">
+                                {new Date(p.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}
+                                {' '}
+                                {new Date(p.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
                   <div className="text-right shrink-0 flex items-center gap-3">
                     <div>
                       <p className="text-[10px] font-black text-slate-900 dark:text-white">${s.total_estimado}</p>
