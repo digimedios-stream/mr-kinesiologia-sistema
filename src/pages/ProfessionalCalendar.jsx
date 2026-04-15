@@ -7,8 +7,9 @@ import listPlugin from '@fullcalendar/list';
 import esLocale from '@fullcalendar/core/locales/es';
 import { Plus, Loader2, X, Clock, Trash2 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
-import toast, { Toaster } from 'react-hot-toast';
+import { Toaster, toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
+import { User, ChevronRight } from 'lucide-react';
 
 const ProfessionalCalendar = () => {
   const [events, setEvents] = useState([]);
@@ -26,6 +27,9 @@ const ProfessionalCalendar = () => {
     motivo: '',
     id: null
   });
+
+  const [patientSearch, setPatientSearch] = useState('');
+  const [showPatientResults, setShowPatientResults] = useState(false);
 
   useEffect(() => {
     fetchEvents();
@@ -68,12 +72,28 @@ const ProfessionalCalendar = () => {
     if (data) setPatients(data);
   };
 
+  const filteredPatientsForSelect = React.useMemo(() => {
+    if (!patientSearch) return [];
+    return patients.filter(p => 
+      `${p.nombre} ${p.apellido}`.toLowerCase().includes(patientSearch.toLowerCase()) || 
+      p.dni?.includes(patientSearch)
+    );
+  }, [patients, patientSearch]);
+
+  const handleSelectPatient = (p) => {
+    setNewTurn({ ...newTurn, paciente_id: p.id });
+    setPatientSearch(`${p.apellido}, ${p.nombre}`);
+    setShowPatientResults(false);
+  };
+
   const handleDateSelect = (selectInfo) => {
     const date = selectInfo.startStr.split('T')[0];
     const time = selectInfo.startStr.split('T')[1]?.substring(0, 5) || '10:00';
     setIsEditMode(false);
     setSelectedEvent(null);
     setNewTurn({ paciente_id: '', fecha: date, hora: time, motivo: '', id: null });
+    setPatientSearch('');
+    setShowPatientResults(false);
     setShowModal(true);
   };
 
@@ -89,6 +109,8 @@ const ProfessionalCalendar = () => {
       hora: event.startStr.split('T')[1]?.substring(0, 5),
       motivo: event.extendedProps.motivo || ''
     });
+    setPatientSearch(event.title);
+    setShowPatientResults(false);
     setShowModal(true);
   };
 
@@ -301,17 +323,49 @@ const ProfessionalCalendar = () => {
               </div>
 
               <form onSubmit={handleSaveTurn} className="space-y-6">
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Paciente</label>
-                  <select 
-                    value={newTurn.paciente_id}
-                    onChange={(e) => setNewTurn({ ...newTurn, paciente_id: e.target.value })}
-                    className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary rounded-2xl p-4 text-sm font-bold dark:text-white transition-all outline-none"
-                    required
-                  >
-                    <option value="">Elegir paciente...</option>
-                    {patients.map(p => <option key={p.id} value={p.id}>{p.apellido}, {p.nombre}</option>)}
-                  </select>
+                  <div className="relative group">
+                    <div className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors">
+                      <User size={18} />
+                    </div>
+                    <input 
+                      type="text" 
+                      value={patientSearch}
+                      onChange={(e) => {
+                        setPatientSearch(e.target.value);
+                        setShowPatientResults(true);
+                        if (newTurn.paciente_id) setNewTurn({ ...newTurn, paciente_id: '' });
+                      }}
+                      onFocus={() => setShowPatientResults(true)}
+                      placeholder="Escribe nombre o apellido..."
+                      className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-primary rounded-2xl pl-12 pr-5 py-4 text-sm font-bold dark:text-white transition-all outline-none" 
+                      required
+                    />
+
+                    {showPatientResults && (
+                      <div className="fixed inset-0 z-40" onClick={() => setShowPatientResults(false)} />
+                    )}
+                    
+                    {showPatientResults && filteredPatientsForSelect.length > 0 && (
+                      <div className="absolute top-full left-0 right-0 mt-2 bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-3xl shadow-2xl z-50 max-h-60 overflow-y-auto overflow-x-hidden animate-in fade-in slide-in-from-top-2 duration-200">
+                        {filteredPatientsForSelect.map(p => (
+                          <button
+                            key={p.id}
+                            type="button"
+                            onClick={() => handleSelectPatient(p)}
+                            className="w-full text-left px-5 py-4 hover:bg-primary/5 border-b last:border-0 border-slate-50 dark:border-slate-800 transition-colors flex items-center justify-between group"
+                          >
+                            <div className="flex flex-col">
+                              <span className="text-sm font-bold text-slate-900 dark:text-white">{p.apellido}, {p.nombre}</span>
+                              <span className="text-[10px] text-slate-400 font-bold uppercase tracking-widest">DNI: {p.dni || 'S/N'}</span>
+                            </div>
+                            <ChevronRight size={14} className="text-slate-300 group-hover:translate-x-1 group-hover:text-primary transition-all" />
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
 
                 <div className="grid grid-cols-2 gap-4">
