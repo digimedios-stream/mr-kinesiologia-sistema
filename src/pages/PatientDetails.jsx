@@ -23,7 +23,8 @@ import {
   Edit2,
   FileText,
   Save,
-  PlusCircle
+  PlusCircle,
+  ClipboardList
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
@@ -505,6 +506,18 @@ const PatientDetails = () => {
               </div>
             ))}
           </div>
+
+          {/* Patient Global Indications */}
+          {patient?.indicaciones && (
+            <div className="mt-12 p-8 rounded-[32px] bg-amber-50/50 dark:bg-amber-500/5 border border-amber-100 dark:border-amber-900/20 animate-in fade-in zoom-in-95 duration-500">
+              <h4 className="text-[10px] font-black text-amber-600 dark:text-amber-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                <ClipboardList size={14} strokeWidth={3} /> Indicaciones Médicas / Observaciones del Paciente
+              </h4>
+              <p className="text-sm text-slate-700 dark:text-slate-300 leading-relaxed font-medium">
+                {patient.indicaciones}
+              </p>
+            </div>
+          )}
 
           {/* Editable Treatment History Section */}
           <div className="mt-12 pt-8 border-t dark:border-slate-800">
