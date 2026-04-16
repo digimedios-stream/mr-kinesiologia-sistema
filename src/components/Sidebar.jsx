@@ -75,8 +75,8 @@ const Sidebar = () => {
         {/* Header */}
         <div className="p-6 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl kinetic-gradient flex items-center justify-center text-white shadow-lg shadow-primary/20">
-              <Stethoscope size={24} strokeWidth={2.5} />
+            <div className="w-10 h-10 rounded-xl overflow-hidden bg-white shadow-lg shadow-primary/10">
+              <img src="/logo.png" alt="Logo" className="w-full h-full object-cover" />
             </div>
             <div className="animate-in fade-in duration-300">
               <h1 className="text-primary font-manrope font-extrabold text-lg leading-none tracking-tight">MR</h1>
@@ -134,8 +134,8 @@ const Sidebar = () => {
         {/* User Profile / Logout */}
         <div className="p-4 border-t border-slate-50 dark:border-slate-800">
           <div className="flex items-center gap-3 p-2 rounded-xl bg-slate-50 dark:bg-slate-800 mb-3">
-            <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white font-bold shrink-0 shadow-sm">
-              MR
+            <div className="w-10 h-10 rounded-full overflow-hidden bg-white shrink-0 shadow-sm border border-slate-100 dark:border-slate-700">
+              <img src="/logo.png" alt="Profile" className="w-full h-full object-cover" />
             </div>
             <div className="overflow-hidden">
               <p className="text-sm font-bold text-slate-900 dark:text-white truncate">Licenciada MR</p>

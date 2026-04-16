@@ -42,8 +42,8 @@ const Login = () => {
       >
         {/* Header */}
         <div className="text-center space-y-4">
-          <div className="mx-auto w-16 h-16 rounded-3xl kinetic-gradient flex items-center justify-center shadow-2xl shadow-primary/30">
-            <Activity className="text-white w-8 h-8" strokeWidth={3} />
+          <div className="mx-auto w-24 h-24 rounded-3xl bg-white flex items-center justify-center shadow-2xl shadow-primary/20 overflow-hidden p-1 border border-slate-100">
+            <img src="/logo.png" alt="Logo" className="w-full h-full object-contain" />
           </div>
           <div className="space-y-1">
             <h1 className="text-4xl font-manrope font-extrabold tracking-tight text-slate-900 dark:text-white">MR Kinesiología</h1>
