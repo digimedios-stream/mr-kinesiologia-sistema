@@ -9,7 +9,8 @@ import {
   Calendar,
   ChevronDown,
   Download,
-  FileText
+  FileText,
+  Clock
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { jsPDF } from 'jspdf';
@@ -20,7 +21,9 @@ const Reports = () => {
     totalSessions: 0,
     totalIncome: 0,
     monthlyIncome: 0,
-    pendingPayments: 0
+    pendingPayments: 0,
+    dailyIncome: 0,
+    dailySessions: 0
   });
 
   useEffect(() => {
@@ -44,13 +47,20 @@ const Reports = () => {
         .reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
 
       const pendingCount = sData.filter(s => (s.monto_abonado || 0) <= 0).length;
+
+      const todayStr = new Date().toISOString().split('T')[0];
+      const todaySessions = sData.filter(s => s.fecha_sesion === todayStr);
+      const dailyIncome = todaySessions.reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
+      const dailySessions = todaySessions.length;
       
       setStats({
         totalPatients: pCount || 0,
         totalSessions: sData.length,
         totalIncome: income,
         monthlyIncome: monthlyIncome,
-        pendingPayments: pendingCount
+        pendingPayments: pendingCount,
+        dailyIncome: dailyIncome,
+        dailySessions: dailySessions
       });
     }
   };
@@ -101,6 +111,17 @@ const Reports = () => {
     doc.text('Sesiones Realizadas:', col1, startY + 15);
     doc.setFont(undefined, 'normal');
     doc.text(`${stats.totalSessions}`, col1 + 45, startY + 15);
+
+    // DAILY STATS
+    doc.setFont(undefined, 'bold');
+    doc.text('Ingresos de Hoy:', col1, startY + 30);
+    doc.setFont(undefined, 'normal');
+    doc.text(`$${stats.dailyIncome.toLocaleString()}`, col1 + 45, startY + 30);
+
+    doc.setFont(undefined, 'bold');
+    doc.text('Sesiones de Hoy:', col2, startY + 30);
+    doc.setFont(undefined, 'normal');
+    doc.text(`${stats.dailySessions}`, col2 + 45, startY + 30);
     
     // Metric 4
     doc.setFont(undefined, 'bold');
@@ -109,12 +130,12 @@ const Reports = () => {
     doc.text(`${stats.totalPatients}`, col2 + 45, startY + 15);
     
     doc.setDrawColor(240);
-    doc.line(20, startY + 25, 190, startY + 25);
+    doc.line(20, startY + 45, 190, startY + 45);
     
     // Status
     doc.setFontSize(12);
     doc.setTextColor(220, 53, 69); // Rose color
-    doc.text(`Pacientes con sesiones pendientes de pago: ${stats.pendingPayments}`, 20, startY + 40);
+    doc.text(`Pacientes con sesiones pendientes de pago: ${stats.pendingPayments}`, 20, startY + 60);
     
     // Footer
     doc.setFontSize(8);
@@ -159,6 +180,37 @@ const Reports = () => {
         <MetricCard icon={DollarSign} label="Ingresos Totales" value={`$${stats.totalIncome.toLocaleString()}`} color="bg-slate-900" />
         <MetricCard icon={Activity} label="Sesiones Realizadas" value={stats.totalSessions} color="bg-secondary" />
         <MetricCard icon={PieChart} label="Sesiones Sin Pago" value={stats.pendingPayments} color="bg-rose-500" />
+      </div>
+
+      <div>
+        <h2 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <Clock size={20} className="text-emerald-500" /> Métricas de Hoy
+        </h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="bg-emerald-50/50 dark:bg-emerald-500/5 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/20 shadow-sm space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg">
+              <DollarSign size={24} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-emerald-600/60 dark:text-emerald-400/60 uppercase tracking-widest">Ingresos de Hoy</p>
+              <h3 className="text-3xl font-manrope font-extrabold text-emerald-700 dark:text-white mt-1">${stats.dailyIncome.toLocaleString()}</h3>
+            </div>
+          </div>
+          
+          <div className="bg-primary/5 p-8 rounded-[32px] border border-primary/10 shadow-sm space-y-4">
+            <div className="w-12 h-12 rounded-2xl bg-primary flex items-center justify-center text-white shadow-lg">
+              <Calendar size={24} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-primary/60 uppercase tracking-widest">Sesiones de Hoy</p>
+              <h3 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white mt-1">{stats.dailySessions}</h3>
+            </div>
+          </div>
+
+          <div className="hidden lg:flex bg-slate-50 dark:bg-slate-800/20 p-8 rounded-[32px] border border-dashed border-slate-200 dark:border-slate-700 items-center justify-center text-center">
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-[0.2em]">Sincronizado en tiempo real</p>
+          </div>
+        </div>
       </div>
 
       {/* Visual Charts */}
