@@ -23,10 +23,12 @@ const Reports = () => {
     totalIncome: 0,
     monthlyIncome: 0,
     pendingPayments: 0,
+    dailyIncome: 0,
     dailySessions: 0,
     monthlyHistory: [],
     dailyHistory: []
   });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
@@ -40,7 +42,8 @@ const Reports = () => {
       .from('sesiones_pagos')
       .select('monto_abonado, fecha_sesion');
     
-    if (sData) {
+    try {
+      if (sData) {
       const income = sData.reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
       
       const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
@@ -60,7 +63,10 @@ const Reports = () => {
       const dailyHistoryMap = {};
       
       sData.forEach(s => {
+        if (!s.fecha_sesion) return;
         const date = new Date(s.fecha_sesion + 'T12:00:00');
+        if (isNaN(date.getTime())) return;
+        
         const mKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
         const dKey = s.fecha_sesion;
         
@@ -89,6 +95,11 @@ const Reports = () => {
         monthlyHistory,
         dailyHistory
       });
+    }
+  } catch (err) {
+      console.error("Error fetching stats:", err);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -183,6 +194,15 @@ const Reports = () => {
       </div>
     </div>
   );
+
+  if (loading) {
+    return (
+      <div className="p-8 space-y-8 flex flex-col items-center justify-center min-h-[60vh]">
+        <Activity className="animate-pulse text-primary/20" size={60} />
+        <p className="text-sm font-black text-slate-300 uppercase tracking-widest">Cargando métricas...</p>
+      </div>
+    );
+  }
 
   return (
     <div className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
