@@ -285,8 +285,13 @@ const PatientDetails = () => {
     acc.totalAssisted += (curr.sesiones_asistidas || 0);
     acc.totalPaid += (curr.monto_abonado || 0);
     acc.totalDebt += (curr.saldo_pendiente || 0);
+    if (curr.entrego_orden) {
+      acc.ordersPresented += 1;
+    } else {
+      acc.ordersPending += 1;
+    }
     return acc;
-  }, { totalQty: 0, totalAssisted: 0, totalPaid: 0, totalDebt: 0 });
+  }, { totalQty: 0, totalAssisted: 0, totalPaid: 0, totalDebt: 0, ordersPresented: 0, ordersPending: 0 });
 
   if (loading) return <div className="p-20 flex justify-center"><Loader2 size={40} className="animate-spin text-primary/30" /></div>;
 
@@ -312,7 +317,7 @@ const PatientDetails = () => {
       </div>
 
       {/* Summary Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] shadow-sm border border-slate-50 dark:border-slate-800 relative overflow-hidden group">
           <div className="absolute right-0 bottom-0 p-4 opacity-5 dark:opacity-10 dark:text-white group-hover:scale-110 transition-transform"><Activity size={80} /></div>
           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Sesiones Asistidas</p>
@@ -328,9 +333,23 @@ const PatientDetails = () => {
           <div className="absolute right-0 bottom-0 p-4 opacity-5 dark:opacity-10 dark:text-white group-hover:scale-110 transition-transform"><DollarSign size={80} /></div>
           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Monto Abonado</p>
           <p className="text-3xl font-manrope font-black text-slate-900 dark:text-white">${stats.totalPaid.toLocaleString()}</p>
+          <div className={`mt-2 text-[9px] font-bold  uppercase flex items-center gap-1 ${stats.totalDebt > 0 ? 'text-rose-500' : 'text-emerald-500'}`}>
+            {stats.totalDebt > 0 ? `Deuda: $${stats.totalDebt.toLocaleString()}` : 'Sin Deuda'}
+          </div>
         </div>
 
-        <div className={`p-8 rounded-[40px] shadow-sm border relative overflow-hidden group ${stats.totalDebt > 0 ? 'bg-rose-50/50 dark:bg-rose-500/5 border-rose-100 dark:border-rose-900/30' : 'bg-white dark:bg-slate-900 border-slate-50 dark:border-slate-800'}`}>
+        <div className="bg-white dark:bg-slate-900 p-8 rounded-[40px] shadow-sm border border-slate-50 dark:border-slate-800 relative overflow-hidden group">
+          <div className="absolute right-0 bottom-0 p-4 opacity-5 dark:opacity-10 dark:text-white group-hover:scale-110 transition-transform"><FileText size={80} /></div>
+          <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Órdenes de Práctica</p>
+          <p className="text-3xl font-manrope font-black text-emerald-500">
+            {stats.ordersPresented} <span className="text-xs text-slate-400 uppercase font-black tracking-tighter">Entregadas</span>
+          </p>
+          <div className="mt-2 text-[9px] font-bold text-rose-500 uppercase flex items-center gap-1">
+             {stats.ordersPending} faltantes
+          </div>
+        </div>
+
+        <div className={`p-8 rounded-[40px] shadow-sm border relative overflow-hidden group ${stats.totalDebt > 0 ? 'bg-rose-50/50 dark:bg-rose-500/5 border-rose-100 dark:border-rose-900/30' : 'bg-white dark:bg-slate-900 border-slate-50 dark:border-slate-800 hidden lg:block'}`}>
           <div className={`absolute right-0 bottom-0 p-4 opacity-5 dark:opacity-10 ${stats.totalDebt > 0 ? 'text-rose-500' : 'text-slate-400 dark:text-white'} group-hover:scale-110 transition-transform`}><AlertCircle size={80} /></div>
           <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1">Saldo Adeudado</p>
           <p className={`text-3xl font-manrope font-black ${stats.totalDebt > 0 ? 'text-rose-500' : 'text-slate-900 dark:text-white'}`}>

@@ -22,8 +22,9 @@ const Reports = () => {
     totalIncome: 0,
     monthlyIncome: 0,
     pendingPayments: 0,
-    dailyIncome: 0,
-    dailySessions: 0
+    dailySessions: 0,
+    monthlyHistory: [],
+    dailyHistory: []
   });
 
   useEffect(() => {
@@ -53,6 +54,29 @@ const Reports = () => {
       const dailyIncome = todaySessions.reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
       const dailySessions = todaySessions.length;
       
+      // Monthly History (last 12 months)
+      const monthlyHistoryMap = {};
+      const dailyHistoryMap = {};
+      
+      sData.forEach(s => {
+        const date = new Date(s.fecha_sesion + 'T12:00:00');
+        const mKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+        const dKey = s.fecha_sesion;
+        
+        monthlyHistoryMap[mKey] = (monthlyHistoryMap[mKey] || 0) + (s.monto_abonado || 0);
+        dailyHistoryMap[dKey] = (dailyHistoryMap[dKey] || 0) + (s.monto_abonado || 0);
+      });
+
+      const monthlyHistory = Object.entries(monthlyHistoryMap)
+        .sort((a, b) => b[0].localeCompare(a[0]))
+        .slice(0, 12)
+        .map(([month, amount]) => ({ month, amount }));
+
+      const dailyHistory = Object.entries(dailyHistoryMap)
+        .sort((a, b) => b[0].localeCompare(a[0]))
+        .slice(0, 7)
+        .map(([date, amount]) => ({ date, amount }));
+
       setStats({
         totalPatients: pCount || 0,
         totalSessions: sData.length,
@@ -60,7 +84,9 @@ const Reports = () => {
         monthlyIncome: monthlyIncome,
         pendingPayments: pendingCount,
         dailyIncome: dailyIncome,
-        dailySessions: dailySessions
+        dailySessions: dailySessions,
+        monthlyHistory,
+        dailyHistory
       });
     }
   };
@@ -220,22 +246,66 @@ const Reports = () => {
             <h3 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white">Evolución de Sesiones</h3>
           </div>
           
-          <div className="h-64 flex items-end justify-between gap-4 px-4">
-            {[45, 60, 40, 80, 50, 90, 70, 85, 95, 60, 40, 75].map((h, i) => (
-              <div key={i} className="flex-1 flex flex-col items-center gap-2 group">
-                <div className="w-full bg-slate-50 rounded-full h-full relative overflow-hidden">
-                  <div 
-                    className="absolute bottom-0 w-full bg-primary/20 rounded-full transition-all group-hover:bg-primary/40" 
-                    style={{ height: `${h}%` }} 
-                  />
+          <div className="h-64 flex items-end justify-between gap-4 px-4 pb-4">
+            {/* Last 12 months chart */}
+            {(() => {
+              const monthsLabels = ['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'];
+              const currentYear = new Date().getFullYear();
+              const yearData = Array(12).fill(0);
+              
+              stats.monthlyHistory.forEach(h => {
+                const [y, m] = h.month.split('-');
+                if (parseInt(y) === currentYear) {
+                  yearData[parseInt(m) - 1] = h.amount;
+                }
+              });
+
+              const maxAmount = Math.max(...yearData, 1);
+
+              return yearData.map((amount, i) => (
+                <div key={i} className="flex-1 flex flex-col items-center gap-2 group h-full">
+                  <div className="w-full bg-slate-50 dark:bg-slate-800/50 rounded-full h-full relative overflow-hidden flex flex-col justify-end">
+                    <motion.div 
+                      initial={{ height: 0 }}
+                      animate={{ height: `${(amount / maxAmount) * 100}%` }}
+                      className="w-full bg-primary/40 rounded-full transition-all group-hover:bg-primary/60" 
+                      title={`$${amount.toLocaleString()}`}
+                    />
+                  </div>
+                  <span className="text-[9px] font-black text-slate-300 uppercase letter-spacing-widest">
+                    {monthsLabels[i]}
+                  </span>
                 </div>
-                <span className="text-[9px] font-black text-slate-300 uppercase letter-spacing-widest">
-                  {['E', 'F', 'M', 'A', 'M', 'J', 'J', 'A', 'S', 'O', 'N', 'D'][i]}
-                </span>
-              </div>
-            ))}
+              ));
+            })()}
           </div>
         </div>
+
+        {/* Daily History Table */}
+        <div className="col-span-12 lg:col-span-4 bg-white dark:bg-slate-900 p-10 rounded-[40px] border border-slate-50 dark:border-slate-800 shadow-sm transition-colors">
+          <h3 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white mb-6">Últimos 7 Días</h3>
+          <div className="space-y-4">
+            {stats.dailyHistory.map((d, i) => (
+              <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/30 border border-transparent hover:border-slate-100 dark:hover:border-slate-800 transition-all">
+                <div className="flex flex-col">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
+                    {new Date(d.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long' })}
+                  </span>
+                  <span className="text-sm font-bold text-slate-900 dark:text-white">
+                    {new Date(d.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                  </span>
+                </div>
+                <div className="text-right">
+                  <span className="text-lg font-black text-emerald-500">${d.amount.toLocaleString()}</span>
+                </div>
+              </div>
+            ))}
+            {stats.dailyHistory.length === 0 && (
+              <div className="py-10 text-center border-2 border-dashed border-slate-100 dark:border-slate-800 rounded-[32px]">
+                <p className="text-[10px] font-black text-slate-300 uppercase tracking-widest">Sin actividad reciente</p>
+              </div>
+            )}
+          </div>
       </div>
     </div>
   );

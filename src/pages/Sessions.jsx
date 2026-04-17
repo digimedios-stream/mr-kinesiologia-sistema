@@ -189,6 +189,7 @@ const Sessions = () => {
             <table className="w-full text-left border-collapse">
               <thead>
                 <tr className="bg-slate-50/50 dark:bg-slate-800/50">
+                  <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Fecha</th>
                   <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text">Paciente</th>
                   <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest">Evolución</th>
                   <th className="px-8 py-5 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Monto</th>
@@ -198,6 +199,16 @@ const Sessions = () => {
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
                 {filteredSessions.map((session) => (
                   <tr key={session.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                    <td className="px-8 py-6">
+                      <div className="flex flex-col">
+                        <span className="text-xs font-black text-primary uppercase tracking-tighter">
+                          {new Date(session.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                        </span>
+                        <span className="text-[9px] font-bold text-slate-400 uppercase">
+                          {new Date(session.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'short' })}
+                        </span>
+                      </div>
+                    </td>
                     <td className="px-8 py-6">
                       <div className="flex flex-col">
                         <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{session.pacientes?.nombre} {session.pacientes?.apellido}</p>
