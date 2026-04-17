@@ -44,36 +44,40 @@ const Reports = () => {
     ]);
     
     try {
-      if (sData && pData) {
-        const income = pData.reduce((acc, p) => acc + (p.monto || 0), 0);
-        
-        const now = new Date();
-        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
-        
-        const monthlyIncome = pData
-          .filter(p => new Date(p.fecha).getTime() >= firstDayOfMonth)
-          .reduce((acc, p) => acc + (p.monto || 0), 0);
+      const income = (pData || []).reduce((acc, p) => acc + (p.monto || 0), 0);
+      
+      const now = new Date();
+      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      
+      const monthlyIncome = (pData || [])
+        .filter(p => p.fecha && new Date(p.fecha).getTime() >= firstDayOfMonth)
+        .reduce((acc, p) => acc + (p.monto || 0), 0);
 
-        const pendingCount = sData.filter(s => (s.monto_abonado || 0) <= 0).length;
+      const pendingCount = (sData || []).filter(s => (s.monto_abonado || 0) <= 0).length;
 
-        const todayStr = now.toISOString().split('T')[0];
-        const dailyIncome = pData
-          .filter(p => p.fecha?.split('T')[0] === todayStr)
-          .reduce((acc, p) => acc + (p.monto || 0), 0);
-          
-        const dailySessions = sData.filter(s => s.fecha_sesion === todayStr).length;
+      const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD
+      const dailyIncome = (pData || [])
+        .filter(p => {
+          if (!p.fecha) return false;
+          const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
+          return pDateStr === todayStr;
+        })
+        .reduce((acc, p) => acc + (p.monto || 0), 0);
+        
+      const dailySessions = (sData || []).filter(s => s.fecha_sesion === todayStr).length;
       
       // Monthly History (last 12 months)
       const monthlyHistoryMap = {};
       const dailyHistoryMap = {};
       
-      pData.forEach(p => {
+      (pData || []).forEach(p => {
         if (!p.fecha) return;
-        const date = new Date(p.fecha);
+        const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
+        const date = new Date(pDateStr + 'T12:00:00');
         if (isNaN(date.getTime())) return;
         
         const mKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-        const dKey = p.fecha.split('T')[0];
+        const dKey = pDateStr;
         
         monthlyHistoryMap[mKey] = (monthlyHistoryMap[mKey] || 0) + (p.monto || 0);
         dailyHistoryMap[dKey] = (dailyHistoryMap[dKey] || 0) + (p.monto || 0);
@@ -100,8 +104,7 @@ const Reports = () => {
         monthlyHistory,
         dailyHistory
       });
-    }
-  } catch (err) {
+    } catch (err) {
       console.error("Error fetching stats:", err);
     } finally {
       setLoading(false);
