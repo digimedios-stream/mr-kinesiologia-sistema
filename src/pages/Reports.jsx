@@ -14,6 +14,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { jsPDF } from 'jspdf';
+import { motion } from 'framer-motion';
 
 const Reports = () => {
   const [stats, setStats] = useState({
@@ -306,6 +307,7 @@ const Reports = () => {
               </div>
             )}
           </div>
+        </div>
       </div>
     </div>
   );
