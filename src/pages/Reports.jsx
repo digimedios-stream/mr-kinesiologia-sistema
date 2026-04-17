@@ -37,41 +37,46 @@ const Reports = () => {
   const fetchStats = async () => {
     const { count: pCount } = await supabase.from('pacientes').select('*', { count: 'exact', head: true });
     
-    // Fetch sessions from correct table
-    const { data: sData } = await supabase
-      .from('sesiones_pagos')
-      .select('monto_abonado, fecha_sesion');
+    // Fetch sessions and payments
+    const [{ data: sData }, { data: pData }] = await Promise.all([
+      supabase.from('sesiones_pagos').select('monto_abonado, fecha_sesion'),
+      supabase.from('pagos').select('monto, fecha')
+    ]);
     
     try {
-      if (sData) {
-      const income = sData.reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
-      
-      const firstDayOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1).getTime();
-      const monthlyIncome = sData
-        .filter(s => new Date(s.fecha_sesion).getTime() >= firstDayOfMonth)
-        .reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
+      if (sData && pData) {
+        const income = pData.reduce((acc, p) => acc + (p.monto || 0), 0);
+        
+        const now = new Date();
+        const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+        
+        const monthlyIncome = pData
+          .filter(p => new Date(p.fecha).getTime() >= firstDayOfMonth)
+          .reduce((acc, p) => acc + (p.monto || 0), 0);
 
-      const pendingCount = sData.filter(s => (s.monto_abonado || 0) <= 0).length;
+        const pendingCount = sData.filter(s => (s.monto_abonado || 0) <= 0).length;
 
-      const todayStr = new Date().toISOString().split('T')[0];
-      const todaySessions = sData.filter(s => s.fecha_sesion === todayStr);
-      const dailyIncome = todaySessions.reduce((acc, s) => acc + (s.monto_abonado || 0), 0);
-      const dailySessions = todaySessions.length;
+        const todayStr = now.toISOString().split('T')[0];
+        const dailyIncome = pData
+          .filter(p => p.fecha?.split('T')[0] === todayStr)
+          .reduce((acc, p) => acc + (p.monto || 0), 0);
+          
+        const dailySessions = sData.filter(s => s.fecha_sesion === todayStr).length;
       
       // Monthly History (last 12 months)
       const monthlyHistoryMap = {};
       const dailyHistoryMap = {};
       
-      sData.forEach(s => {
-        if (!s.fecha_sesion) return;
-        const date = new Date(s.fecha_sesion + 'T12:00:00');
+      pData.forEach(p => {
+        if (!p.fecha) return;
+        const date = new Date(p.fecha);
         if (isNaN(date.getTime())) return;
         
         const mKey = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
-        const dKey = s.fecha_sesion;
+        const dKey = p.fecha.split('T')[0];
         
-        monthlyHistoryMap[mKey] = (monthlyHistoryMap[mKey] || 0) + (s.monto_abonado || 0);
-        dailyHistoryMap[dKey] = (dailyHistoryMap[dKey] || 0) + (s.monto_abonado || 0);
+        monthlyHistoryMap[mKey] = (monthlyHistoryMap[mKey] || 0) + (p.monto || 0);
+        dailyHistoryMap[dKey] = (dailyHistoryMap[dKey] || 0) + (p.monto || 0);
       });
 
       const monthlyHistory = Object.entries(monthlyHistoryMap)
