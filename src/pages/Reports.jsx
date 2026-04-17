@@ -35,28 +35,54 @@ const Reports = () => {
   }, []);
 
   const fetchStats = async () => {
-    const { count: pCount } = await supabase.from('pacientes').select('*', { count: 'exact', head: true });
-    
-    // Fetch sessions and payments
-    const [{ data: sData }, { data: pData }] = await Promise.all([
-      supabase.from('sesiones_pagos').select('monto_abonado, fecha_sesion'),
-      supabase.from('pagos').select('monto, fecha')
-    ]);
-    
     try {
-      const income = (pData || []).reduce((acc, p) => acc + (p.monto || 0), 0);
+      setLoading(true);
+      const { count: pCount } = await supabase.from('pacientes').select('*', { count: 'exact', head: true });
+      
+      // Fetch sessions and payments
+      const [{ data: sData }, { data: pData }] = await Promise.all([
+        supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente'),
+        supabase.from('pagos').select('monto, fecha, sesion_id')
+      ]);
+
+      if (!sData) return;
+
+      // Identify sessions that ALREADY have records in 'pagos' to avoid double counting
+      const sessionsWithPayments = new Set((pData || []).map(p => p.sesion_id));
+
+      // Create a unified list of financial transactions
+      const allPayments = [...(pData || [])];
+
+      // Add "virtual" payments for sessions that have an upfront 'monto_abonado' 
+      // but no entries in the 'pagos' table (legacy data or sessions created before the fix)
+      sData.forEach(session => {
+        if (!sessionsWithPayments.has(session.id) && (session.monto_abonado || 0) > 0) {
+          allPayments.push({
+            monto: session.monto_abonado,
+            fecha: session.fecha_sesion, // Use session date as fallback
+            sesion_id: session.id
+          });
+        }
+      });
+
+      const income = allPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
       
       const now = new Date();
       const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
       
-      const monthlyIncome = (pData || [])
-        .filter(p => p.fecha && new Date(p.fecha).getTime() >= firstDayOfMonth)
+      const monthlyIncome = allPayments
+        .filter(p => {
+          if (!p.fecha) return false;
+          const pDate = new Date(p.fecha.includes('T') ? p.fecha : p.fecha + 'T12:00:00');
+          return pDate.getTime() >= firstDayOfMonth;
+        })
         .reduce((acc, p) => acc + (p.monto || 0), 0);
 
-      const pendingCount = (sData || []).filter(s => (s.monto_abonado || 0) <= 0).length;
+      // Pending payments: sessions where saldo_pendiente > 0
+      const pendingCount = sData.filter(s => (s.saldo_pendiente || 0) > 0).length;
 
       const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD
-      const dailyIncome = (pData || [])
+      const dailyIncome = allPayments
         .filter(p => {
           if (!p.fecha) return false;
           const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
@@ -64,13 +90,13 @@ const Reports = () => {
         })
         .reduce((acc, p) => acc + (p.monto || 0), 0);
         
-      const dailySessions = (sData || []).filter(s => s.fecha_sesion === todayStr).length;
+      const dailySessions = sData.filter(s => s.fecha_sesion === todayStr).length;
       
       // Monthly History (last 12 months)
       const monthlyHistoryMap = {};
       const dailyHistoryMap = {};
       
-      (pData || []).forEach(p => {
+      allPayments.forEach(p => {
         if (!p.fecha) return;
         const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
         const date = new Date(pDateStr + 'T12:00:00');

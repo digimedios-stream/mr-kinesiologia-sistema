@@ -108,7 +108,7 @@ const Sessions = () => {
     if (!selectedPatientData || !evolution) return toast.error('Completa los campos obligatorios');
 
     try {
-      const { error } = await supabase.from('sesiones_pagos').insert([{
+      const { data: sessionData, error } = await supabase.from('sesiones_pagos').insert([{
         paciente_id: selectedPatientData.id,
         evolucion: evolution,
         cantidad_sesiones: parseInt(qty) || 1,
@@ -121,9 +121,20 @@ const Sessions = () => {
         codigo_prestacion: billingCode,
         descripcion_nomenclador: billingDesc,
         fecha_sesion: new Date().toISOString().split('T')[0]
-      }]);
+      }]).select();
 
       if (error) throw error;
+
+      // If there was an upfront payment, record it in the payments table
+      if (parseFloat(paid) > 0 && sessionData?.[0]) {
+        await supabase.from('pagos').insert([{
+          sesion_id: sessionData[0].id,
+          paciente_id: selectedPatientData.id,
+          monto: parseFloat(paid) || 0,
+          fecha: new Date().toISOString()
+        }]);
+      }
+
       toast.success('Sesión registrada');
       setShowModal(false);
       resetForm();
