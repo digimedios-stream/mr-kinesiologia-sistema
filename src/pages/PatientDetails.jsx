@@ -42,6 +42,7 @@ const PatientDetails = () => {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [sessionToPay, setSessionToPay] = useState(null);
   const [newPaymentAmount, setNewPaymentAmount] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Efectivo');
 
   // Turno Modal States
   const [showTurnoModal, setShowTurnoModal] = useState(false);
@@ -153,7 +154,9 @@ const PatientDetails = () => {
         .insert([{
           sesion_id: sessionToPay.id,
           paciente_id: id,
-          monto: amount
+          monto: amount,
+          medio_pago: paymentMethod,
+          fecha: new Date().toISOString()
         }]);
       
       if (pError) console.error('Error saving payment record:', pError);
@@ -161,6 +164,7 @@ const PatientDetails = () => {
       toast.success('Pago registrado correctamente');
       setShowPaymentModal(false);
       setNewPaymentAmount('');
+      setPaymentMethod('Efectivo');
       fetchData();
     } catch (err) {
       toast.error('Error al actualizar pago');
@@ -629,6 +633,23 @@ const PatientDetails = () => {
                 <div className="space-y-2">
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Monto a abonar ahora</label>
                   <input type="number" value={newPaymentAmount} onChange={(e) => setNewPaymentAmount(e.target.value)} autoFocus className="w-full bg-slate-50 dark:bg-slate-900 border-2 border-transparent focus:border-emerald-500 rounded-2xl p-5 text-2xl font-black text-slate-900 dark:text-white outline-none" placeholder="0" />
+                </div>
+
+                <div className="flex gap-2 p-1.5 bg-slate-50 dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-800">
+                  <button 
+                    type="button" 
+                    onClick={() => setPaymentMethod('Efectivo')}
+                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${paymentMethod === 'Efectivo' ? 'bg-emerald-500 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                  >
+                    Efectivo
+                  </button>
+                  <button 
+                    type="button" 
+                    onClick={() => setPaymentMethod('Electrónico')}
+                    className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${paymentMethod === 'Electrónico' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800'}`}
+                  >
+                    Transf / Débito
+                  </button>
                 </div>
                 <button type="submit" className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-bold uppercase text-xs shadow-xl active:scale-95 transition-all">Confirmar Abono</button>
               </form>

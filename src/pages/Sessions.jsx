@@ -44,6 +44,7 @@ const Sessions = () => {
   const [paid, setPaid] = useState('');
   const [billingCode, setBillingCode] = useState('');
   const [billingDesc, setBillingDesc] = useState('');
+  const [paymentMethod, setPaymentMethod] = useState('Efectivo');
 
   const total = useMemo(() => {
     const q = parseFloat(qty) || 0;
@@ -120,7 +121,8 @@ const Sessions = () => {
         saldo_pendiente: pending,
         codigo_prestacion: billingCode,
         descripcion_nomenclador: billingDesc,
-        fecha_sesion: new Date().toLocaleDateString('en-CA')
+        fecha_sesion: new Date().toLocaleDateString('en-CA'),
+        medio_pago: parseFloat(paid) > 0 ? paymentMethod : null
       }]).select();
 
       if (error) throw error;
@@ -131,7 +133,8 @@ const Sessions = () => {
           sesion_id: sessionData[0].id,
           paciente_id: selectedPatientData.id,
           monto: parseFloat(paid) || 0,
-          fecha: new Date().toISOString()
+          fecha: new Date().toISOString(),
+          medio_pago: paymentMethod
         }]);
       }
 
@@ -168,6 +171,7 @@ const Sessions = () => {
     setPaid('');
     setBillingCode('');
     setBillingDesc('');
+    setPaymentMethod('Efectivo');
   };
 
   const filteredSessions = sessions.filter(s => 
@@ -383,6 +387,26 @@ const Sessions = () => {
                   <div className="bg-emerald-50 dark:bg-emerald-500/5 p-8 rounded-[32px] space-y-4 border-2 border-emerald-100 dark:border-emerald-900/10">
                     <label className="text-[10px] font-black text-emerald-700 dark:text-emerald-400 uppercase tracking-widest">Monto Abonado Hoy</label>
                     <input type="number" value={paid} onChange={(e) => setPaid(e.target.value)} placeholder="0" className="w-full bg-white dark:bg-slate-900 border-2 border-emerald-200 dark:border-emerald-800 rounded-2xl p-4 text-xl font-black text-emerald-600 outline-none" />
+                    
+                    {parseFloat(paid) > 0 && (
+                      <div className="flex gap-2 p-1.5 bg-white dark:bg-slate-900/50 rounded-2xl border border-emerald-100 dark:border-emerald-900/10">
+                        <button 
+                          type="button" 
+                          onClick={() => setPaymentMethod('Efectivo')}
+                          className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${paymentMethod === 'Efectivo' ? 'bg-emerald-500 text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                        >
+                          Efectivo
+                        </button>
+                        <button 
+                          type="button" 
+                          onClick={() => setPaymentMethod('Electrónico')}
+                          className={`flex-1 py-3 rounded-xl text-[10px] font-black uppercase tracking-widest transition-all ${paymentMethod === 'Electrónico' ? 'bg-primary text-white shadow-lg' : 'text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-800'}`}
+                        >
+                          Transf / Débito
+                        </button>
+                      </div>
+                    )}
+
                     <div className="flex justify-between text-[10px] font-black uppercase text-rose-500">
                       {pending > 0 && `Saldo pendiente: $${pending}`}
                     </div>

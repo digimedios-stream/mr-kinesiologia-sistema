@@ -25,6 +25,8 @@ const Reports = () => {
     pendingPayments: 0,
     dailyIncome: 0,
     dailySessions: 0,
+    incomeCash: 0,
+    incomeElectronic: 0,
     monthlyHistory: [],
     dailyHistory: []
   });
@@ -42,7 +44,7 @@ const Reports = () => {
       // Fetch sessions and payments
       const [{ data: sData }, { data: pData }] = await Promise.all([
         supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente'),
-        supabase.from('pagos').select('monto, fecha, sesion_id')
+        supabase.from('pagos').select('monto, fecha, sesion_id, medio_pago')
       ]);
 
       if (!sData) return;
@@ -127,6 +129,8 @@ const Reports = () => {
         pendingPayments: pendingCount,
         dailyIncome: dailyIncome,
         dailySessions: dailySessions,
+        incomeCash: allPayments.filter(p => !p.medio_pago || p.medio_pago === 'Efectivo').reduce((acc, p) => acc + (p.monto || 0), 0),
+        incomeElectronic: allPayments.filter(p => p.medio_pago === 'Electrónico' || p.medio_pago === 'Transferencia').reduce((acc, p) => acc + (p.monto || 0), 0),
         monthlyHistory,
         dailyHistory
       });
@@ -258,8 +262,8 @@ const Reports = () => {
       {/* Highlights Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard icon={TrendingUp} label="Ingresos del Mes" value={`$${stats.monthlyIncome.toLocaleString()}`} color="kinetic-gradient" />
-        <MetricCard icon={DollarSign} label="Ingresos Totales" value={`$${stats.totalIncome.toLocaleString()}`} color="bg-slate-900" />
-        <MetricCard icon={Activity} label="Sesiones Realizadas" value={stats.totalSessions} color="bg-secondary" />
+        <MetricCard icon={DollarSign} label="Efectivo (Total)" value={`$${stats.incomeCash.toLocaleString()}`} color="bg-emerald-500" />
+        <MetricCard icon={Activity} label="Electrónico (Total)" value={`$${stats.incomeElectronic.toLocaleString()}`} color="bg-primary" />
         <MetricCard icon={PieChart} label="Sesiones Sin Pago" value={stats.pendingPayments} color="bg-rose-500" />
       </div>
 
