@@ -120,7 +120,7 @@ const Sessions = () => {
         saldo_pendiente: pending,
         codigo_prestacion: billingCode,
         descripcion_nomenclador: billingDesc,
-        fecha_sesion: new Date().toISOString().split('T')[0]
+        fecha_sesion: new Date().toLocaleDateString('en-CA')
       }]).select();
 
       if (error) throw error;

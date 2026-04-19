@@ -440,7 +440,7 @@ const PatientDetails = () => {
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-4">
                   <div>
                     <div className="flex items-center gap-2">
-                       <span className="text-[10px] font-black text-primary uppercase tracking-widest">{new Date(s.fecha_sesion).toLocaleDateString('es-ES', { day: 'numeric', month: 'long' })}</span>
+                       <span className="text-[10px] font-black text-primary uppercase tracking-widest">{formatLocalDate(s.fecha_sesion)}</span>
                        <button 
                           onClick={() => handleToggleOrder(s.id, s.entrego_orden)}
                           className={`px-1.5 py-0.5 text-[8px] font-black uppercase rounded transition-all hover:scale-105 active:scale-95 ${
