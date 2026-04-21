@@ -174,9 +174,33 @@ const Sessions = () => {
     setPaymentMethod('Efectivo');
   };
 
-  const filteredSessions = sessions.filter(s => 
-    `${s.pacientes?.nombre} ${s.pacientes?.apellido}`.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filteredSessions = useMemo(() => {
+    if (!searchTerm) return sessions;
+    const search = searchTerm.toLowerCase();
+    return sessions.filter(s => {
+      const patientName = `${s.pacientes?.nombre} ${s.pacientes?.apellido}`.toLowerCase();
+      const insurance = (s.pacientes?.obras_sociales?.nombre || 'particular').toLowerCase();
+      const evolution = (s.evolucion || '').toLowerCase();
+      const date = new Date(s.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { 
+        day: '2-digit', 
+        month: '2-digit', 
+        year: 'numeric' 
+      });
+      
+      return patientName.includes(search) || 
+             insurance.includes(search) || 
+             evolution.includes(search) ||
+             date.includes(search);
+    });
+  }, [sessions, searchTerm]);
+
+  const stats = useMemo(() => {
+    return {
+      total: sessions.length,
+      pending: sessions.reduce((acc, s) => acc + (s.saldo_pendiente || 0), 0),
+      count_pending: sessions.filter(s => s.saldo_pendiente > 0).length
+    }
+  }, [sessions]);
 
   return (
     <div className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
@@ -196,6 +220,69 @@ const Sessions = () => {
         </button>
       </div>
 
+      {/* Stats Summary */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
+            <ClipboardList size={28} />
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Sesiones</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white leading-none mt-1">{stats.total}</p>
+          </div>
+        </div>
+        
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500">
+            <AlertCircle size={28} />
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Saldos Pendientes</p>
+            <p className="text-2xl font-black text-rose-500 leading-none mt-1">${stats.pending.toLocaleString()}</p>
+          </div>
+        </div>
+
+        <div className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm flex items-center gap-5">
+          <div className="w-14 h-14 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-500">
+            <CheckCircle2 size={28} />
+          </div>
+          <div>
+            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pacientes al Día</p>
+            <p className="text-2xl font-black text-emerald-500 leading-none mt-1">{stats.total - stats.count_pending}</p>
+          </div>
+        </div>
+      </div>
+
+      {/* Toolbar / Search Bar */}
+      <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+        <div className="md:col-span-8 relative group">
+          <div className="absolute left-5 top-1/2 -translate-y-1/2 text-slate-400 group-focus-within:text-primary transition-colors duration-300">
+            <Search size={20} strokeWidth={2.5} />
+          </div>
+          <input 
+            type="text" 
+            placeholder="Buscar por paciente, obra social, evolución o fecha (DD/MM/AAAA)..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className="w-full bg-white dark:bg-slate-900 border-2 border-slate-100 dark:border-slate-800 rounded-[24px] pl-14 pr-6 py-4.5 text-sm font-semibold text-slate-900 dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-600 shadow-sm focus:ring-8 focus:ring-primary/5 focus:border-primary transition-all outline-none"
+          />
+          {searchTerm && (
+            <button 
+              onClick={() => setSearchTerm('')}
+              className="absolute right-4 top-1/2 -translate-y-1/2 p-2 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-full text-slate-400 transition-colors"
+            >
+              <X size={16} />
+            </button>
+          )}
+        </div>
+        <div className="md:col-span-4 flex items-center justify-end px-2">
+          <div className="flex items-center gap-3 text-[10px] font-black text-slate-400 uppercase tracking-widest">
+            <Activity size={14} className="text-primary" />
+            Mostrando {filteredSessions.length} de {sessions.length} sesiones
+          </div>
+        </div>
+      </div>
+
       <div className="bg-white dark:bg-slate-900 rounded-[40px] shadow-sm border border-slate-50 dark:border-slate-800 overflow-hidden">
         {loading ? (
           <div className="py-20 flex justify-center"><Loader2 size={40} className="animate-spin text-primary/30" /></div>
@@ -212,61 +299,80 @@ const Sessions = () => {
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
-                {filteredSessions.map((session) => (
-                  <tr key={session.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
-                    <td className="px-8 py-6">
-                      <div className="flex flex-col">
-                        <span className="text-xs font-black text-primary uppercase tracking-tighter">
-                          {new Date(session.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
-                        </span>
-                        <span className="text-[9px] font-bold text-slate-400 uppercase">
-                          {new Date(session.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'short' })}
-                        </span>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6">
-                      <div className="flex flex-col">
-                        <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{session.pacientes?.nombre} {session.pacientes?.apellido}</p>
-                        <div className="flex items-center gap-2 mt-1">
-                          <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{session.pacientes?.obras_sociales?.nombre || 'Particular'}</span>
-                          {session.entrego_orden ? (
-                            <span className="px-1.5 py-0.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[8px] font-black uppercase rounded">Orden OK</span>
-                          ) : (
-                            <span className="px-1.5 py-0.5 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[8px] font-black uppercase rounded">Falta Orden</span>
-                          )}
+                {filteredSessions.length > 0 ? (
+                  filteredSessions.map((session) => (
+                    <tr key={session.id} className="group hover:bg-slate-50/50 dark:hover:bg-slate-800/50 transition-colors">
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col">
+                          <span className="text-xs font-black text-primary uppercase tracking-tighter">
+                            {new Date(session.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' })}
+                          </span>
+                          <span className="text-[9px] font-bold text-slate-400 uppercase">
+                            {new Date(session.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'short' })}
+                          </span>
                         </div>
-                      </div>
-                    </td>
-                    <td className="px-8 py-6 max-w-xs text-xs text-slate-600 dark:text-slate-400 italic">
-                      {session.evolucion}
-                    </td>
-                    <td className="px-8 py-6 text-right">
-                      <p className="text-sm font-black text-slate-900 dark:text-white">${session.total_estimado}</p>
-                      <span className={`text-[9px] font-black uppercase ${session.saldo_pendiente <= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                        {session.saldo_pendiente <= 0 ? 'Liquidado' : `Debe $${session.saldo_pendiente}`}
-                      </span>
-                    </td>
-                    <td className="px-8 py-6 text-right">
-                      <div className="flex items-center justify-end gap-3">
+                      </td>
+                      <td className="px-8 py-6">
+                        <div className="flex flex-col">
+                          <p className="text-sm font-bold text-slate-900 dark:text-white leading-tight">{session.pacientes?.nombre} {session.pacientes?.apellido}</p>
+                          <div className="flex items-center gap-2 mt-1">
+                            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-tighter">{session.pacientes?.obras_sociales?.nombre || 'Particular'}</span>
+                            {session.entrego_orden ? (
+                              <span className="px-1.5 py-0.5 bg-emerald-50 dark:bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 text-[8px] font-black uppercase rounded">Orden OK</span>
+                            ) : (
+                              <span className="px-1.5 py-0.5 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[8px] font-black uppercase rounded">Falta Orden</span>
+                            )}
+                          </div>
+                        </div>
+                      </td>
+                      <td className="px-8 py-6 max-w-xs text-xs text-slate-600 dark:text-slate-400 italic">
+                        {session.evolucion}
+                      </td>
+                      <td className="px-8 py-6 text-right">
+                        <p className="text-sm font-black text-slate-900 dark:text-white">${session.total_estimado}</p>
+                        <span className={`text-[9px] font-black uppercase ${session.saldo_pendiente <= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                          {session.saldo_pendiente <= 0 ? 'Liquidado' : `Debe $${session.saldo_pendiente}`}
+                        </span>
+                      </td>
+                      <td className="px-8 py-6 text-right">
+                        <div className="flex items-center justify-end gap-3">
+                          <button 
+                            onClick={() => navigate(`/pacientes/${session.paciente_id}`)}
+                            className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
+                            title="Ver Ficha Completa"
+                          >
+                            <UserCircle2 size={18} />
+                            FICHA
+                          </button>
+                          <button 
+                            onClick={() => handleDeleteSession(session.id)}
+                            className="p-2 text-slate-300 hover:text-rose-500 transition-colors"
+                            title="Borrar"
+                          >
+                            <Trash2 size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="px-8 py-20 text-center">
+                      <div className="flex flex-col items-center justify-center gap-3">
+                        <div className="w-16 h-16 bg-slate-50 dark:bg-slate-800 rounded-full flex items-center justify-center text-slate-300">
+                          <Search size={32} />
+                        </div>
+                        <p className="text-sm font-bold text-slate-400">No se encontraron sesiones que coincidan con tu búsqueda</p>
                         <button 
-                          onClick={() => navigate(`/pacientes/${session.paciente_id}`)}
-                          className="flex items-center gap-2 px-4 py-2 bg-primary/10 text-primary hover:bg-primary hover:text-white rounded-xl text-[10px] font-black uppercase tracking-widest transition-all"
-                          title="Ver Ficha Completa"
+                          onClick={() => setSearchTerm('')}
+                          className="text-xs font-black uppercase text-primary hover:underline transition-all"
                         >
-                          <UserCircle2 size={18} />
-                          FICHA
-                        </button>
-                        <button 
-                          onClick={() => handleDeleteSession(session.id)}
-                          className="p-2 text-slate-300 hover:text-rose-500 transition-colors"
-                          title="Borrar"
-                        >
-                          <Trash2 size={18} />
+                          Limpiar búsqueda
                         </button>
                       </div>
                     </td>
                   </tr>
-                ))}
+                )}
               </tbody>
             </table>
           </div>
