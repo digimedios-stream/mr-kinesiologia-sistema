@@ -122,7 +122,8 @@ const Sessions = () => {
         codigo_prestacion: billingCode,
         descripcion_nomenclador: billingDesc,
         fecha_sesion: new Date().toLocaleDateString('en-CA'),
-        medio_pago: parseFloat(paid) > 0 ? paymentMethod : null
+        medio_pago: parseFloat(paid) > 0 ? paymentMethod : null,
+        sesiones_asistidas: 1
       }]).select();
 
       if (error) throw error;
