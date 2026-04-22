@@ -149,6 +149,12 @@ const Sidebar = () => {
             <LogOut size={20} className="shrink-0" strokeWidth={2.5} />
             <span className="font-bold text-sm">Cerrar Sesión</span>
           </button>
+          
+          <div className="mt-4 px-4 text-center opacity-50">
+            <p className="text-[10px] text-slate-400 font-medium tracking-tight">
+              Desarrollado por Digimedios Apps
+            </p>
+          </div>
         </div>
       </aside>
     </>
