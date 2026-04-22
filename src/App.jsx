@@ -28,7 +28,7 @@ const ProtectedRoute = ({ children }) => {
   if (!user) return <Navigate to="/login" replace />;
 
   return (
-    <div className="flex min-h-screen bg-slate-50/50 dark:bg-slate-950">
+    <div className="flex min-h-screen bg-slate-50/50 dark:bg-slate-950" translate="no">
       <Sidebar />
       <main className="flex-1 lg:pl-64 min-h-screen transition-colors duration-300">
         <div className="max-w-[1600px] mx-auto">
