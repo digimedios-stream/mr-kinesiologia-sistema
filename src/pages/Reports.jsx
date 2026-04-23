@@ -43,26 +43,34 @@ const Reports = () => {
       
       // Fetch sessions and payments
       const [{ data: sData }, { data: pData }] = await Promise.all([
-        supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente'),
+        supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago'),
         supabase.from('pagos').select('monto, fecha, sesion_id, medio_pago')
       ]);
 
       if (!sData) return;
 
-      // Identify sessions that ALREADY have records in 'pagos' to avoid double counting
-      const sessionsWithPayments = new Set((pData || []).map(p => p.sesion_id));
-
       // Create a unified list of financial transactions
       const allPayments = [...(pData || [])];
 
-      // Add "virtual" payments for sessions that have an upfront 'monto_abonado' 
-      // but no entries in the 'pagos' table (legacy data or sessions created before the fix)
+      // Calculate how much is already accounted for in the 'pagos' table per session
+      const paidInTableBySession = {};
+      (pData || []).forEach(p => {
+        paidInTableBySession[p.sesion_id] = (paidInTableBySession[p.sesion_id] || 0) + (p.monto || 0);
+      });
+
+      // Check each session to see if there's an upfront payment not yet in the 'pagos' table
       sData.forEach(session => {
-        if (!sessionsWithPayments.has(session.id) && (session.monto_abonado || 0) > 0) {
+        const totalAbonado = session.monto_abonado || 0;
+        const yaEnTabla = paidInTableBySession[session.id] || 0;
+        const faltante = totalAbonado - yaEnTabla;
+
+        // If there's a difference, it's an upfront/legacy payment that needs a virtual record
+        if (faltante > 0) {
           allPayments.push({
-            monto: session.monto_abonado,
-            fecha: session.fecha_sesion, // Use session date as fallback
-            sesion_id: session.id
+            monto: faltante,
+            fecha: session.fecha_sesion,
+            sesion_id: session.id,
+            medio_pago: session.medio_pago
           });
         }
       });
