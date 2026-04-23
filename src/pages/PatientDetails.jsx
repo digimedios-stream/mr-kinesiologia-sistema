@@ -52,6 +52,7 @@ const PatientDetails = () => {
   // Treatment History States
   const [treatmentHistory, setTreatmentHistory] = useState([]);
   const [payments, setPayments] = useState([]);
+  const [asistencias, setAsistencias] = useState([]);
   const [newTreatmentText, setNewTreatmentText] = useState('');
   const [editingTreatmentId, setEditingTreatmentId] = useState(null);
   const [editingTreatmentText, setEditingTreatmentText] = useState('');
@@ -102,6 +103,14 @@ const PatientDetails = () => {
         .order('fecha', { ascending: false });
       
       setPayments(payData || []);
+
+      const { data: asisData } = await supabase
+        .from('asistencias_sesiones')
+        .select('*')
+        .eq('paciente_id', id)
+        .order('fecha_asistencia', { ascending: false });
+      
+      setAsistencias(asisData || []);
     } catch (error) {
       console.error('Error fetching patient details:', error);
     } finally {
@@ -123,6 +132,25 @@ const PatientDetails = () => {
         .eq('id', sessionId);
       
       if (error) throw error;
+
+      // Update attendance history table
+      if (type === 'add') {
+        await supabase.from('asistencias_sesiones').insert([{
+          sesion_id: sessionId,
+          paciente_id: id,
+          fecha_asistencia: new Date().toISOString()
+        }]);
+      } else if (type === 'sub') {
+        // Delete the most recent attendance for this session
+        const lastAsis = asistencias
+          .filter(a => a.sesion_id === sessionId)
+          .sort((a, b) => new Date(b.fecha_asistencia) - new Date(a.fecha_asistencia))[0];
+        
+        if (lastAsis) {
+          await supabase.from('asistencias_sesiones').delete().eq('id', lastAsis.id);
+        }
+      }
+
       fetchData();
     } catch (err) {
       toast.error('Error al actualizar asistencias');
@@ -501,6 +529,33 @@ const PatientDetails = () => {
                                 {new Date(p.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}
                                 {' '}
                                 {new Date(p.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Attendance History */}
+                    {asistencias.filter(a => a.sesion_id === s.id).length > 0 && (
+                      <div className="space-y-1.5 mt-4">
+                        <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
+                          <Calendar size={10} /> Fechas de Asistencia
+                        </p>
+                        <div className="flex flex-wrap gap-2">
+                          {asistencias
+                            .filter(a => a.sesion_id === s.id)
+                            .sort((a, b) => new Date(a.fecha_asistencia) - new Date(b.fecha_asistencia))
+                            .map((a, idx) => (
+                            <div key={a.id} className="px-2.5 py-1 bg-primary/5 border border-primary/10 rounded-lg flex items-center gap-2 shadow-sm">
+                              <span className="text-[9px] font-black text-primary uppercase">Sesión {idx + 1}</span>
+                              <div className="w-[1px] h-3 bg-primary/20" />
+                              <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                                {new Date(a.fecha_asistencia).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                                {' '}
+                                <span className="text-[9px] opacity-60">
+                                  {new Date(a.fecha_asistencia).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}hs
+                                </span>
                               </span>
                             </div>
                           ))}

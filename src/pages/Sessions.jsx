@@ -128,7 +128,16 @@ const Sessions = () => {
 
       if (error) throw error;
 
-      // If there was an upfront payment, record it in the payments table
+      // 2. Register initial attendance if sesiones_asistidas > 0
+      if ((parseInt(qty) || 1) > 0 && sessionData?.[0]) {
+        await supabase.from('asistencias_sesiones').insert([{
+          sesion_id: sessionData[0].id,
+          paciente_id: selectedPatientData.id,
+          fecha_asistencia: new Date().toISOString()
+        }]);
+      }
+
+      // 3. If there was an upfront payment, record it in the payments table
       if (parseFloat(paid) > 0 && sessionData?.[0]) {
         await supabase.from('pagos').insert([{
           sesion_id: sessionData[0].id,

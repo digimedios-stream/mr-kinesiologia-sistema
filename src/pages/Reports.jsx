@@ -42,9 +42,10 @@ const Reports = () => {
       const { count: pCount } = await supabase.from('pacientes').select('*', { count: 'exact', head: true });
       
       // Fetch sessions and payments
-      const [{ data: sData }, { data: pData }] = await Promise.all([
+      const [{ data: sData }, { data: pData }, { data: aData }] = await Promise.all([
         supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago'),
-        supabase.from('pagos').select('monto, fecha, sesion_id, medio_pago')
+        supabase.from('pagos').select('monto, fecha, sesion_id, medio_pago'),
+        supabase.from('asistencias_sesiones').select('id, fecha_asistencia')
       ]);
 
       if (!sData) return;
@@ -100,7 +101,11 @@ const Reports = () => {
         })
         .reduce((acc, p) => acc + (p.monto || 0), 0);
         
-      const dailySessions = sData.filter(s => s.fecha_sesion === todayStr).length;
+      const dailySessions = aData ? aData.filter(a => {
+        if (!a.fecha_asistencia) return false;
+        const aDateStr = a.fecha_asistencia.split('T')[0];
+        return aDateStr === todayStr;
+      }).length : 0;
       
       // Monthly History (last 12 months)
       const monthlyHistoryMap = {};
@@ -131,9 +136,14 @@ const Reports = () => {
 
       setStats({
         totalPatients: pCount || 0,
-        totalSessions: sData.length,
+        totalSessions: aData ? aData.length : 0,
         totalIncome: income,
         monthlyIncome: monthlyIncome,
+        monthlySessions: aData ? aData.filter(a => {
+          if (!a.fecha_asistencia) return false;
+          const aDate = new Date(a.fecha_asistencia);
+          return aDate.getTime() >= firstDayOfMonth;
+        }).length : 0,
         pendingPayments: pendingCount,
         dailyIncome: dailyIncome,
         dailySessions: dailySessions,
