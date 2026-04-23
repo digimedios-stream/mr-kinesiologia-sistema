@@ -43,7 +43,7 @@ const Reports = () => {
       
       // Fetch sessions and payments
       const [{ data: sData }, { data: pData }, { data: aData }] = await Promise.all([
-        supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago'),
+        supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago, sesiones_asistidas'),
         supabase.from('pagos').select('monto, fecha, sesion_id, medio_pago'),
         supabase.from('asistencias_sesiones').select('id, fecha_asistencia')
       ]);
