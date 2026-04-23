@@ -101,11 +101,39 @@ const Reports = () => {
         })
         .reduce((acc, p) => acc + (p.monto || 0), 0);
         
-      const dailySessions = aData ? aData.filter(a => {
-        if (!a.fecha_asistencia) return false;
-        const aDateStr = a.fecha_asistencia.split('T')[0];
-        return aDateStr === todayStr;
-      }).length : 0;
+      // Calculation of total and period-based sessions including legacy data
+      let totalSessions = 0;
+      let monthlySessions = 0;
+      let dailySessions = 0;
+
+      // Group tracked attendances by session_id
+      const trackedBySession = {};
+      (aData || []).forEach(a => {
+        trackedBySession[a.sesion_id] = (trackedBySession[a.sesion_id] || 0) + 1;
+      });
+
+      sData.forEach(session => {
+        const totalAsistidas = session.sesiones_asistidas || 0;
+        const trackeadas = trackedBySession[session.id] || 0;
+        const legacy = totalAsistidas - trackeadas;
+
+        // 1. Count tracked ones based on their real date
+        const sessionTrackedAsis = (aData || []).filter(a => a.sesion_id === session.id);
+        sessionTrackedAsis.forEach(a => {
+          totalSessions++;
+          const aDate = new Date(a.fecha_asistencia);
+          if (aDate.getTime() >= firstDayOfMonth) monthlySessions++;
+          if (a.fecha_asistencia.split('T')[0] === todayStr) dailySessions++;
+        });
+
+        // 2. Count legacy ones based on session creation date
+        if (legacy > 0) {
+          totalSessions += legacy;
+          const sDate = new Date(session.fecha_sesion + 'T12:00:00');
+          if (sDate.getTime() >= firstDayOfMonth) monthlySessions += legacy;
+          if (session.fecha_sesion === todayStr) dailySessions += legacy;
+        }
+      });
       
       // Monthly History (last 12 months)
       const monthlyHistoryMap = {};
@@ -136,17 +164,13 @@ const Reports = () => {
 
       setStats({
         totalPatients: pCount || 0,
-        totalSessions: aData ? aData.length : 0,
+        totalSessions,
         totalIncome: income,
         monthlyIncome: monthlyIncome,
-        monthlySessions: aData ? aData.filter(a => {
-          if (!a.fecha_asistencia) return false;
-          const aDate = new Date(a.fecha_asistencia);
-          return aDate.getTime() >= firstDayOfMonth;
-        }).length : 0,
+        monthlySessions,
         pendingPayments: pendingCount,
         dailyIncome: dailyIncome,
-        dailySessions: dailySessions,
+        dailySessions,
         incomeCash: allPayments.filter(p => !p.medio_pago || p.medio_pago === 'Efectivo').reduce((acc, p) => acc + (p.monto || 0), 0),
         incomeElectronic: allPayments.filter(p => p.medio_pago === 'Electrónico' || p.medio_pago === 'Transferencia').reduce((acc, p) => acc + (p.monto || 0), 0),
         monthlyHistory,
