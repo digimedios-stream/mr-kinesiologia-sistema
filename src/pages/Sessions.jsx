@@ -28,6 +28,7 @@ const Sessions = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [sessions, setSessions] = useState([]);
+  const [asistencias, setAsistencias] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [showModal, setShowModal] = useState(false);
   
@@ -63,13 +64,19 @@ const Sessions = () => {
   const fetchSessions = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('sesiones_pagos')
-        .select('*, pacientes(nombre, apellido, obras_sociales(nombre))')
-        .order('fecha_sesion', { ascending: false });
+      const [{ data: sData }, { data: aData }] = await Promise.all([
+        supabase
+          .from('sesiones_pagos')
+          .select('*, pacientes(nombre, apellido, obras_sociales(nombre))')
+          .order('fecha_sesion', { ascending: false }),
+        supabase
+          .from('asistencias_sesiones')
+          .select('*')
+          .order('fecha_asistencia', { ascending: true })
+      ]);
       
-      if (error) throw error;
-      setSessions(data || []);
+      setSessions(sData || []);
+      setAsistencias(aData || []);
     } catch (err) {
       toast.error('Error al cargar sesiones');
     } finally {
@@ -332,6 +339,21 @@ const Sessions = () => {
                             ) : (
                               <span className="px-1.5 py-0.5 bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 text-[8px] font-black uppercase rounded">Falta Orden</span>
                             )}
+                          </div>
+                          
+                          {/* Attendance Dates Badges */}
+                          <div className="flex flex-wrap gap-1.5 mt-3">
+                            {asistencias
+                              .filter(a => a.sesion_id === session.id)
+                              .map((a, idx) => (
+                                <div key={a.id} className="px-3 py-1 bg-slate-50 dark:bg-slate-800/60 border border-slate-100 dark:border-slate-800 rounded-xl text-[10px] flex items-center gap-2 shadow-sm">
+                                  <span className="text-primary font-black">{idx + 1}</span>
+                                  <div className="w-[1px] h-2.5 bg-slate-200 dark:bg-slate-700" />
+                                  <span className="text-slate-600 dark:text-slate-200 font-bold">
+                                    {new Date(a.fecha_asistencia).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}
+                                  </span>
+                                </div>
+                              ))}
                           </div>
                         </div>
                       </td>
