@@ -199,6 +199,28 @@ const PatientDetails = () => {
     }
   };
 
+  const handleForgiveDebt = async () => {
+    if (!window.confirm('¿Confirmás bonificar/cancelar esta deuda? El saldo pendiente quedará en cero y el costo total del plan se ajustará al monto ya pagado. Esto no afectará tu balance de ingresos.')) return;
+
+    try {
+      const { error } = await supabase
+        .from('sesiones_pagos')
+        .update({
+          saldo_pendiente: 0,
+          total_estimado: sessionToPay.monto_abonado || 0
+        })
+        .eq('id', sessionToPay.id);
+      
+      if (error) throw error;
+
+      toast.success('Deuda bonificada correctamente');
+      setShowPaymentModal(false);
+      fetchData();
+    } catch (err) {
+      toast.error('Error al bonificar deuda');
+    }
+  };
+
   const handleDeleteTurno = async (turnoId) => {
     if (!window.confirm('¿Deseas eliminar este turno?')) return;
     try {
@@ -707,6 +729,16 @@ const PatientDetails = () => {
                   </button>
                 </div>
                 <button type="submit" className="w-full py-5 bg-emerald-500 text-white rounded-2xl font-bold uppercase text-xs shadow-xl active:scale-95 transition-all">Confirmar Abono</button>
+
+                {sessionToPay?.saldo_pendiente > 0 && (
+                  <button 
+                    type="button" 
+                    onClick={handleForgiveDebt}
+                    className="w-full mt-2 py-3 bg-transparent text-slate-400 hover:text-slate-600 dark:hover:text-slate-300 rounded-2xl font-bold uppercase text-[10px] tracking-widest transition-all"
+                  >
+                    Bonificar / Cancelar Deuda (Sin Cobro)
+                  </button>
+                )}
               </form>
             </motion.div>
           </div>
