@@ -24,6 +24,8 @@ const Reports = () => {
     monthlyIncome: 0,
     pendingPayments: 0,
     dailyIncome: 0,
+    dailyIncomeCash: 0,
+    dailyIncomeTransfer: 0,
     dailySessions: 0,
     incomeCash: 0,
     incomeElectronic: 0,
@@ -45,7 +47,7 @@ const Reports = () => {
       const [{ data: sData }, { data: pData }, { data: aData }] = await Promise.all([
         supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago, sesiones_asistidas'),
         supabase.from('pagos').select('monto, fecha, sesion_id, medio_pago'),
-        supabase.from('asistencias_sesiones').select('id, fecha_asistencia')
+        supabase.from('asistencias_sesiones').select('id, sesion_id, fecha_asistencia')
       ]);
 
       if (!sData) return;
@@ -93,13 +95,15 @@ const Reports = () => {
       const pendingCount = sData.filter(s => (s.saldo_pendiente || 0) > 0).length;
 
       const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD
-      const dailyIncome = allPayments
-        .filter(p => {
-          if (!p.fecha) return false;
-          const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
-          return pDateStr === todayStr;
-        })
-        .reduce((acc, p) => acc + (p.monto || 0), 0);
+      const dailyPayments = allPayments.filter(p => {
+        if (!p.fecha) return false;
+        const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
+        return pDateStr === todayStr;
+      });
+
+      const dailyIncome = dailyPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
+      const dailyIncomeCash = dailyPayments.filter(p => !p.medio_pago || p.medio_pago === 'Efectivo').reduce((acc, p) => acc + (p.monto || 0), 0);
+      const dailyIncomeTransfer = dailyPayments.filter(p => p.medio_pago === 'Electrónico' || p.medio_pago === 'Transferencia').reduce((acc, p) => acc + (p.monto || 0), 0);
         
       // Calculation of total and period-based sessions including legacy data
       let totalSessions = 0;
@@ -170,6 +174,8 @@ const Reports = () => {
         monthlySessions,
         pendingPayments: pendingCount,
         dailyIncome: dailyIncome,
+        dailyIncomeCash: dailyIncomeCash,
+        dailyIncomeTransfer: dailyIncomeTransfer,
         dailySessions,
         incomeCash: allPayments.filter(p => !p.medio_pago || p.medio_pago === 'Efectivo').reduce((acc, p) => acc + (p.monto || 0), 0),
         incomeElectronic: allPayments.filter(p => p.medio_pago === 'Electrónico' || p.medio_pago === 'Transferencia').reduce((acc, p) => acc + (p.monto || 0), 0),
@@ -234,7 +240,7 @@ const Reports = () => {
     doc.setFont(undefined, 'bold');
     doc.text('Ingresos de Hoy:', col1, startY + 30);
     doc.setFont(undefined, 'normal');
-    doc.text(`$${stats.dailyIncome.toLocaleString()}`, col1 + 45, startY + 30);
+    doc.text(`$${stats.dailyIncome.toLocaleString()} (Ef: $${(stats.dailyIncomeCash || 0).toLocaleString()} / Tr: $${(stats.dailyIncomeTransfer || 0).toLocaleString()})`, col1 + 45, startY + 30);
 
     doc.setFont(undefined, 'bold');
     doc.text('Sesiones de Hoy:', col2, startY + 30);
@@ -314,13 +320,25 @@ const Reports = () => {
           <Clock size={20} className="text-emerald-500" /> Métricas de Hoy
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          <div className="bg-emerald-50/50 dark:bg-emerald-500/5 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/20 shadow-sm space-y-4">
-            <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg">
-              <DollarSign size={24} />
-            </div>
+          <div className="bg-emerald-50/50 dark:bg-emerald-500/5 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/20 shadow-sm flex flex-col justify-between">
             <div>
-              <p className="text-[10px] font-black text-emerald-600/60 dark:text-emerald-400/60 uppercase tracking-widest">Ingresos de Hoy</p>
-              <h3 className="text-3xl font-manrope font-extrabold text-emerald-700 dark:text-white mt-1">${stats.dailyIncome.toLocaleString()}</h3>
+              <div className="w-12 h-12 rounded-2xl bg-emerald-500 flex items-center justify-center text-white shadow-lg mb-4">
+                <DollarSign size={24} />
+              </div>
+              <div>
+                <p className="text-[10px] font-black text-emerald-600/60 dark:text-emerald-400/60 uppercase tracking-widest">Ingresos de Hoy</p>
+                <h3 className="text-3xl font-manrope font-extrabold text-emerald-700 dark:text-white mt-1">${stats.dailyIncome.toLocaleString()}</h3>
+              </div>
+            </div>
+            <div className="pt-4 mt-6 border-t border-emerald-200/50 dark:border-emerald-800/50 flex justify-between items-center">
+              <div>
+                <p className="text-[9px] font-black text-emerald-600/70 dark:text-emerald-400/70 uppercase tracking-wider">Efectivo</p>
+                <p className="text-sm font-extrabold text-emerald-800 dark:text-emerald-300">${(stats.dailyIncomeCash || 0).toLocaleString()}</p>
+              </div>
+              <div className="text-right">
+                <p className="text-[9px] font-black text-emerald-600/70 dark:text-emerald-400/70 uppercase tracking-wider">Transferencia</p>
+                <p className="text-sm font-extrabold text-emerald-800 dark:text-emerald-300">${(stats.dailyIncomeTransfer || 0).toLocaleString()}</p>
+              </div>
             </div>
           </div>
           
