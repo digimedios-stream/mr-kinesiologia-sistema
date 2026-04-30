@@ -568,19 +568,35 @@ const PatientDetails = () => {
                           {asistencias
                             .filter(a => a.sesion_id === s.id)
                             .sort((a, b) => new Date(a.fecha_asistencia) - new Date(b.fecha_asistencia))
-                            .map((a, idx) => (
-                            <div key={a.id} className="px-2.5 py-1 bg-primary/5 border border-primary/10 rounded-lg flex items-center gap-2 shadow-sm">
-                              <span className="text-[9px] font-black text-primary uppercase">Sesión {idx + 1}</span>
-                              <div className="w-[1px] h-3 bg-primary/20" />
-                              <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">
-                                {new Date(a.fecha_asistencia).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })}
-                                {' '}
-                                <span className="text-[9px] opacity-60">
-                                  {new Date(a.fecha_asistencia).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}hs
-                                </span>
-                              </span>
-                            </div>
-                          ))}
+                            .map((a, idx) => {
+                              const dayPayments = payments.filter(p => 
+                                p.sesion_id === s.id && 
+                                new Date(p.fecha).toDateString() === new Date(a.fecha_asistencia).toDateString()
+                              );
+                              const dayAmount = dayPayments.reduce((sum, p) => sum + (p.monto || 0), 0);
+                              
+                              return (
+                                <div key={a.id} className="px-2.5 py-1 bg-primary/5 border border-primary/10 rounded-lg flex items-center gap-2 shadow-sm">
+                                  <span className="text-[9px] font-black text-primary uppercase">Sesión {idx + 1}</span>
+                                  <div className="w-[1px] h-3 bg-primary/20" />
+                                  <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                                    {new Date(a.fecha_asistencia).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                                    {' '}
+                                    <span className="text-[9px] opacity-60">
+                                      {new Date(a.fecha_asistencia).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}hs
+                                    </span>
+                                  </span>
+                                  {dayAmount > 0 && (
+                                    <>
+                                      <div className="w-[1px] h-3 bg-emerald-200 dark:bg-emerald-800" />
+                                      <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">
+                                        Abonó ${dayAmount.toLocaleString()}
+                                      </span>
+                                    </>
+                                  )}
+                                </div>
+                              );
+                            })}
                         </div>
                       </div>
                     )}
@@ -588,9 +604,10 @@ const PatientDetails = () => {
 
                   <div className="text-right shrink-0 flex items-center gap-3">
                     <div>
-                      <p className="text-[10px] font-black text-slate-900 dark:text-white">${s.total_estimado}</p>
+                      <p className="text-[10px] font-black text-slate-900 dark:text-white">${s.total_estimado?.toLocaleString()}</p>
+                      <p className="text-[9px] font-bold text-emerald-500 uppercase leading-none mb-1">Abonó ${s.monto_abonado?.toLocaleString() || 0}</p>
                       <span className={`text-[9px] font-black uppercase ${s.saldo_pendiente <= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                        {s.saldo_pendiente <= 0 ? 'Pagado' : `Debe $${s.saldo_pendiente}`}
+                        {s.saldo_pendiente <= 0 ? 'Pagado' : `Debe $${s.saldo_pendiente?.toLocaleString()}`}
                       </span>
                     </div>
                     {s.saldo_pendiente > 0 && (
