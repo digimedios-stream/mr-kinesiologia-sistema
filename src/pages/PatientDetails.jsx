@@ -239,6 +239,47 @@ const PatientDetails = () => {
     setShowTurnoModal(true);
   };
 
+  const handleDeletePayment = async (paymentId, sessionId, paymentAmount) => {
+    if (!window.confirm('¿Estás seguro de eliminar este pago? El saldo pendiente se actualizará.')) return;
+
+    try {
+      // 1. Get the current session to update totals
+      const { data: sessionData } = await supabase
+        .from('sesiones_pagos')
+        .select('monto_abonado, saldo_pendiente')
+        .eq('id', sessionId)
+        .single();
+
+      if (sessionData) {
+        const newMontoAbonado = (sessionData.monto_abonado || 0) - paymentAmount;
+        const newSaldoPendiente = (sessionData.saldo_pendiente || 0) + paymentAmount;
+
+        // 2. Update the session totals
+        await supabase
+          .from('sesiones_pagos')
+          .update({
+            monto_abonado: newMontoAbonado,
+            saldo_pendiente: newSaldoPendiente
+          })
+          .eq('id', sessionId);
+      }
+
+      // 3. Delete the payment record
+      const { error } = await supabase
+        .from('pagos')
+        .delete()
+        .eq('id', paymentId);
+
+      if (error) throw error;
+
+      toast.success('Pago eliminado correctamente');
+      fetchData();
+    } catch (err) {
+      console.error("Error deleting payment:", err);
+      toast.error('No se pudo eliminar el pago');
+    }
+  };
+
   const handleUpdateTurno = async (e) => {
     e.preventDefault();
     try {
@@ -552,6 +593,13 @@ const PatientDetails = () => {
                                 {' '}
                                 {p.medio_pago || 'Efectivo'}
                               </span>
+                              <button 
+                                onClick={() => handleDeletePayment(p.id, s.id, p.monto)}
+                                className="text-slate-300 hover:text-rose-500 transition-colors ml-1"
+                                title="Eliminar este pago"
+                              >
+                                <Trash2 size={12} />
+                              </button>
                             </div>
                           ))}
                         </div>
