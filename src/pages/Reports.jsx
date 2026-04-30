@@ -94,23 +94,22 @@ const Reports = () => {
       // Pending payments: sessions where saldo_pendiente > 0
       const pendingCount = sData.filter(s => (s.saldo_pendiente || 0) > 0).length;
 
-      const todayStr = now.toLocaleDateString('en-CA'); // YYYY-MM-DD
+      const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       const dailyPayments = allPayments.filter(p => {
         if (!p.fecha) return false;
+        // Robust date parsing (YYYY-MM-DD)
         const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
         return pDateStr === todayStr;
       });
 
       const dailyIncome = dailyPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
       
-      const isCash = (method) => !method || method.toLowerCase() === 'efectivo';
-      const isElectronic = (method) => method && (
-        method.toLowerCase() === 'electrónico' || 
-        method.toLowerCase() === 'electronico' || 
-        method.toLowerCase() === 'transferencia' || 
-        method.toLowerCase() === 'débito' || 
-        method.toLowerCase() === 'debito'
-      );
+      const isElectronic = (method) => {
+        if (!method || typeof method !== 'string') return false;
+        const m = method.toLowerCase().trim();
+        return m === 'electrónico' || m === 'electronico' || m === 'transferencia' || m === 'débito' || m === 'debito';
+      };
+      const isCash = (method) => !isElectronic(method);
 
       const dailyIncomeCash = dailyPayments.filter(p => isCash(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0);
       const dailyIncomeTransfer = dailyPayments.filter(p => isElectronic(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0);
@@ -333,6 +332,7 @@ const Reports = () => {
       <div>
         <h2 className="text-xl font-manrope font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
           <Clock size={20} className="text-emerald-500" /> Métricas de Hoy
+          <span className="text-[10px] bg-emerald-500 text-white px-2 py-0.5 rounded-full font-black uppercase tracking-tighter">Live</span>
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           <div className="bg-emerald-50/50 dark:bg-emerald-500/5 p-8 rounded-[32px] border border-emerald-100 dark:border-emerald-900/20 shadow-sm flex flex-col justify-between">
