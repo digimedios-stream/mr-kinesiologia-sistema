@@ -95,10 +95,14 @@ const Reports = () => {
       const pendingCount = sData.filter(s => (s.saldo_pendiente || 0) > 0).length;
 
       const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+      
       const dailyPayments = allPayments.filter(p => {
         if (!p.fecha) return false;
-        // Robust date parsing (YYYY-MM-DD)
-        const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
+        
+        // Convert to Date object to handle UTC vs Local correctly
+        const pDate = new Date(p.fecha);
+        const pDateStr = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
+        
         return pDateStr === todayStr;
       });
 
