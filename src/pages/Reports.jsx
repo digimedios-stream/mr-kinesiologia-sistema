@@ -125,17 +125,22 @@ const Reports = () => {
         const sessionTrackedAsis = (aData || []).filter(a => a.sesion_id === session.id);
         sessionTrackedAsis.forEach(a => {
           totalSessions++;
-          const aDate = new Date(a.fecha_asistencia);
+          // Robust date extraction (handles 'T' or space separator)
+          const aDateStr = a.fecha_asistencia.includes('T') ? a.fecha_asistencia.split('T')[0] : a.fecha_asistencia.split(' ')[0];
+          const aDate = new Date(aDateStr + 'T12:00:00');
+          
           if (aDate.getTime() >= firstDayOfMonth) monthlySessions++;
-          if (a.fecha_asistencia.split('T')[0] === todayStr) dailySessions++;
+          if (aDateStr === todayStr) dailySessions++;
         });
 
-        // 2. Count legacy ones based on session creation date
+        // 2. Count legacy ones based on session creation date (for old data)
         if (legacy > 0) {
           totalSessions += legacy;
-          const sDate = new Date(session.fecha_sesion + 'T12:00:00');
+          const sDateStr = session.fecha_sesion.includes('T') ? session.fecha_sesion.split('T')[0] : session.fecha_sesion.split(' ')[0];
+          const sDate = new Date(sDateStr + 'T12:00:00');
+          
           if (sDate.getTime() >= firstDayOfMonth) monthlySessions += legacy;
-          if (session.fecha_sesion === todayStr) dailySessions += legacy;
+          if (sDateStr === todayStr) dailySessions += legacy;
         }
       });
       

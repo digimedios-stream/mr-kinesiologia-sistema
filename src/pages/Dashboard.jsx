@@ -55,17 +55,17 @@ const Dashboard = () => {
       
       const uniqueMissing = new Set(missingData?.map(s => s.paciente_id) || []);
 
-      // Fetch Sessions recorded today (actual evolutions)
-      const { count: sessionsRecordedCount } = await supabase
-        .from('sesiones_pagos')
+      // Fetch Sessions recorded today (actual attendances)
+      const { count: attendancesToday } = await supabase
+        .from('asistencias_sesiones')
         .select('*', { count: 'exact', head: true })
-        .eq('fecha_sesion', today);
+        .gte('fecha_asistencia', `${today}T00:00:00.000Z`)
+        .lte('fecha_asistencia', `${today}T23:59:59.999Z`);
 
       const totalScheduled = turnsToday?.length || 0;
-      const completed = sessionsRecordedCount || 0;
+      const completed = attendancesToday || 0;
       
-      // Calculate productivity: (Recorded Sessions / Scheduled Turns)
-      // If 0 turns, we don't show a percentage or show 0
+      // Calculate productivity: (Recorded Attendances / Scheduled Turns)
       const productivityScore = totalScheduled > 0 
         ? Math.round((completed / totalScheduled) * 100) 
         : (completed > 0 ? 100 : 0);
@@ -73,7 +73,7 @@ const Dashboard = () => {
       setStats(prev => ({
         ...prev,
         activePatients: patientsCount || 0,
-        sessionsToday: totalScheduled,
+        sessionsToday: completed,
         missingOrdersCount: uniqueMissing.size,
         productivity: productivityScore
       }));
