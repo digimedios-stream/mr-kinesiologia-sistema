@@ -365,9 +365,16 @@ const Sessions = () => {
                       </td>
                       <td className="px-8 py-6 text-right">
                         <p className="text-sm font-black text-slate-900 dark:text-white">${session.total_estimado}</p>
-                        <span className={`text-[9px] font-black uppercase ${session.saldo_pendiente <= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
-                          {session.saldo_pendiente <= 0 ? 'Liquidado' : `Debe $${session.saldo_pendiente}`}
-                        </span>
+                        <div className="flex flex-col items-end">
+                          <span className={`text-[9px] font-black uppercase ${session.saldo_pendiente <= 0 ? 'text-emerald-500' : 'text-rose-500'}`}>
+                            {session.saldo_pendiente <= 0 ? 'Liquidado' : `Debe $${session.saldo_pendiente}`}
+                          </span>
+                          {session.monto_abonado > 0 && (
+                            <span className="text-[8px] font-bold text-slate-400 uppercase mt-0.5">
+                              {session.medio_pago || 'Efectivo'}
+                            </span>
+                          )}
+                        </div>
                       </td>
                       <td className="px-8 py-6 text-right">
                         <div className="flex items-center justify-end gap-3">

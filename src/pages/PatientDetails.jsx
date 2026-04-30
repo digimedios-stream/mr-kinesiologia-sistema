@@ -550,7 +550,7 @@ const PatientDetails = () => {
                               <span className="text-[9px] font-bold text-slate-400">
                                 {new Date(p.fecha).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' })}
                                 {' '}
-                                {new Date(p.fecha).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}
+                                {p.medio_pago || 'Efectivo'}
                               </span>
                             </div>
                           ))}

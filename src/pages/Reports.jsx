@@ -102,8 +102,18 @@ const Reports = () => {
       });
 
       const dailyIncome = dailyPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
-      const dailyIncomeCash = dailyPayments.filter(p => !p.medio_pago || p.medio_pago === 'Efectivo').reduce((acc, p) => acc + (p.monto || 0), 0);
-      const dailyIncomeTransfer = dailyPayments.filter(p => p.medio_pago === 'Electrónico' || p.medio_pago === 'Transferencia').reduce((acc, p) => acc + (p.monto || 0), 0);
+      
+      const isCash = (method) => !method || method.toLowerCase() === 'efectivo';
+      const isElectronic = (method) => method && (
+        method.toLowerCase() === 'electrónico' || 
+        method.toLowerCase() === 'electronico' || 
+        method.toLowerCase() === 'transferencia' || 
+        method.toLowerCase() === 'débito' || 
+        method.toLowerCase() === 'debito'
+      );
+
+      const dailyIncomeCash = dailyPayments.filter(p => isCash(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0);
+      const dailyIncomeTransfer = dailyPayments.filter(p => isElectronic(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0);
         
       // Calculation of total and period-based sessions including legacy data
       let totalSessions = 0;
@@ -182,8 +192,8 @@ const Reports = () => {
         dailyIncomeCash: dailyIncomeCash,
         dailyIncomeTransfer: dailyIncomeTransfer,
         dailySessions,
-        incomeCash: allPayments.filter(p => !p.medio_pago || p.medio_pago === 'Efectivo').reduce((acc, p) => acc + (p.monto || 0), 0),
-        incomeElectronic: allPayments.filter(p => p.medio_pago === 'Electrónico' || p.medio_pago === 'Transferencia').reduce((acc, p) => acc + (p.monto || 0), 0),
+        incomeCash: allPayments.filter(p => isCash(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0),
+        incomeElectronic: allPayments.filter(p => isElectronic(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0),
         monthlyHistory,
         dailyHistory
       });
@@ -316,7 +326,7 @@ const Reports = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <MetricCard icon={TrendingUp} label="Ingresos del Mes" value={`$${stats.monthlyIncome.toLocaleString()}`} color="kinetic-gradient" />
         <MetricCard icon={DollarSign} label="Efectivo (Total)" value={`$${stats.incomeCash.toLocaleString()}`} color="bg-emerald-500" />
-        <MetricCard icon={Activity} label="Electrónico (Total)" value={`$${stats.incomeElectronic.toLocaleString()}`} color="bg-primary" />
+        <MetricCard icon={Activity} label="Transferencia (Total)" value={`$${stats.incomeElectronic.toLocaleString()}`} color="bg-primary" />
         <MetricCard icon={PieChart} label="Sesiones Sin Pago" value={stats.pendingPayments} color="bg-rose-500" />
       </div>
 
