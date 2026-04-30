@@ -99,11 +99,11 @@ const Reports = () => {
       const dailyPayments = allPayments.filter(p => {
         if (!p.fecha) return false;
         
-        // Convert to Date object to handle UTC vs Local correctly
-        const pDate = new Date(p.fecha);
-        const pDateStr = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
+        const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
+        const pDate = new Date(pDateStr + 'T12:00:00');
+        const formattedPDate = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
         
-        return pDateStr === todayStr;
+        return formattedPDate === todayStr;
       });
 
       const dailyIncome = dailyPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
