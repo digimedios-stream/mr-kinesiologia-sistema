@@ -249,8 +249,11 @@ const Sessions = () => {
           </div>
         </div>
         
-        <div className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm flex items-center gap-5">
-          <div className="w-14 h-14 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500">
+        <div 
+          onClick={() => navigate('/deudores')}
+          className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm flex items-center gap-5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all group"
+        >
+          <div className="w-14 h-14 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-colors">
             <AlertCircle size={28} />
           </div>
           <div>

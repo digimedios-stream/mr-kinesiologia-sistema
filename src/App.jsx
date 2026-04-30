@@ -13,6 +13,7 @@ import Insurances from './pages/Insurances';
 import Reports from './pages/Reports';
 import PatientDetails from './pages/PatientDetails';
 import MissingOrders from './pages/MissingOrders';
+import Debtors from './pages/Debtors';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -106,6 +107,12 @@ const App = () => {
             <Route path="/pacientes-sin-orden" element={
               <ProtectedRoute>
                 <MissingOrders />
+              </ProtectedRoute>
+            } />
+
+            <Route path="/deudores" element={
+              <ProtectedRoute>
+                <Debtors />
               </ProtectedRoute>
             } />
 
