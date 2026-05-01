@@ -227,14 +227,22 @@ const Reports = () => {
         dailyIncomeCash: dailyIncomeCash,
         dailyIncomeTransfer: dailyIncomeTransfer,
         dailySessions,
-        incomeCash: allPayments.filter(p => isCash(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0),
-        incomeElectronic: allPayments.filter(p => isElectronic(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0),
+        incomeCash: allPayments.filter(p => {
+          const s = sData.find(sd => sd.id === p.sesion_id);
+          return isCash(p.medio_pago || s?.medio_pago);
+        }).reduce((acc, p) => acc + (p.monto || 0), 0),
+        incomeElectronic: allPayments.filter(p => {
+          const s = sData.find(sd => sd.id === p.sesion_id);
+          return isElectronic(p.medio_pago || s?.medio_pago);
+        }).reduce((acc, p) => acc + (p.monto || 0), 0),
         monthlyHistory,
         dailyHistory,
         todayPaymentsList
       });
     } catch (err) {
-      console.error("Error fetching stats:", err);
+      console.error("Error crítico en fetchStats:", err);
+      // Fallback state to prevent black screen
+      setStats(prev => ({ ...prev, error: true }));
     } finally {
       setLoading(false);
     }
