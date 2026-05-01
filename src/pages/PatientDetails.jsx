@@ -293,6 +293,7 @@ const PatientDetails = () => {
         .from('pagos')
         .insert([{
           sesion_id: session.id,
+          paciente_id: id, // Adding the missing patient_id
           monto: monto,
           fecha: new Date().toISOString()
         }]);
