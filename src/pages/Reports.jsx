@@ -99,9 +99,10 @@ const Reports = () => {
       const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       
       const dailyPayments = allPayments.filter(p => {
-        if (!p.monto || !p.fecha) return false;
+        if (!p.fecha) return false;
         
-        const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
+        const pDateStr = (p.fecha || '').includes('T') ? p.fecha.split('T')[0] : (p.fecha || '');
+        if (!pDateStr) return false;
         const pDate = new Date(pDateStr + 'T12:00:00');
         const formattedPDate = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
         
@@ -144,9 +145,10 @@ const Reports = () => {
         // 1. Count tracked ones based on their real date
         const sessionTrackedAsis = (aData || []).filter(a => a.sesion_id === session.id);
         sessionTrackedAsis.forEach(a => {
+          if (!a.fecha_asistencia) return; // Skip if date is missing
           totalSessions++;
-          // Robust date extraction (handles 'T' or space separator)
-          const aDateStr = a.fecha_asistencia.includes('T') ? a.fecha_asistencia.split('T')[0] : a.fecha_asistencia.split(' ')[0];
+          // Robust date extraction
+          const aDateStr = (a.fecha_asistencia || '').includes('T') ? a.fecha_asistencia.split('T')[0] : a.fecha_asistencia.split(' ')[0];
           const aDate = new Date(aDateStr + 'T12:00:00');
           
           if (aDate.getTime() >= firstDayOfMonth) monthlySessions++;
@@ -156,11 +158,13 @@ const Reports = () => {
         // 2. Count legacy ones based on session creation date (for old data)
         if (legacy > 0) {
           totalSessions += legacy;
-          const sDateStr = session.fecha_sesion.includes('T') ? session.fecha_sesion.split('T')[0] : session.fecha_sesion.split(' ')[0];
-          const sDate = new Date(sDateStr + 'T12:00:00');
-          
-          if (sDate.getTime() >= firstDayOfMonth) monthlySessions += legacy;
-          if (sDateStr === todayStr) dailySessions += legacy;
+          if (session.fecha_sesion) {
+            const sDateStr = (session.fecha_sesion || '').includes('T') ? session.fecha_sesion.split('T')[0] : session.fecha_sesion.split(' ')[0];
+            const sDate = new Date(sDateStr + 'T12:00:00');
+            
+            if (sDate.getTime() >= firstDayOfMonth) monthlySessions += legacy;
+            if (sDateStr === todayStr) dailySessions += legacy;
+          }
         }
       });
       
