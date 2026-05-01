@@ -18,8 +18,19 @@ import { motion } from 'framer-motion';
 
 const extractDateOnly = (dateString) => {
   if (!dateString) return '';
-  const match = String(dateString).trim().match(/^\d{4}-\d{2}-\d{2}/);
-  return match ? match[0] : '';
+  const str = String(dateString).trim();
+  if (/^\d{4}-\d{2}-\d{2}$/.test(str)) {
+    return str;
+  }
+  const d = new Date(str);
+  if (isNaN(d.getTime())) {
+    const match = str.match(/^\d{4}-\d{2}-\d{2}/);
+    return match ? match[0] : '';
+  }
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, '0');
+  const day = String(d.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
 };
 
 const formatLocalDateString = (dateStr, options) => {

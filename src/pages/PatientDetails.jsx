@@ -288,15 +288,25 @@ const PatientDetails = () => {
         return;
       }
 
+      const now = new Date();
+      const year = now.getFullYear();
+      const month = String(now.getMonth() + 1).padStart(2, '0');
+      const day = String(now.getDate()).padStart(2, '0');
+      const hours = String(now.getHours()).padStart(2, '0');
+      const minutes = String(now.getMinutes()).padStart(2, '0');
+      const seconds = String(now.getSeconds()).padStart(2, '0');
+      const localDateStr = `${year}-${month}-${day}T${hours}:${minutes}:${seconds}`;
+
       // Create the individual payment record with TODAY's date
       const { error: pError } = await supabase
         .from('pagos')
         .insert([{
           sesion_id: session.id,
-          paciente_id: id, // Adding the missing patient_id
+          paciente_id: id,
           monto: monto,
-          fecha: new Date().toISOString()
+          fecha: localDateStr
         }]);
+
 
       if (pError) {
         console.error("DB Error:", pError);
