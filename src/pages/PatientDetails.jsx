@@ -282,8 +282,11 @@ const PatientDetails = () => {
 
   const handleFixUpfrontPaymentDate = async (session) => {
     try {
-      const monto = session.monto_abonado || 0;
-      if (monto <= 0) return;
+      const monto = parseFloat(session.monto_abonado) || 0;
+      if (monto <= 0) {
+        toast.error('No hay monto para mover');
+        return;
+      }
 
       // Create the individual payment record with TODAY's date
       const { error: pError } = await supabase
@@ -295,13 +298,16 @@ const PatientDetails = () => {
           fecha: new Date().toISOString()
         }]);
 
-      if (pError) throw pError;
+      if (pError) {
+        console.error("DB Error:", pError);
+        throw pError;
+      }
 
-      toast.success('Fecha de pago actualizada a hoy');
-      fetchData();
+      toast.success('¡Pago vinculado a hoy correctamente!');
+      fetchData(); // Refresh the view
     } catch (err) {
-      console.error("Error fixing payment date:", err);
-      toast.error('No se pudo actualizar la fecha');
+      console.error("Error completo:", err);
+      toast.error(`Error: ${err.message || 'No se pudo vincular'}`);
     }
   };
 
