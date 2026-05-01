@@ -280,6 +280,31 @@ const PatientDetails = () => {
     }
   };
 
+  const handleFixUpfrontPaymentDate = async (session) => {
+    try {
+      const monto = session.monto_abonado || 0;
+      if (monto <= 0) return;
+
+      // Create the individual payment record with TODAY's date
+      const { error: pError } = await supabase
+        .from('pagos')
+        .insert([{
+          sesion_id: session.id,
+          monto: monto,
+          medio_pago: session.medio_pago || 'Efectivo',
+          fecha: new Date().toISOString()
+        }]);
+
+      if (pError) throw pError;
+
+      toast.success('Fecha de pago actualizada a hoy');
+      fetchData();
+    } catch (err) {
+      console.error("Error fixing payment date:", err);
+      toast.error('No se pudo actualizar la fecha');
+    }
+  };
+
   const handleUpdateTurno = async (e) => {
     e.preventDefault();
     try {
@@ -578,6 +603,22 @@ const PatientDetails = () => {
                     <p className="text-xs text-slate-500 dark:text-slate-400 italic mb-3">"{s.evolucion || 'Sin evolución registrada'}"</p>
                     
                     {/* Payments Mini-History */}
+                     {/* Upfront payment detected but no individual records */}
+                     {s.monto_abonado > 0 && payments.filter(p => p.sesion_id === s.id).length === 0 && (
+                       <div className="mt-2 p-3 bg-amber-50 dark:bg-amber-900/10 border border-amber-100 dark:border-amber-900/20 rounded-xl flex items-center justify-between gap-3">
+                         <div className="flex items-center gap-2 text-amber-700 dark:text-amber-400">
+                           <History size={14} />
+                           <span className="text-[10px] font-bold uppercase tracking-tight">Pago sin registro de fecha individual</span>
+                         </div>
+                         <button 
+                           onClick={() => handleFixUpfrontPaymentDate(s)}
+                           className="text-[9px] font-black uppercase bg-amber-500 text-white px-2 py-1 rounded-lg hover:bg-amber-600 transition-colors"
+                         >
+                           Mover a Hoy
+                         </button>
+                       </div>
+                     )}
+
                     {payments.filter(p => p.sesion_id === s.id).length > 0 && (
                       <div className="space-y-1.5 mt-2">
                         <p className="text-[9px] font-black text-slate-400 uppercase tracking-widest flex items-center gap-1">
