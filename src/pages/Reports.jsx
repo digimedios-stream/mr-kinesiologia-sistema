@@ -16,6 +16,21 @@ import { supabase } from '../lib/supabase';
 import { jsPDF } from 'jspdf';
 import { motion } from 'framer-motion';
 
+const extractDateOnly = (dateString) => {
+  if (!dateString) return '';
+  const match = String(dateString).trim().match(/^\d{4}-\d{2}-\d{2}/);
+  return match ? match[0] : '';
+};
+
+const formatLocalDateString = (dateStr, options) => {
+  if (!dateStr) return '';
+  const dOnly = extractDateOnly(dateStr);
+  if (!dOnly) return dateStr;
+  const d = new Date(dOnly + 'T12:00:00');
+  if (isNaN(d.getTime())) return dateStr;
+  return d.toLocaleDateString('es-AR', options);
+};
+
 const Reports = () => {
   const [stats, setStats] = useState({
     totalPatients: 0,
@@ -89,8 +104,9 @@ const Reports = () => {
       const monthlyIncome = allPayments
         .filter(p => {
           if (!p.fecha) return false;
-          const pDateStr = String(p.fecha);
-          const pDate = new Date(pDateStr.includes('T') ? pDateStr : pDateStr + 'T12:00:00');
+          const pDateStr = extractDateOnly(p.fecha);
+          if (!pDateStr) return false;
+          const pDate = new Date(pDateStr + 'T12:00:00');
           return pDate.getTime() >= firstDayOfMonth;
         })
         .reduce((acc, p) => acc + (p.monto || 0), 0);
@@ -103,7 +119,7 @@ const Reports = () => {
       const dailyPayments = allPayments.filter(p => {
         if (!p.fecha) return false;
         
-        const pDateStr = (p.fecha || '').includes('T') ? p.fecha.split('T')[0] : (p.fecha || '');
+        const pDateStr = extractDateOnly(p.fecha);
         if (!pDateStr) return false;
         const pDate = new Date(pDateStr + 'T12:00:00');
         const formattedPDate = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
@@ -149,8 +165,8 @@ const Reports = () => {
         sessionTrackedAsis.forEach(a => {
           if (!a.fecha_asistencia) return; // Skip if date is missing
           totalSessions++;
-          // Robust date extraction
-          const aDateStr = (a.fecha_asistencia || '').includes('T') ? a.fecha_asistencia.split('T')[0] : a.fecha_asistencia.split(' ')[0];
+          const aDateStr = extractDateOnly(a.fecha_asistencia);
+          if (!aDateStr) return;
           const aDate = new Date(aDateStr + 'T12:00:00');
           
           if (aDate.getTime() >= firstDayOfMonth) monthlySessions++;
@@ -160,14 +176,13 @@ const Reports = () => {
         // 2. Count legacy ones based on session creation date (for old data)
         if (legacy > 0) {
           totalSessions += legacy;
-          if (session.fecha_sesion) {
-            const sDateStr = (session.fecha_sesion || '').includes('T') ? session.fecha_sesion.split('T')[0] : session.fecha_sesion.split(' ')[0];
+            const sDateStr = extractDateOnly(session.fecha_sesion);
+            if (!sDateStr) return;
             const sDate = new Date(sDateStr + 'T12:00:00');
             
             if (sDate.getTime() >= firstDayOfMonth) monthlySessions += legacy;
             if (sDateStr === todayStr) dailySessions += legacy;
           }
-        }
       });
       
       // Monthly History (last 12 months)
@@ -176,7 +191,8 @@ const Reports = () => {
       
       allPayments.forEach(p => {
         if (!p.fecha) return;
-        const pDateStr = String(p.fecha).includes('T') ? String(p.fecha).split('T')[0] : String(p.fecha);
+        const pDateStr = extractDateOnly(p.fecha);
+        if (!pDateStr) return;
         const date = new Date(pDateStr + 'T12:00:00');
         if (isNaN(date.getTime())) return;
         
@@ -486,10 +502,10 @@ const Reports = () => {
               <div key={i} className="flex items-center justify-between p-4 rounded-2xl bg-slate-50 dark:bg-slate-800/30 border border-transparent hover:border-slate-100 dark:hover:border-slate-800 transition-all">
                 <div className="flex flex-col">
                   <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">
-                    {new Date(d.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long' })}
+                    {formatLocalDateString(d.date, { weekday: 'long' })}
                   </span>
                   <span className="text-sm font-bold text-slate-900 dark:text-white">
-                    {new Date(d.date + 'T12:00:00').toLocaleDateString('es-ES', { day: 'numeric', month: 'short' })}
+                    {formatLocalDateString(d.date, { day: 'numeric', month: 'short' })}
                   </span>
                 </div>
                 <div className="text-right">
