@@ -89,7 +89,8 @@ const Reports = () => {
       const monthlyIncome = allPayments
         .filter(p => {
           if (!p.fecha) return false;
-          const pDate = new Date(p.fecha.includes('T') ? p.fecha : p.fecha + 'T12:00:00');
+          const pDateStr = String(p.fecha);
+          const pDate = new Date(pDateStr.includes('T') ? pDateStr : pDateStr + 'T12:00:00');
           return pDate.getTime() >= firstDayOfMonth;
         })
         .reduce((acc, p) => acc + (p.monto || 0), 0);
@@ -175,7 +176,7 @@ const Reports = () => {
       
       allPayments.forEach(p => {
         if (!p.fecha) return;
-        const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
+        const pDateStr = String(p.fecha).includes('T') ? String(p.fecha).split('T')[0] : String(p.fecha);
         const date = new Date(pDateStr + 'T12:00:00');
         if (isNaN(date.getTime())) return;
         
@@ -350,8 +351,24 @@ const Reports = () => {
     );
   }
 
+  if (stats.error) {
+    return (
+      <div className="p-8 space-y-4 flex flex-col items-center justify-center min-h-[60vh]">
+        <h2 className="text-xl font-bold text-slate-800 dark:text-white">Algo salió mal al cargar las estadísticas</h2>
+        <p className="text-sm text-slate-500 dark:text-slate-400">Por favor, intenta recargar la página.</p>
+        <button 
+          onClick={fetchStats}
+          className="px-4 py-2 bg-primary text-white rounded-lg text-sm font-bold mt-2 hover:scale-[1.02] active:scale-95 transition-all"
+        >
+          Reintentar
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
