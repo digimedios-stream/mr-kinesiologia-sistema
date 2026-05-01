@@ -31,6 +31,14 @@ const formatLocalDateString = (dateStr, options) => {
   return d.toLocaleDateString('es-AR', options);
 };
 
+const isElectronic = (method) => {
+  if (!method || typeof method !== 'string') return false;
+  const m = method.toLowerCase().trim();
+  return m === 'electrónico' || m === 'electronico' || m === 'transferencia' || m === 'débito' || m === 'debito';
+};
+
+const isCash = (method) => !isElectronic(method);
+
 const Reports = () => {
   const [stats, setStats] = useState({
     totalPatients: 0,
@@ -134,12 +142,6 @@ const Reports = () => {
 
       const dailyIncome = dailyPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
       
-      const isElectronic = (method) => {
-        if (!method || typeof method !== 'string') return false;
-        const m = method.toLowerCase().trim();
-        return m === 'electrónico' || m === 'electronico' || m === 'transferencia' || m === 'débito' || m === 'debito';
-      };
-      const isCash = (method) => !isElectronic(method);
 
       const dailyIncomeCash = dailyPayments.filter(p => isCash(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0);
       const dailyIncomeTransfer = dailyPayments.filter(p => isElectronic(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0);
