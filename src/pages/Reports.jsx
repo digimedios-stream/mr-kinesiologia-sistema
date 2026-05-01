@@ -30,7 +30,8 @@ const Reports = () => {
     incomeCash: 0,
     incomeElectronic: 0,
     monthlyHistory: [],
-    dailyHistory: []
+    dailyHistory: [],
+    todayPaymentsList: []
   });
   const [loading, setLoading] = useState(true);
 
