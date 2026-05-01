@@ -44,10 +44,11 @@ const Reports = () => {
       const { count: pCount } = await supabase.from('pacientes').select('*', { count: 'exact', head: true });
       
       // Fetch sessions and payments
-      const [{ data: sData }, { data: pData }, { data: aData }] = await Promise.all([
-        supabase.from('sesiones_pagos').select('id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago, sesiones_asistidas'),
-        supabase.from('pagos').select('monto, fecha, sesion_id, medio_pago'),
-        supabase.from('asistencias_sesiones').select('id, sesion_id, fecha_asistencia')
+      const [{ data: sData }, { data: pData }, { data: aData }, { data: patientsData }] = await Promise.all([
+        supabase.from('sesiones_pagos').select('id, paciente_id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago, sesiones_asistidas'),
+        supabase.from('pagos').select('id, monto, fecha, sesion_id'),
+        supabase.from('asistencias_sesiones').select('id, sesion_id, fecha_asistencia'),
+        supabase.from('pacientes').select('id, nombre, apellido')
       ]);
 
       if (!sData) return;
@@ -71,9 +72,10 @@ const Reports = () => {
         if (faltante > 0) {
           allPayments.push({
             monto: faltante,
-            fecha: session.fecha_sesion,
+            fecha: session.fecha_sesion, // This is the source of truth for legacy/upfront
             sesion_id: session.id,
-            medio_pago: session.medio_pago
+            medio_pago: session.medio_pago,
+            is_upfront: true
           });
         }
       });
@@ -97,13 +99,18 @@ const Reports = () => {
       const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       
       const dailyPayments = allPayments.filter(p => {
-        if (!p.fecha) return false;
+        if (!p.monto || !p.fecha) return false;
         
         const pDateStr = p.fecha.includes('T') ? p.fecha.split('T')[0] : p.fecha;
         const pDate = new Date(pDateStr + 'T12:00:00');
         const formattedPDate = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
         
         return formattedPDate === todayStr;
+      }).map(p => {
+        // Ensure every payment has a medio_pago even if not in its table
+        if (p.medio_pago) return p;
+        const session = sData.find(s => s.id === p.sesion_id);
+        return { ...p, medio_pago: session?.medio_pago || 'Efectivo' };
       });
 
       const dailyIncome = dailyPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
@@ -179,6 +186,27 @@ const Reports = () => {
         .slice(0, 12)
         .map(([month, amount]) => ({ month, amount }));
 
+      // NEW: Individual payments for today's list
+      const todayPaymentsList = (pData || [])
+        .filter(p => {
+          if (!p.fecha) return false;
+          const pDate = new Date(p.fecha);
+          const pDateStr = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
+          return pDateStr === todayStr;
+        })
+        .map(p => {
+          // Find the session and its payment method
+          const session = sData.find(s => s.id === p.sesion_id);
+          const patient = patientsData?.find(pat => pat.id === session?.paciente_id);
+          return {
+            id: p.id,
+            monto: p.monto,
+            medio_pago: session?.medio_pago || 'Efectivo', // Inherit from session
+            fecha: p.fecha,
+            pacienteNombre: patient ? `${patient.nombre} ${patient.apellido}` : 'Paciente Desconocido'
+          };
+        });
+
       const dailyHistory = Object.entries(dailyHistoryMap)
         .sort((a, b) => b[0].localeCompare(a[0]))
         .slice(0, 7)
@@ -198,7 +226,8 @@ const Reports = () => {
         incomeCash: allPayments.filter(p => isCash(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0),
         incomeElectronic: allPayments.filter(p => isElectronic(p.medio_pago)).reduce((acc, p) => acc + (p.monto || 0), 0),
         monthlyHistory,
-        dailyHistory
+        dailyHistory,
+        todayPaymentsList
       });
     } catch (err) {
       console.error("Error fetching stats:", err);
@@ -444,6 +473,49 @@ const Reports = () => {
               </div>
             )}
           </div>
+        </div>
+      </div>
+      <div className="mt-8">
+        <h3 className="text-lg font-manrope font-extrabold text-slate-900 dark:text-white mb-6 flex items-center gap-2">
+          <DollarSign className="text-emerald-500" size={20} /> Detalle de Pagos de Hoy
+        </h3>
+        <div className="bg-white dark:bg-slate-900 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm overflow-hidden">
+          {stats.todayPaymentsList.length > 0 ? (
+            <div className="overflow-x-auto">
+              <table className="w-full text-left border-collapse">
+                <thead>
+                  <tr className="bg-slate-50/50 dark:bg-slate-800/50">
+                    <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Paciente</th>
+                    <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Hora</th>
+                    <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest">Método</th>
+                    <th className="px-8 py-4 text-[10px] font-black text-slate-400 uppercase tracking-widest text-right">Monto</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-50 dark:divide-slate-800">
+                  {stats.todayPaymentsList.map((p) => (
+                    <tr key={p.id} className="hover:bg-slate-50/30 dark:hover:bg-slate-800/30 transition-colors">
+                      <td className="px-8 py-4 text-sm font-bold text-slate-700 dark:text-slate-300">{p.pacienteNombre}</td>
+                      <td className="px-8 py-4 text-xs text-slate-500">
+                        {new Date(p.fecha).toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' })}hs
+                      </td>
+                      <td className="px-8 py-4">
+                        <span className={`text-[9px] font-black uppercase px-2 py-1 rounded-lg ${isElectronic(p.medio_pago) ? 'bg-primary/10 text-primary' : 'bg-emerald-500/10 text-emerald-600'}`}>
+                          {p.medio_pago || 'Efectivo'}
+                        </span>
+                      </td>
+                      <td className="px-8 py-4 text-right text-sm font-black text-slate-900 dark:text-white">
+                        ${p.monto.toLocaleString()}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          ) : (
+            <div className="py-12 text-center text-slate-400 font-bold uppercase text-[10px] tracking-widest">
+              No hay pagos registrados el día de hoy
+            </div>
+          )}
         </div>
       </div>
     </div>

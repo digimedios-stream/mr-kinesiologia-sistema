@@ -294,7 +294,6 @@ const PatientDetails = () => {
         .insert([{
           sesion_id: session.id,
           monto: monto,
-          medio_pago: session.medio_pago || 'Efectivo',
           fecha: new Date().toISOString()
         }]);
 
