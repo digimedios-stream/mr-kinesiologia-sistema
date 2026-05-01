@@ -375,7 +375,7 @@ const Reports = () => {
               </div>
               <div>
                 <p className="text-[10px] font-black text-emerald-600/60 dark:text-emerald-400/60 uppercase tracking-widest">Ingresos de Hoy</p>
-                <h3 className="text-3xl font-manrope font-extrabold text-emerald-700 dark:text-white mt-1">${stats.dailyIncome.toLocaleString()}</h3>
+                <h3 className="text-3xl font-manrope font-extrabold text-emerald-700 dark:text-white mt-1">${(stats.dailyIncome || 0).toLocaleString()}</h3>
               </div>
             </div>
             <div className="pt-4 mt-6 border-t border-emerald-200/50 dark:border-emerald-800/50 flex justify-between items-center">
@@ -436,7 +436,7 @@ const Reports = () => {
                       initial={{ height: 0 }}
                       animate={{ height: `${(amount / maxAmount) * 100}%` }}
                       className="w-full bg-primary/40 rounded-full transition-all group-hover:bg-primary/60" 
-                      title={`$${amount.toLocaleString()}`}
+                      title={`$${(amount || 0).toLocaleString()}`}
                     />
                   </div>
                   <span className="text-[9px] font-black text-slate-300 uppercase letter-spacing-widest">
@@ -463,7 +463,7 @@ const Reports = () => {
                   </span>
                 </div>
                 <div className="text-right">
-                  <span className="text-lg font-black text-emerald-500">${d.amount.toLocaleString()}</span>
+                  <span className="text-lg font-black text-emerald-500">${(d.amount || 0).toLocaleString()}</span>
                 </div>
               </div>
             ))}
@@ -504,7 +504,7 @@ const Reports = () => {
                         </span>
                       </td>
                       <td className="px-8 py-4 text-right text-sm font-black text-slate-900 dark:text-white">
-                        ${p.monto.toLocaleString()}
+                        ${(p.monto || 0).toLocaleString()}
                       </td>
                     </tr>
                   ))}
