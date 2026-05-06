@@ -85,38 +85,21 @@ const Reports = () => {
       // Fetch sessions and payments
       const [{ data: sData }, { data: pData }, { data: aData }, { data: patientsData }] = await Promise.all([
         supabase.from('sesiones_pagos').select('id, paciente_id, monto_abonado, fecha_sesion, total_estimado, saldo_pendiente, medio_pago, sesiones_asistidas'),
-        supabase.from('pagos').select('id, monto, fecha, sesion_id'),
+        supabase.from('pagos').select('id, monto, fecha, sesion_id, medio_pago'),
         supabase.from('asistencias_sesiones').select('id, sesion_id, fecha_asistencia'),
         supabase.from('pacientes').select('id, nombre, apellido')
       ]);
 
       if (!sData) return;
 
-      // Create a unified list of financial transactions
-      const allPayments = [...(pData || [])];
-
-      // Calculate how much is already accounted for in the 'pagos' table per session
-      const paidInTableBySession = {};
-      (pData || []).forEach(p => {
-        paidInTableBySession[p.sesion_id] = (paidInTableBySession[p.sesion_id] || 0) + (p.monto || 0);
-      });
-
-      // Check each session to see if there's an upfront payment not yet in the 'pagos' table
-      sData.forEach(session => {
-        const totalAbonado = session.monto_abonado || 0;
-        const yaEnTabla = paidInTableBySession[session.id] || 0;
-        const faltante = totalAbonado - yaEnTabla;
-
-        // If there's a difference, it's an upfront/legacy payment that needs a virtual record
-        if (faltante > 0) {
-          allPayments.push({
-            monto: faltante,
-            fecha: session.fecha_sesion, // This is the source of truth for legacy/upfront
-            sesion_id: session.id,
-            medio_pago: session.medio_pago,
-            is_upfront: true
-          });
+      // All payments come directly from the pagos table (migration ensures all are tracked)
+      const allPayments = (pData || []).map(p => {
+        // If medio_pago is missing from the payment record, inherit from session
+        if (!p.medio_pago) {
+          const session = sData.find(s => s.id === p.sesion_id);
+          return { ...p, medio_pago: session?.medio_pago || 'Efectivo' };
         }
+        return p;
       });
 
       const income = allPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
@@ -149,11 +132,6 @@ const Reports = () => {
         const formattedPDate = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
         
         return formattedPDate === todayStr;
-      }).map(p => {
-        // Ensure every payment has a medio_pago even if not in its table
-        if (p.medio_pago) return p;
-        const session = sData.find(s => s.id === p.sesion_id);
-        return { ...p, medio_pago: session?.medio_pago || 'Efectivo' };
       });
 
       const dailyIncome = dailyPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
@@ -226,22 +204,15 @@ const Reports = () => {
         .slice(0, 12)
         .map(([month, amount]) => ({ month, amount }));
 
-      // NEW: Individual payments for today's list
-      const todayPaymentsList = (pData || [])
-        .filter(p => {
-          if (!p.fecha) return false;
-          const pDate = new Date(p.fecha);
-          const pDateStr = `${pDate.getFullYear()}-${String(pDate.getMonth() + 1).padStart(2, '0')}-${String(pDate.getDate()).padStart(2, '0')}`;
-          return pDateStr === todayStr;
-        })
+      // Individual payments for today's list (from pagos table directly)
+      const todayPaymentsList = dailyPayments
         .map(p => {
-          // Find the session and its payment method
           const session = sData.find(s => s.id === p.sesion_id);
           const patient = patientsData?.find(pat => pat.id === session?.paciente_id);
           return {
             id: p.id,
             monto: p.monto,
-            medio_pago: session?.medio_pago || 'Efectivo', // Inherit from session
+            medio_pago: p.medio_pago || 'Efectivo',
             fecha: p.fecha,
             pacienteNombre: patient ? `${patient.nombre} ${patient.apellido}` : 'Paciente Desconocido'
           };
