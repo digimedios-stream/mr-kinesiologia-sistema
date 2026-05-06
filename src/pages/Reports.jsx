@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   BarChart3, 
   PieChart, 
@@ -10,7 +11,8 @@ import {
   ChevronDown,
   Download,
   FileText,
-  Clock
+  Clock,
+  AlertCircle
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { jsPDF } from 'jspdf';
@@ -51,12 +53,14 @@ const isElectronic = (method) => {
 const isCash = (method) => !isElectronic(method);
 
 const Reports = () => {
+  const navigate = useNavigate();
   const [stats, setStats] = useState({
     totalPatients: 0,
     totalSessions: 0,
     totalIncome: 0,
     monthlyIncome: 0,
     pendingPayments: 0,
+    pendingAmount: 0,
     dailyIncome: 0,
     dailyIncomeCash: 0,
     dailyIncomeTransfer: 0,
@@ -132,6 +136,7 @@ const Reports = () => {
 
       // Pending payments: sessions where saldo_pendiente > 0
       const pendingCount = sData.filter(s => (s.saldo_pendiente || 0) > 0).length;
+      const pendingAmount = sData.reduce((acc, s) => acc + (s.saldo_pendiente || 0), 0);
 
       const todayStr = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
       
@@ -254,6 +259,7 @@ const Reports = () => {
         monthlyIncome: monthlyIncome,
         monthlySessions,
         pendingPayments: pendingCount,
+        pendingAmount,
         dailyIncome: dailyIncome,
         dailyIncomeCash: dailyIncomeCash,
         dailyIncomeTransfer: dailyIncomeTransfer,
@@ -359,14 +365,17 @@ const Reports = () => {
     doc.save(`Informe_Clinico_MR_${today.replace(/\//g, '-')}.pdf`);
   };
 
-  const MetricCard = ({ icon: Icon, label, value, color }) => (
-    <div className="bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm space-y-4 transition-colors">
-      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg ${color}`}>
+  const MetricCard = ({ icon: Icon, label, value, color, onClick }) => (
+    <div 
+      onClick={onClick}
+      className={`bg-white dark:bg-slate-900 p-8 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm space-y-4 transition-all ${onClick ? 'cursor-pointer hover:scale-[1.02] active:scale-95 group' : ''}`}
+    >
+      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center text-white shadow-lg transition-transform ${onClick ? 'group-hover:scale-110' : ''} ${color}`}>
         <Icon size={24} />
       </div>
       <div>
         <p className="text-[10px] font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest">{label}</p>
-        <h3 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white mt-1">{value}</h3>
+        <h3 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white mt-1 transition-colors">{value}</h3>
       </div>
     </div>
   );
@@ -414,11 +423,18 @@ const Reports = () => {
       </div>
 
       {/* Highlights Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
         <MetricCard icon={TrendingUp} label="Ingresos del Mes" value={`$${stats.monthlyIncome.toLocaleString()}`} color="kinetic-gradient" />
         <MetricCard icon={DollarSign} label="Efectivo (Total)" value={`$${stats.incomeCash.toLocaleString()}`} color="bg-emerald-500" />
         <MetricCard icon={Activity} label="Transferencia (Total)" value={`$${stats.incomeElectronic.toLocaleString()}`} color="bg-primary" />
-        <MetricCard icon={PieChart} label="Sesiones Sin Pago" value={stats.pendingPayments} color="bg-rose-500" />
+        <MetricCard icon={PieChart} label="Sesiones Sin Pago" value={stats.pendingPayments} color="bg-amber-500" />
+        <MetricCard 
+          icon={AlertCircle} 
+          label="Saldos Pendientes" 
+          value={`$${stats.pendingAmount.toLocaleString()}`} 
+          color="bg-rose-500" 
+          onClick={() => navigate('/deudores')}
+        />
       </div>
 
       <div>

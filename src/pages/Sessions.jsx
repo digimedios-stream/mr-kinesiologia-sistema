@@ -238,7 +238,7 @@ const Sessions = () => {
       </div>
 
       {/* Stats Summary */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm flex items-center gap-5">
           <div className="w-14 h-14 bg-primary/10 rounded-2xl flex items-center justify-center text-primary">
             <ClipboardList size={28} />
@@ -246,19 +246,6 @@ const Sessions = () => {
           <div>
             <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Sesiones</p>
             <p className="text-2xl font-black text-slate-900 dark:text-white leading-none mt-1">{stats.total}</p>
-          </div>
-        </div>
-        
-        <div 
-          onClick={() => navigate('/deudores')}
-          className="bg-white dark:bg-slate-900 p-6 rounded-[32px] border border-slate-50 dark:border-slate-800 shadow-sm flex items-center gap-5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all group"
-        >
-          <div className="w-14 h-14 bg-rose-500/10 rounded-2xl flex items-center justify-center text-rose-500 group-hover:bg-rose-500 group-hover:text-white transition-colors">
-            <AlertCircle size={28} />
-          </div>
-          <div>
-            <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Saldos Pendientes</p>
-            <p className="text-2xl font-black text-rose-500 leading-none mt-1">${stats.pending.toLocaleString()}</p>
           </div>
         </div>
 
