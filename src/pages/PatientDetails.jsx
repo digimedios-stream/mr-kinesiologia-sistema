@@ -165,6 +165,44 @@ const PatientDetails = () => {
     }
   };
 
+  const handleDeleteAttendance = async (attendanceId, sessionId) => {
+    if (!window.confirm('¿Eliminar este registro de asistencia?')) return;
+    
+    setIsUpdatingAttendance(true);
+    try {
+      // 1. Delete the specific attendance record
+      const { error: deleteError } = await supabase
+        .from('asistencias_sesiones')
+        .delete()
+        .eq('id', attendanceId);
+      
+      if (deleteError) throw deleteError;
+
+      // 2. Recalculate the exact number of attendances left for this session to fix any desync
+      const { count, error: countError } = await supabase
+        .from('asistencias_sesiones')
+        .select('*', { count: 'exact', head: true })
+        .eq('sesion_id', sessionId);
+        
+      if (countError) throw countError;
+
+      // 3. Update the counter
+      const { error: updateError } = await supabase
+        .from('sesiones_pagos')
+        .update({ sesiones_asistidas: count || 0 })
+        .eq('id', sessionId);
+        
+      if (updateError) throw updateError;
+
+      toast.success('Asistencia eliminada');
+      fetchData();
+    } catch (err) {
+      toast.error('Error al eliminar asistencia');
+    } finally {
+      setIsUpdatingAttendance(false);
+    }
+  };
+
   const handleApplyPayment = async (e) => {
     e.preventDefault();
     if (isProcessingPayment) return;
@@ -721,6 +759,13 @@ const PatientDetails = () => {
                                         </span>
                                       </>
                                     )}
+                                    <button 
+                                      onClick={() => handleDeleteAttendance(a.id, s.id)}
+                                      className="text-slate-300 hover:text-rose-500 transition-colors ml-1"
+                                      title="Eliminar asistencia"
+                                    >
+                                      <Trash2 size={12} />
+                                    </button>
                                   </div>
                                 );
                               });
