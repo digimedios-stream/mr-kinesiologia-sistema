@@ -43,6 +43,8 @@ const PatientDetails = () => {
   const [sessionToPay, setSessionToPay] = useState(null);
   const [newPaymentAmount, setNewPaymentAmount] = useState('');
   const [paymentMethod, setPaymentMethod] = useState('Efectivo');
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [isUpdatingAttendance, setIsUpdatingAttendance] = useState(false);
 
   // Turno Modal States
   const [showTurnoModal, setShowTurnoModal] = useState(false);
@@ -119,11 +121,15 @@ const PatientDetails = () => {
   };
 
   const handleUpdateAttendance = async (sessionId, current, total, type) => {
+    if (isUpdatingAttendance) return;
+    
     let newVal = current;
     if (type === 'add' && current < total) newVal++;
     if (type === 'sub' && current > 0) newVal--;
     
     if (newVal === current) return;
+
+    setIsUpdatingAttendance(true);
 
     try {
       const { error } = await supabase
@@ -154,13 +160,19 @@ const PatientDetails = () => {
       fetchData();
     } catch (err) {
       toast.error('Error al actualizar asistencias');
+    } finally {
+      setIsUpdatingAttendance(false);
     }
   };
 
   const handleApplyPayment = async (e) => {
     e.preventDefault();
+    if (isProcessingPayment) return;
+    
     const amount = parseFloat(newPaymentAmount) || 0;
     if (amount <= 0) return toast.error('Ingresa un monto válido');
+
+    setIsProcessingPayment(true);
 
     const newMontoAbonado = (sessionToPay.monto_abonado || 0) + amount;
     const newSaldoPendiente = (sessionToPay.total_estimado || 0) - newMontoAbonado;
@@ -196,6 +208,8 @@ const PatientDetails = () => {
       fetchData();
     } catch (err) {
       toast.error('Error al actualizar pago');
+    } finally {
+      setIsProcessingPayment(false);
     }
   };
 
@@ -670,38 +684,47 @@ const PatientDetails = () => {
                           <Calendar size={10} /> Fechas de Asistencia
                         </p>
                         <div className="flex flex-wrap gap-2">
-                          {asistencias
-                            .filter(a => a.sesion_id === s.id)
-                            .sort((a, b) => new Date(a.fecha_asistencia) - new Date(b.fecha_asistencia))
-                            .map((a, idx) => {
-                              const dayPayments = payments.filter(p => 
-                                p.sesion_id === s.id && 
-                                new Date(p.fecha).toDateString() === new Date(a.fecha_asistencia).toDateString()
-                              );
-                              const dayAmount = dayPayments.reduce((sum, p) => sum + (p.monto || 0), 0);
-                              
-                              return (
-                                <div key={a.id} className="px-2.5 py-1 bg-primary/5 border border-primary/10 rounded-lg flex items-center gap-2 shadow-sm">
-                                  <span className="text-[9px] font-black text-primary uppercase">Sesión {idx + 1}</span>
-                                  <div className="w-[1px] h-3 bg-primary/20" />
-                                  <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">
-                                    {new Date(a.fecha_asistencia).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })}
-                                    {' '}
-                                    <span className="text-[9px] opacity-60">
-                                      {new Date(a.fecha_asistencia).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}hs
-                                    </span>
-                                  </span>
-                                  {dayAmount > 0 && (
-                                    <>
-                                      <div className="w-[1px] h-3 bg-emerald-200 dark:bg-emerald-800" />
-                                      <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">
-                                        Abonó ${dayAmount.toLocaleString()}
+                          {(() => {
+                            const shownDates = new Set();
+                            return asistencias
+                              .filter(a => a.sesion_id === s.id)
+                              .sort((a, b) => new Date(a.fecha_asistencia) - new Date(b.fecha_asistencia))
+                              .map((a, idx) => {
+                                const dateKey = new Date(a.fecha_asistencia).toDateString();
+                                let dayAmount = 0;
+                                
+                                if (!shownDates.has(dateKey)) {
+                                  const dayPayments = payments.filter(p => 
+                                    p.sesion_id === s.id && 
+                                    new Date(p.fecha).toDateString() === dateKey
+                                  );
+                                  dayAmount = dayPayments.reduce((sum, p) => sum + (p.monto || 0), 0);
+                                  if (dayAmount > 0) shownDates.add(dateKey);
+                                }
+                                
+                                return (
+                                  <div key={a.id} className="px-2.5 py-1 bg-primary/5 border border-primary/10 rounded-lg flex items-center gap-2 shadow-sm">
+                                    <span className="text-[9px] font-black text-primary uppercase">Sesión {idx + 1}</span>
+                                    <div className="w-[1px] h-3 bg-primary/20" />
+                                    <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">
+                                      {new Date(a.fecha_asistencia).toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: '2-digit' })}
+                                      {' '}
+                                      <span className="text-[9px] opacity-60">
+                                        {new Date(a.fecha_asistencia).toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}hs
                                       </span>
-                                    </>
-                                  )}
-                                </div>
-                              );
-                            })}
+                                    </span>
+                                    {dayAmount > 0 && (
+                                      <>
+                                        <div className="w-[1px] h-3 bg-emerald-200 dark:bg-emerald-800" />
+                                        <span className="text-[10px] font-black text-emerald-600 dark:text-emerald-400">
+                                          Abonó ${dayAmount.toLocaleString()}
+                                        </span>
+                                      </>
+                                    )}
+                                  </div>
+                                );
+                              });
+                          })()}
                         </div>
                       </div>
                     )}

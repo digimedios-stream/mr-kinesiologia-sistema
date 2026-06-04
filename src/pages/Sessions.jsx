@@ -37,6 +37,7 @@ const Sessions = () => {
   const [showPatientResults, setShowPatientResults] = useState(false);
   const [selectedPatientData, setSelectedPatientData] = useState(null);
   const [evolution, setEvolution] = useState('');
+  const [sessionDate, setSessionDate] = useState(new Date().toLocaleDateString('en-CA'));
   
   const [qty, setQty] = useState('1');
   const [unitCost, setUnitCost] = useState('');
@@ -91,10 +92,11 @@ const Sessions = () => {
 
   const filteredPatientsForSelect = useMemo(() => {
     if (!patientSearch) return [];
-    return patients.filter(p => 
-      `${p.nombre} ${p.apellido}`.toLowerCase().includes(patientSearch.toLowerCase()) || 
-      p.dni?.includes(patientSearch)
-    );
+    const searchTerms = patientSearch.toLowerCase().trim().split(/\s+/);
+    return patients.filter(p => {
+      const searchString = `${p.nombre} ${p.apellido} ${p.apellido} ${p.nombre} ${p.dni || ''}`.toLowerCase();
+      return searchTerms.every(term => searchString.includes(term));
+    });
   }, [patients, patientSearch]);
 
   const handleSelectPatient = (p) => {
@@ -128,7 +130,7 @@ const Sessions = () => {
         saldo_pendiente: pending,
         codigo_prestacion: billingCode,
         descripcion_nomenclador: billingDesc,
-        fecha_sesion: new Date().toLocaleDateString('en-CA'),
+        fecha_sesion: sessionDate,
         medio_pago: parseFloat(paid) > 0 ? paymentMethod : null,
         sesiones_asistidas: 1
       }]).select();
@@ -181,6 +183,7 @@ const Sessions = () => {
     setPatientSearch('');
     setShowPatientResults(false);
     setEvolution('');
+    setSessionDate(new Date().toLocaleDateString('en-CA'));
     setQty('1');
     setUnitCost('');
     setPlusMonto('');
@@ -193,9 +196,11 @@ const Sessions = () => {
 
   const filteredSessions = useMemo(() => {
     if (!searchTerm) return sessions;
-    const search = searchTerm.toLowerCase();
+    const searchTerms = searchTerm.toLowerCase().trim().split(/\s+/);
+    
     return sessions.filter(s => {
       const patientName = `${s.pacientes?.nombre} ${s.pacientes?.apellido}`.toLowerCase();
+      const patientNameReversed = `${s.pacientes?.apellido} ${s.pacientes?.nombre}`.toLowerCase();
       const insurance = (s.pacientes?.obras_sociales?.nombre || 'particular').toLowerCase();
       const evolution = (s.evolucion || '').toLowerCase();
       const date = new Date(s.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { 
@@ -204,10 +209,8 @@ const Sessions = () => {
         year: 'numeric' 
       });
       
-      return patientName.includes(search) || 
-             insurance.includes(search) || 
-             evolution.includes(search) ||
-             date.includes(search);
+      const searchString = `${patientName} ${patientNameReversed} ${insurance} ${evolution} ${date}`;
+      return searchTerms.every(term => searchString.includes(term));
     });
   }, [sessions, searchTerm]);
 
@@ -472,6 +475,18 @@ const Sessions = () => {
                         </div>
                       </div>
                     )}
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="space-y-2">
+                      <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1">Fecha de Sesión</label>
+                      <input 
+                        type="date" 
+                        value={sessionDate}
+                        onChange={(e) => setSessionDate(e.target.value)}
+                        className="w-full bg-slate-50 dark:bg-slate-900 border-2 rounded-2xl px-5 py-4 text-sm font-semibold dark:text-white outline-none focus:border-primary transition-all"
+                      />
+                    </div>
                   </div>
 
                   <div className="space-y-2">
