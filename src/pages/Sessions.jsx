@@ -24,6 +24,14 @@ import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 
+// Normaliza texto: quita acentos, convierte a minúsculas y elimina espacios extra
+const normalize = (str) =>
+  (str || '')
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
 const Sessions = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
@@ -92,10 +100,11 @@ const Sessions = () => {
 
   const filteredPatientsForSelect = useMemo(() => {
     if (!patientSearch) return [];
-    const searchTerms = patientSearch.toLowerCase().trim().split(/\s+/);
+    const terms = normalize(patientSearch).split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return [];
     return patients.filter(p => {
-      const searchString = `${p.nombre} ${p.apellido} ${p.apellido} ${p.nombre} ${p.dni || ''}`.toLowerCase();
-      return searchTerms.every(term => searchString.includes(term));
+      const haystack = normalize(`${p.nombre} ${p.apellido} ${p.apellido} ${p.nombre} ${p.dni || ''}`);
+      return terms.every(term => haystack.includes(term));
     });
   }, [patients, patientSearch]);
 
@@ -196,21 +205,22 @@ const Sessions = () => {
 
   const filteredSessions = useMemo(() => {
     if (!searchTerm) return sessions;
-    const searchTerms = searchTerm.toLowerCase().trim().split(/\s+/);
-    
+    const terms = normalize(searchTerm).split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return sessions;
+
     return sessions.filter(s => {
-      const patientName = `${s.pacientes?.nombre} ${s.pacientes?.apellido}`.toLowerCase();
-      const patientNameReversed = `${s.pacientes?.apellido} ${s.pacientes?.nombre}`.toLowerCase();
-      const insurance = (s.pacientes?.obras_sociales?.nombre || 'particular').toLowerCase();
-      const evolution = (s.evolucion || '').toLowerCase();
-      const date = new Date(s.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', { 
-        day: '2-digit', 
-        month: '2-digit', 
-        year: 'numeric' 
+      const date = new Date(s.fecha_sesion + 'T12:00:00').toLocaleDateString('es-ES', {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric'
       });
-      
-      const searchString = `${patientName} ${patientNameReversed} ${insurance} ${evolution} ${date}`;
-      return searchTerms.every(term => searchString.includes(term));
+      const haystack = normalize(
+        `${s.pacientes?.nombre} ${s.pacientes?.apellido} ` +
+        `${s.pacientes?.apellido} ${s.pacientes?.nombre} ` +
+        `${s.pacientes?.obras_sociales?.nombre || 'particular'} ` +
+        `${s.evolucion || ''} ${date}`
+      );
+      return terms.every(term => haystack.includes(term));
     });
   }, [sessions, searchTerm]);
 

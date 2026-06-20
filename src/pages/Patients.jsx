@@ -13,6 +13,14 @@ import {
 import { supabase } from '../lib/supabase';
 import toast, { Toaster } from 'react-hot-toast';
 
+// Normaliza texto: quita acentos, convierte a minúsculas y elimina espacios extra
+const normalize = (str) =>
+  (str || '')
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
 const Patients = () => {
   const navigate = useNavigate();
   const [patients, setPatients] = useState([]);
@@ -57,10 +65,12 @@ const Patients = () => {
     }
   };
 
-  const filteredPatients = patients.filter(p => 
-    `${p.nombre} ${p.apellido}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    p.dni?.includes(searchTerm)
-  );
+  const filteredPatients = patients.filter(p => {
+    const terms = normalize(searchTerm).split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return true;
+    const haystack = normalize(`${p.nombre} ${p.apellido} ${p.apellido} ${p.nombre} ${p.dni || ''}`);
+    return terms.every(term => haystack.includes(term));
+  });
 
   return (
     <div className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">

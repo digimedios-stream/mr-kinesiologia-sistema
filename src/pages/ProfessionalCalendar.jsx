@@ -11,6 +11,14 @@ import { Toaster, toast } from 'react-hot-toast';
 import { motion, AnimatePresence } from 'framer-motion';
 import { User, ChevronRight } from 'lucide-react';
 
+// Normaliza texto: quita acentos, convierte a minúsculas y elimina espacios extra
+const normalize = (str) =>
+  (str || '')
+    .toLowerCase()
+    .trim()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '');
+
 const ProfessionalCalendar = () => {
   const [events, setEvents] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -74,10 +82,12 @@ const ProfessionalCalendar = () => {
 
   const filteredPatientsForSelect = React.useMemo(() => {
     if (!patientSearch) return [];
-    return patients.filter(p => 
-      `${p.nombre} ${p.apellido}`.toLowerCase().includes(patientSearch.toLowerCase()) || 
-      p.dni?.includes(patientSearch)
-    );
+    const terms = normalize(patientSearch).split(/\s+/).filter(Boolean);
+    if (terms.length === 0) return [];
+    return patients.filter(p => {
+      const haystack = normalize(`${p.nombre} ${p.apellido} ${p.apellido} ${p.nombre} ${p.dni || ''}`);
+      return terms.every(term => haystack.includes(term));
+    });
   }, [patients, patientSearch]);
 
   const handleSelectPatient = (p) => {
