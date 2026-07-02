@@ -16,6 +16,7 @@ import {
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import { jsPDF } from 'jspdf';
+import autoTable from 'jspdf-autotable';
 import { motion } from 'framer-motion';
 
 const extractDateOnly = (dateString) => {
@@ -54,6 +55,10 @@ const isCash = (method) => !isElectronic(method);
 
 const Reports = () => {
   const navigate = useNavigate();
+  const [selectedMonth, setSelectedMonth] = useState(() => {
+    const now = new Date();
+    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}`;
+  });
   const [stats, setStats] = useState({
     totalPatients: 0,
     totalSessions: 0,
@@ -69,13 +74,14 @@ const Reports = () => {
     incomeElectronic: 0,
     monthlyHistory: [],
     dailyHistory: [],
-    todayPaymentsList: []
+    todayPaymentsList: [],
+    monthlyPaymentsList: []
   });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetchStats();
-  }, []);
+  }, [selectedMonth]);
 
   const fetchStats = async () => {
     try {
@@ -105,7 +111,9 @@ const Reports = () => {
       const income = allPayments.reduce((acc, p) => acc + (p.monto || 0), 0);
       
       const now = new Date();
-      const firstDayOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).getTime();
+      const [selYear, selMonth] = selectedMonth.split('-');
+      const firstDayOfMonth = new Date(parseInt(selYear), parseInt(selMonth) - 1, 1).getTime();
+      const lastDayOfMonth = new Date(parseInt(selYear), parseInt(selMonth), 0).getTime() + 86400000 - 1;
       
       const monthlyIncome = allPayments
         .filter(p => {
@@ -113,7 +121,7 @@ const Reports = () => {
           const pDateStr = extractDateOnly(p.fecha);
           if (!pDateStr) return false;
           const pDate = new Date(pDateStr + 'T12:00:00');
-          return pDate.getTime() >= firstDayOfMonth;
+          return pDate.getTime() >= firstDayOfMonth && pDate.getTime() <= lastDayOfMonth;
         })
         .reduce((acc, p) => acc + (p.monto || 0), 0);
 
@@ -165,7 +173,7 @@ const Reports = () => {
           if (!aDateStr) return;
           const aDate = new Date(aDateStr + 'T12:00:00');
           
-          if (aDate.getTime() >= firstDayOfMonth) monthlySessions++;
+          if (aDate.getTime() >= firstDayOfMonth && aDate.getTime() <= lastDayOfMonth) monthlySessions++;
           if (aDateStr === todayStr) dailySessions++;
         });
 
@@ -176,7 +184,7 @@ const Reports = () => {
             if (!sDateStr) return;
             const sDate = new Date(sDateStr + 'T12:00:00');
             
-            if (sDate.getTime() >= firstDayOfMonth) monthlySessions += legacy;
+            if (sDate.getTime() >= firstDayOfMonth && sDate.getTime() <= lastDayOfMonth) monthlySessions += legacy;
             if (sDateStr === todayStr) dailySessions += legacy;
           }
       });
@@ -218,6 +226,27 @@ const Reports = () => {
           };
         });
 
+      const monthlyPaymentsList = allPayments
+        .filter(p => {
+          if (!p.fecha) return false;
+          const pDateStr = extractDateOnly(p.fecha);
+          if (!pDateStr) return false;
+          const pDate = new Date(pDateStr + 'T12:00:00');
+          return pDate.getTime() >= firstDayOfMonth && pDate.getTime() <= lastDayOfMonth;
+        })
+        .map(p => {
+          const session = sData.find(s => s.id === p.sesion_id);
+          const patient = patientsData?.find(pat => pat.id === session?.paciente_id);
+          return {
+            id: p.id,
+            monto: p.monto,
+            medio_pago: p.medio_pago || 'Efectivo',
+            fecha: p.fecha,
+            pacienteNombre: patient ? `${patient.nombre} ${patient.apellido}` : 'Paciente Desconocido'
+          };
+        })
+        .sort((a, b) => new Date(b.fecha).getTime() - new Date(a.fecha).getTime());
+
       const dailyHistory = Object.entries(dailyHistoryMap)
         .sort((a, b) => b[0].localeCompare(a[0]))
         .slice(0, 7)
@@ -245,7 +274,8 @@ const Reports = () => {
         }).reduce((acc, p) => acc + (p.monto || 0), 0),
         monthlyHistory,
         dailyHistory,
-        todayPaymentsList
+        todayPaymentsList,
+        monthlyPaymentsList
       });
     } catch (err) {
       console.error("Error crítico en fetchStats:", err);
@@ -259,6 +289,9 @@ const Reports = () => {
   const generatePDF = () => {
     const doc = new jsPDF();
     const today = new Date().toLocaleDateString('es-AR');
+    const [selYear, selMonth] = selectedMonth.split('-');
+    const monthName = new Date(parseInt(selYear), parseInt(selMonth) - 1, 1).toLocaleDateString('es-AR', { month: 'long', year: 'numeric' });
+    const formattedMonthName = monthName.charAt(0).toUpperCase() + monthName.slice(1);
     
     // Add Branding
     doc.setFontSize(22);
@@ -267,7 +300,7 @@ const Reports = () => {
     
     doc.setFontSize(10);
     doc.setTextColor(100);
-    doc.text(`Informe generado el: ${today}`, 20, 28);
+    doc.text(`Informe generado el: ${today} | Período: ${formattedMonthName}`, 20, 28);
     
     doc.setDrawColor(230);
     doc.line(20, 32, 190, 32);
@@ -275,7 +308,7 @@ const Reports = () => {
     // Header
     doc.setFontSize(16);
     doc.setTextColor(33, 37, 41);
-    doc.text('Métricas y Resultados Clínicos', 20, 45);
+    doc.text(`Métricas y Resultados - ${formattedMonthName}`, 20, 45);
     
     // Grid-like layout for metrics
     doc.setFontSize(11);
@@ -287,9 +320,9 @@ const Reports = () => {
     
     // Metric 1
     doc.setFont(undefined, 'bold');
-    doc.text('Ingresos del Mes:', col1, startY);
+    doc.text(`Ingresos de ${formattedMonthName}:`, col1, startY);
     doc.setFont(undefined, 'normal');
-    doc.text(`$${stats.monthlyIncome.toLocaleString()}`, col1 + 45, startY);
+    doc.text(`$${stats.monthlyIncome.toLocaleString()}`, col1 + 55, startY);
     
     // Metric 2
     doc.setFont(undefined, 'bold');
@@ -299,26 +332,33 @@ const Reports = () => {
     
     // Metric 3
     doc.setFont(undefined, 'bold');
-    doc.text('Sesiones Realizadas:', col1, startY + 15);
+    doc.text(`Sesiones en ${formattedMonthName}:`, col1, startY + 15);
     doc.setFont(undefined, 'normal');
-    doc.text(`${stats.totalSessions}`, col1 + 45, startY + 15);
+    doc.text(`${stats.monthlySessions}`, col1 + 55, startY + 15);
 
-    // DAILY STATS
-    doc.setFont(undefined, 'bold');
-    doc.text('Ingresos de Hoy:', col1, startY + 30);
-    doc.setFont(undefined, 'normal');
-    doc.text(`$${stats.dailyIncome.toLocaleString()} (Ef: $${(stats.dailyIncomeCash || 0).toLocaleString()} / Tr: $${(stats.dailyIncomeTransfer || 0).toLocaleString()})`, col1 + 45, startY + 30);
-
-    doc.setFont(undefined, 'bold');
-    doc.text('Sesiones de Hoy:', col2, startY + 30);
-    doc.setFont(undefined, 'normal');
-    doc.text(`${stats.dailySessions}`, col2 + 45, startY + 30);
-    
     // Metric 4
     doc.setFont(undefined, 'bold');
     doc.text('Pacientes Registrados:', col2, startY + 15);
     doc.setFont(undefined, 'normal');
     doc.text(`${stats.totalPatients}`, col2 + 45, startY + 15);
+
+    // DAILY STATS
+    doc.setFont(undefined, 'bold');
+    doc.text('Ingresos de Hoy:', col1, startY + 30);
+    doc.setFont(undefined, 'normal');
+    doc.text(`$${stats.dailyIncome.toLocaleString()}`, col1 + 55, startY + 30);
+    
+    // Breakdown of daily income (moved to next line to avoid overlap)
+    doc.setFontSize(9);
+    doc.setTextColor(150);
+    doc.text(`(Efectivo: $${(stats.dailyIncomeCash || 0).toLocaleString()} / Transf: $${(stats.dailyIncomeTransfer || 0).toLocaleString()})`, col1 + 55, startY + 36);
+    doc.setFontSize(11);
+    doc.setTextColor(100);
+
+    doc.setFont(undefined, 'bold');
+    doc.text('Sesiones de Hoy:', col2, startY + 30);
+    doc.setFont(undefined, 'normal');
+    doc.text(`${stats.dailySessions}`, col2 + 45, startY + 30);
     
     doc.setDrawColor(240);
     doc.line(20, startY + 45, 190, startY + 45);
@@ -333,7 +373,36 @@ const Reports = () => {
     doc.setTextColor(150);
     doc.text('Este documento es un resumen financiero automático para uso administrativo.', 20, 280);
     
-    doc.save(`Informe_Clinico_MR_${today.replace(/\//g, '-')}.pdf`);
+    // Detailed page
+    doc.addPage();
+    doc.setFontSize(14);
+    doc.setTextColor(33, 37, 41);
+    doc.text(`Detalle de Pagos - ${formattedMonthName}`, 20, 20);
+
+    const tableColumn = ["Paciente", "Fecha", "Método", "Monto"];
+    const tableRows = [];
+
+    stats.monthlyPaymentsList.forEach(p => {
+      const pDate = new Date(p.fecha).toLocaleDateString('es-AR', { day: '2-digit', month: '2-digit', year: 'numeric' });
+      const pData = [
+        p.pacienteNombre,
+        pDate,
+        p.medio_pago,
+        `$${p.monto.toLocaleString()}`
+      ];
+      tableRows.push(pData);
+    });
+
+    autoTable(doc, {
+      head: [tableColumn],
+      body: tableRows,
+      startY: 30,
+      theme: 'grid',
+      headStyles: { fillColor: [0, 105, 114] },
+      styles: { fontSize: 9 }
+    });
+
+    doc.save(`Informe_MR_${formattedMonthName.replace(/\s/g, '_')}.pdf`);
   };
 
   const MetricCard = ({ icon: Icon, label, value, color, onClick }) => (
@@ -379,23 +448,31 @@ const Reports = () => {
     <div className="p-8 space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
 
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
           <h1 className="text-3xl font-manrope font-extrabold text-slate-900 dark:text-white leading-tight">Informes y Métricas</h1>
           <p className="text-sm text-slate-500 dark:text-slate-400 font-medium">Análisis de rendimiento y finanzas clínicas</p>
         </div>
-        <button 
-          onClick={generatePDF}
-          className="flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-slate-900/10"
-        >
-          <Download size={16} />
-          Exportar PDF
-        </button>
+        <div className="flex items-center gap-4">
+          <input 
+            type="month" 
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+            className="px-4 py-2 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-xl text-sm font-bold text-slate-700 dark:text-slate-300 shadow-sm focus:outline-none focus:border-primary/50 dark:[color-scheme:dark]"
+          />
+          <button 
+            onClick={generatePDF}
+            className="flex items-center gap-2 px-6 py-3 bg-slate-900 dark:bg-white text-white dark:text-slate-900 rounded-2xl text-[10px] font-black uppercase tracking-widest hover:scale-[1.02] active:scale-95 transition-all shadow-xl shadow-slate-900/10"
+          >
+            <Download size={16} />
+            Exportar PDF
+          </button>
+        </div>
       </div>
 
       {/* Highlights Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-        <MetricCard icon={TrendingUp} label="Ingresos del Mes" value={`$${stats.monthlyIncome.toLocaleString()}`} color="kinetic-gradient" />
+        <MetricCard icon={TrendingUp} label="Ingresos del Período" value={`$${stats.monthlyIncome.toLocaleString()}`} color="kinetic-gradient" />
         <MetricCard icon={DollarSign} label="Efectivo (Total)" value={`$${stats.incomeCash.toLocaleString()}`} color="bg-emerald-500" />
         <MetricCard icon={Activity} label="Transferencia (Total)" value={`$${stats.incomeElectronic.toLocaleString()}`} color="bg-primary" />
         <MetricCard icon={PieChart} label="Sesiones Sin Pago" value={stats.pendingPayments} color="bg-amber-500" />
